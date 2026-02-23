@@ -6,8 +6,7 @@ team:
   - name: "39eliens"
     discord: "39eliens"
   - name: "Carlos Navarrete"
-  - name: "SergioGutierrezVillwornet"
-members: 3
+members: 2
 area: "IoT/Hardware"
 phase: 70
 status: "completed"
@@ -21,17 +20,20 @@ techStack:
 contracts:
   - name: "EcoToken"
     deployed: true
-    address: "0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9"
+    address: "0x03b5e6f27e1b1a1ae5aa990074209fcfae473222"
     description: "ERC20 reward token"
   - name: "RecyclingRegistry"
     deployed: true
+    address: "0x18590db5176e85785fb859b4b96e99b0a4d2f817"
     description: "Registry of recycling events"
-  - name: "VoucherNFT"
-    deployed: true
-    description: "NFT vouchers for rewards"
   - name: "ChallengeManager"
     deployed: true
+    address: "0x1507efa34a2f9e33ed491526132bfaf6a5c50c97"
     description: "Gamification challenges"
+  - name: "VoucherNFT"
+    deployed: true
+    address: "0x188496b92fb6580dfd9159c40fd5bf4fb438d729"
+    description: "NFT vouchers for rewards"
 repo: "https://github.com/eeelien/eco-eeelien-monad"
 messages: 342
 errors:
@@ -56,7 +58,6 @@ errors:
 ## 👥 Miembros del Equipo
 - **39eliens** — Desarrollo principal, IoT
 - **Carlos Navarrete** — Co-desarrollo
-- **SergioGutierrezVillwornet** — Smart contracts
 
 ## 🔧 Stack Técnico
 - **Hardware:** ESP32-CAM (cámara IoT)
@@ -66,71 +67,14 @@ errors:
 - **Deploy:** Vercel
 - **Blockchain:** Monad Testnet (Chain ID 10143)
 
-## 📜 Contratos Deployados (4)
+## 📜 Contratos Deployados (4) ✅ VERIFICADOS ON-CHAIN
 
-### 1. EcoToken.sol ✅ DEPLOYED
-```solidity
-// ERC20 reward token
-contract EcoToken is ERC20 {
-    address: 0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9
-    
-    function mint(address to, uint256 amount) external onlyMinter;
-    function burn(uint256 amount) external;
-}
-```
-
-### 2. RecyclingRegistry.sol ✅ DEPLOYED
-```solidity
-// Registro de eventos de reciclaje
-struct RecycleEvent {
-    address user;
-    string materialType;
-    uint256 weight;
-    uint256 timestamp;
-    bytes32 imageHash;
-}
-
-function registerRecycle(string materialType, uint256 weight, bytes32 imageHash) external;
-function getHistory(address user) external view returns (RecycleEvent[] memory);
-```
-
-### 3. VoucherNFT.sol ✅ DEPLOYED
-```solidity
-// NFT vouchers canjeables
-function mintVoucher(address to, string rewardType) external;
-function redeemVoucher(uint256 tokenId) external;
-```
-
-### 4. ChallengeManager.sol ✅ DEPLOYED
-```solidity
-// Sistema de gamificación
-struct Challenge {
-    string name;
-    uint256 targetWeight;
-    uint256 rewardAmount;
-    uint256 deadline;
-}
-
-function createChallenge(...) external;
-function completeChallenge(uint256 challengeId) external;
-```
-
-## 📂 Estructura del Repo
-```
-eco-eeelien-monad/
-├── contracts/
-│   ├── EcoToken.sol
-│   ├── RecyclingRegistry.sol
-│   ├── VoucherNFT.sol
-│   └── ChallengeManager.sol
-├── frontend/
-│   └── Next.js + WalletConnect
-├── hardware/
-│   └── ESP32-CAM code
-├── ai/
-│   └── image classification
-└── foundry.toml
-```
+| Contrato | Address |
+|----------|---------|
+| EcoToken | `0x03b5e6f27e1b1a1ae5aa990074209fcfae473222` |
+| RecyclingRegistry | `0x18590db5176e85785fb859b4b96e99b0a4d2f817` |
+| ChallengeManager | `0x1507efa34a2f9e33ed491526132bfaf6a5c50c97` |
+| VoucherNFT | `0x188496b92fb6580dfd9159c40fd5bf4fb438d729` |
 
 ## ⏰ Timeline de Actividad
 - **~15:30 UTC** — Inicio, arquitectura IoT + blockchain
@@ -147,20 +91,10 @@ eco-eeelien-monad/
 - **Solución:** Actualizar chain config
 - **Tiempo perdido:** ~1 hora
 
-### 2. WalletConnect Integration
-- **Problema:** WalletConnect no conectaba con Monad
-- **Solución:** aibus-dumbleclaw configuró chain custom
-- **Tiempo perdido:** ~1 hora
-
-### 3. Token de GitHub expuesto (CRÍTICO)
+### 2. Token de GitHub expuesto (CRÍTICO)
 - **Problema:** 39eliens pegó token en Discord público
 - **Impacto:** Seguridad comprometida
 - **Solución:** Token revocado inmediatamente
-- **Lección:** NUNCA compartir tokens en chats
-
-### 4. ESP32-CAM Integration
-- **Problema:** Conectar hardware IoT con frontend web
-- **Solución:** Arquitectura definida, integración completa post-hackathon
 
 ## 📈 Curva de Aprendizaje
 - **Nivel inicial:** Intermedio-avanzado — experiencia en IoT, nuevos en Solidity
@@ -177,22 +111,6 @@ eco-eeelien-monad/
 - **Contratos deployados:** ✅ 4 contratos en Monad Testnet
 - **Frontend deployado:** ✅ En Vercel
 - **Hardware:** ✅ ESP32-CAM integrado (parcial)
-- **Errores resueltos:** 4
-
-## 💡 Insights para DevRel
-
-**Por qué importa:**
-- Reciclaje = problema global con incentivos rotos
-- Tokenización = alinea incentivos económicos
-- IoT + blockchain = verificación física
-
-**Potencial post-Blitz:**
-- Piloto en colonias de CDMX
-- Partnership con empresas de reciclaje
-- Integración con sistemas municipales
-
-**Diferenciador único:**
-Único proyecto del Blitz con hardware físico.
 
 ## ✅ Estado Final
-🟢 **COMPLETADO** — Proyecto más activo y completo del Blitz. 4 contratos deployados, frontend funcional, hardware definido. Combinación única de IoT + IA + blockchain. Ejemplo de lo que es posible en un hackathon de 1 día.
+🟢 **COMPLETADO** — Proyecto más activo y completo del Blitz. 4 contratos deployados con addresses verificadas. Combinación única de IoT + IA + blockchain.

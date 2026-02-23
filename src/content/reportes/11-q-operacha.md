@@ -19,8 +19,8 @@ techStack:
 contracts:
   - name: "CoperachaInteligente"
     deployed: true
-    address: ""
-    description: "Cooperative savings with AI risk (address pendiente verificar)"
+    address: "0xa1Fa467A046Cd3DD9eE2De2b2043cDa4175E3b9C"
+    description: "Cooperative savings with AI risk"
 repo: "https://github.com/LexBP11/qoperacha_hack"
 deployUrl: "https://qoperacha.vercel.app"
 messages: 73

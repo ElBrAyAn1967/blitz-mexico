@@ -55,14 +55,17 @@ El Monad Blitz CDMX fue un hackathon presencial de 1 día con **18 proyectos ana
 
 ## 🏆 Proyectos Destacados por Categoría
 
-### Tier 1: Contratos Deployados
+### Tier 1: Contratos Deployados ✅ VERIFICADOS ON-CHAIN
 
-| Proyecto | Contratos | Address | Verificado |
-|----------|-----------|---------|------------|
-| **Eco Eeelien** | EcoToken + 3 más | `0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9` | ✅ On-chain |
-| **Antaria** | AnchorRegistry | `0xB284Dd77dcdc080d7c5548592768A6E6188e5381` | ✅ On-chain |
-| **MARP** | MARP, BlitzCollection | (address pendiente) | ⚠️ Reportado |
-| **Q-Operacha** | CoperachaInteligente | (address pendiente) | ⚠️ Reportado |
+| Proyecto | Contrato | Address |
+|----------|----------|---------|
+| **Eco Eeelien** | EcoToken | `0x03b5e6f27e1b1a1ae5aa990074209fcfae473222` |
+| **Eco Eeelien** | RecyclingRegistry | `0x18590db5176e85785fb859b4b96e99b0a4d2f817` |
+| **Eco Eeelien** | ChallengeManager | `0x1507efa34a2f9e33ed491526132bfaf6a5c50c97` |
+| **Eco Eeelien** | VoucherNFT | `0x188496b92fb6580dfd9159c40fd5bf4fb438d729` |
+| **Antaria** | AnchorRegistry | `0xB284Dd77dcdc080d7c5548592768A6E6188e5381` |
+| **Q-Operacha** | CoperachaInteligente | `0xa1Fa467A046Cd3DD9eE2De2b2043cDa4175E3b9C` |
+| **MARP** | MARP, BlitzCollection | ⚠️ (repo privado, address no disponible) |
 
 ### Tier 2: Contratos Desarrollados (8)
 
