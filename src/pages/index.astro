@@ -3,12 +3,12 @@ import Layout from '../layouts/Layout.astro';
 const threads = [
   { emoji: "📚", name: "Monad101 Blitz", msgs: 400, time: "18:58", status: "Onboarding masivo", color: "blue" },
   { emoji: "🛒", name: "Monazon", msgs: 323, time: "19:19", status: "Contratos deployados", color: "green" },
-  { emoji: "🌱", name: "Eco Eeelien", msgs: 317, time: "21:26", status: "Frontend + contratos listos", color: "emerald" },
-  { emoji: "🇲🇽", name: "Axel & equipo (Solidario MX)", msgs: 196, time: "18:35", status: "Deployado en Vercel", color: "yellow" },
-  { emoji: "💜", name: "MARP", msgs: 107, time: "21:14", status: "Pitch + contrato live", color: "purple" },
-  { emoji: "📊", name: "Clob.mad", msgs: 50, time: "20:22", status: "Archivado → pivotó a MARP", color: "gray" },
-  { emoji: "🏥", name: "MediTrack", msgs: 30, time: "21:40", status: "MVP UI construido", color: "red" },
-  { emoji: "📱", name: "AgenteConsumo", msgs: 7, time: "21:00", status: "Arquitectura definida", color: "orange" },
+  { emoji: "🌱", name: "Ecoeeelien Monad", msgs: 317, time: "21:26", status: "2 contratos live en testnet ✅ (25%)", color: "emerald" },
+  { emoji: "🇲🇽", name: "Solidario México (Axel)", msgs: 196, time: "18:35", status: "Deployado en Vercel ✅", color: "yellow" },
+  { emoji: "💜", name: "MARP", msgs: 107, time: "21:14", status: "Contrato live + pitch bilingüe ✅", color: "purple" },
+  { emoji: "📊", name: "CLOB.nad", msgs: 50, time: "20:22", status: "2 miembros — Iniciando", color: "gray" },
+  { emoji: "🏥", name: "Registros Médicos", msgs: 30, time: "21:40", status: "4 miembros — MVP UI (25%)", color: "red" },
+  { emoji: "📱", name: "AgenteConsumo (BOTazo)", msgs: 7, time: "21:00", status: "PWA mobile-first", color: "orange" },
 ];
 const agents = [
   { name: "devrel-banana 🍌", threads: 8, hours: "~8h", specialty: "Onboarding, arquitectura, pitches", active: true },
@@ -42,9 +42,9 @@ const errors = [
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 max-w-3xl mx-auto">
       {[
         { label: "Mensajes totales", value: "~1,430+", icon: "💬" },
-        { label: "Proyectos activos", value: "8", icon: "🛠️" },
-        { label: "Horas de hackathon", value: "~10h", icon: "⏱️" },
-        { label: "Agentes activos", value: "2", icon: "🤖" },
+        { label: "Proyectos totales", value: "13+", icon: "🛠️" },
+        { label: "Devs participantes", value: "35+", icon: "👩‍💻" },
+        { label: "Agentes activos", value: "2/5", icon: "🤖" },
       ].map(s => (
         <div class="bg-purple-900/20 border border-purple-800/30 rounded-xl p-4">
           <div class="text-3xl mb-1">{s.icon}</div>
@@ -54,6 +54,39 @@ const errors = [
       ))}
     </div>
   </div>
+
+  <!-- Ground truth projects highlight -->
+  <section class="mb-12">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-2xl font-bold flex items-center gap-2"><span class="text-green-400">🎯</span> Proyectos Confirmados</h2>
+      <a href="/proyectos" class="text-sm text-purple-400 hover:text-purple-300 border border-purple-800/40 rounded-lg px-3 py-1.5 hover:border-purple-600/50 transition-all">Ver todos →</a>
+    </div>
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
+      {[
+        { emoji:"🎮", name:"FanSlayer", phase:"38.12% 🏆", members:3, type:"Web3 Gaming + NFTs", star:4 },
+        { emoji:"🤝", name:"Antaria", phase:"Contratos", members:1, type:"Tandas + WhatsApp", star:5 },
+        { emoji:"🥑", name:"Perséa Protocol", phase:"Pitch completo", members:null, type:"AgriTech LATAM", star:5 },
+        { emoji:"💜", name:"MARP", phase:"Contrato live ✅", members:null, type:"Agent Reputation", star:5 },
+        { emoji:"🏢", name:"7AYLABS", phase:"Smart contracts", members:6, type:"Proof of Presence", star:4 },
+        { emoji:"💚", name:"ClearHope", phase:"20%", members:4, type:"Donativos México", star:4 },
+        { emoji:"🌱", name:"Ecoeeelien", phase:"25% — 2 contratos ✅", members:2, type:"Reciclaje + tokens", star:4 },
+        { emoji:"🏥", name:"Registros Médicos", phase:"25%", members:4, type:"HealthTech", star:3 },
+      ].map(p => (
+        <div class="bg-[#0f0f1a] border border-purple-900/30 hover:border-purple-700/50 rounded-xl p-4 transition-all group">
+          <div class="flex items-start justify-between mb-2">
+            <span class="text-xl">{p.emoji}</span>
+            <span class="text-yellow-400 text-xs">{"⭐".repeat(p.star)}</span>
+          </div>
+          <div class="font-semibold text-white text-sm mb-1">{p.name}</div>
+          <div class="text-xs text-purple-300 mb-2">{p.type}</div>
+          <div class="text-xs text-gray-500 flex items-center justify-between">
+            <span>{p.phase}</span>
+            {p.members && <span>{p.members}👤</span>}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
 
   <!-- Timeline -->
   <section class="mb-12">
