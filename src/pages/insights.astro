@@ -1,0 +1,158 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+<Layout title="Insights y Recomendaciones">
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold mb-2">💡 Insights y Recomendaciones</h1>
+    <p class="text-gray-400">Post-mortem del Monad Blitz CDMX — Lo que funcionó, lo que no, y qué mejorar</p>
+  </div>
+
+  <!-- Friction points -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2"><span class="text-red-400">🚨</span> Top 5 Friction Points</h2>
+    <div class="space-y-4">
+      {[
+        { n:1, title:"Setup en Windows", sev:"HIGH", desc:"Git Bash + Windows genera errores distintos a macOS. git clone en directorio no vacío da error diferente. El equipo de Axel gastó +1h solo en setup.", sol:"Guía específica de Windows para el próximo blitz. Step-by-step con screenshots.", impact:"Axel & equipo: 196 msgs solo de setup básico" },
+        { n:2, title:"Chain ID incorrecto — múltiples equipos", sev:"HIGH", desc:"Monazon llegó con mainnet hardcodeada. Confusión entre 143 (mainnet?) y 10143 (testnet). Error silencioso — el código 'funciona' pero en la red equivocada.", sol:"Big banner en el template README. Mensaje de inicio del agente con el chain ID correcto.", impact:"Monazon: 5 bugs críticos, todos relacionados" },
+        { n:3, title:"WalletConnect projectId", sev:"MED", desc:"Participantes no sabían que necesitaban registrarse en cloud.walletconnect.com. Usaron placeholders como 'eco-eeelien-monad-blitz' como ID real.", sol:"Incluir paso de WalletConnect en el onboarding inicial. Dar un projectId de demo para el blitz.", impact:"Eco Eeelien: build fallando por este bug" },
+        { n:4, title:"Comandos copiados y pegados todos juntos", sev:"MED", desc:"Participantes copiaban bloques de 3-4 comandos y los corrían sin esperar. Causaba errores en cadena muy difíciles de debuggear porque el error no era del último comando.", sol:"Comandos con pasos numerados + texto explícito 'espera que termine cada uno antes de continuar'.", impact:"Axel & equipo: loop de errores innecesarios" },
+        { n:5, title:"Llegada tardía", sev:"LOW", desc:"MediTrack llegó a las 21:40 UTC, solo 4 horas antes del code freeze. Alcanzaron un MVP pero fue muy acelerado y el contrato no se escribió.", sol:"Comunicar explícitamente que el setup pre-blitz es OBLIGATORIO. Check-in digital antes del evento.", impact:"MediTrack: solo 30 msgs, contrato pendiente" },
+      ].map(f => (
+        <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
+          <div class="flex items-start gap-3 mb-3">
+            <span class={`text-xs font-bold px-2 py-1 rounded shrink-0 ${f.sev === 'HIGH' ? 'bg-red-900/50 text-red-400 border border-red-800/50' : 'bg-yellow-900/40 text-yellow-400 border border-yellow-700/40'}`}>{f.sev}</span>
+            <h3 class="font-bold text-white">#{f.n} {f.title}</h3>
+          </div>
+          <p class="text-sm text-gray-400 mb-3">{f.desc}</p>
+          <div class="grid md:grid-cols-2 gap-3">
+            <div class="bg-green-900/20 border border-green-800/30 rounded-lg p-3">
+              <div class="text-xs text-green-400 font-semibold mb-1">✅ Solución</div>
+              <p class="text-xs text-gray-300">{f.sol}</p>
+            </div>
+            <div class="bg-blue-900/20 border border-blue-800/30 rounded-lg p-3">
+              <div class="text-xs text-blue-400 font-semibold mb-1">📊 Impacto observado</div>
+              <p class="text-xs text-gray-300">{f.impact}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Potencial post-blitz -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6">⭐ Equipos con Mayor Potencial Post-Blitz</h2>
+    <div class="grid md:grid-cols-2 gap-4">
+      {[
+        { emoji:"💜", name:"MARP", stars:5, why:"Concepto más maduro del blitz. Contrato live, pitch bilingüe, arquitectura sólida. 'MARP como la capa de confianza para todo el ecosistema agentic de Monad'.", action:"Conectar con Monad team. Post en X. Buscar grants." },
+        { emoji:"🥑", name:"Perséa Protocol", stars:5, why:"USD 320M/año sin capturar. Timing perfecto (ESG Europa 2027). Tech stack sólido (YOLOv8 + ESP32 + Monad). No tiene competencia directa.", action:"Introducir a fondos de impacto agroindustrial. Pre-seed USD 500K." },
+        { emoji:"🌱", name:"Eco Eeelien", stars:4, why:"Concepto más innovador: hardware físico + IA + blockchain. 2 contratos live. Diferenciador claro en el ecosistema.", action:"Conectar con Monad team. Workshop de WalletConnect para fix pendiente." },
+        { emoji:"🛒", name:"Monazon", stars:3, why:"Caso de uso real (pagos globales con stablecoins). Solo necesita resolver config bugs. ToryDom tenía repo propio antes del blitz.", action:"5 bugs ya corregidos. Próximo paso: deploy completo en Vercel." },
+        { emoji:"🏥", name:"MediTrack", stars:3, why:"Healthcare + blockchain es caso de uso real con impacto social. El MVP de UI ya existe.", action:"Escribir MediTrack.sol. Configurar Privy App ID. Deploy." },
+      ].map(p => (
+        <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="font-bold text-white text-lg">{p.emoji} {p.name}</h3>
+            <span class="text-yellow-400 text-lg">{"⭐".repeat(p.stars)}</span>
+          </div>
+          <p class="text-sm text-gray-400 mb-3">{p.why}</p>
+          <div class="bg-purple-900/20 border border-purple-800/30 rounded-lg p-2">
+            <span class="text-xs text-purple-300">🎯 Próxima acción: </span>
+            <span class="text-xs text-gray-300">{p.action}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Curva de aprendizaje -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6">🎓 Curva de Aprendizaje por Equipo</h2>
+    <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-6">
+      <div class="flex items-end gap-1 mb-4 h-24 relative">
+        <div class="absolute bottom-0 left-0 right-0 border-t border-gray-800 text-xs text-gray-600 pt-1">PRINCIPIANTE</div>
+        <div class="absolute top-0 left-0 right-0 border-b border-gray-800 text-xs text-gray-600 pb-1">AVANZADO</div>
+        {[
+          { name:"Axel", pct:10, color:"bg-red-500" },
+          { name:"AgenteConsumo", pct:25, color:"bg-orange-500" },
+          { name:"MediTrack", pct:40, color:"bg-blue-500" },
+          { name:"Monazon", pct:55, color:"bg-yellow-500" },
+          { name:"Eco Eeelien", pct:70, color:"bg-emerald-500" },
+          { name:"MARP", pct:90, color:"bg-purple-500" },
+          { name:"Clob.mad", pct:92, color:"bg-purple-700" },
+        ].map(b => (
+          <div class="flex-1 flex flex-col items-center gap-1">
+            <div class={`w-full ${b.color} rounded-t`} style={`height:${b.pct}%`}></div>
+          </div>
+        ))}
+      </div>
+      <div class="flex gap-1">
+        {["Axel", "Consumo", "MediTrack", "Monazon", "Eco", "MARP", "Clob"].map(n => (
+          <div class="flex-1 text-center text-xs text-gray-500 truncate">{n}</div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Recomendaciones -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6">🔧 Recomendaciones para el Próximo Blitz</h2>
+    <div class="grid md:grid-cols-3 gap-4">
+      {[
+        { phase: "Pre-evento", icon:"📋", items:[
+          "Guía de pre-setup: Node v20+, Foundry, Git, WalletConnect projectId",
+          "Guía específica Windows con screenshots",
+          "Anunciar chain ID = 10143 en TODOS los canales",
+          "Check-in digital 48h antes para verificar setup",
+        ]},
+        { phase: "Durante el evento", icon:"⚡", items:[
+          "Abrir thread de proyecto desde el check-in (no en el blitz)",
+          "Recordatorio de code freeze: 2h antes y 30min antes",
+          "Agente de onboarding SEPARADO del agente de proyectos",
+          "Canal de errores comunes actualizado en tiempo real",
+        ]},
+        { phase: "Post-evento", icon:"🚀", items:[
+          "Conectar MARP y Eco Eeelien con Monad team ESTA SEMANA",
+          "Workshop de WalletConnect para equipos con placeholder",
+          "Seguimiento de repos — verificar que todos hayan pusheado",
+          "Post en X con resumen de proyectos + mención a equipos",
+        ]},
+      ].map(s => (
+        <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
+          <h3 class="font-bold text-white mb-3">{s.icon} {s.phase}</h3>
+          <ul class="space-y-2">
+            {s.items.map(i => (
+              <li class="flex items-start gap-2 text-sm text-gray-400">
+                <span class="text-purple-400 shrink-0 mt-0.5">→</span>
+                {i}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Métricas finales -->
+  <section>
+    <h2 class="text-2xl font-bold mb-6">📊 Métricas Finales del Blitz</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {[
+        { label:"Total mensajes", value:"~1,430+", icon:"💬" },
+        { label:"Threads activos", value:"7 + 1 archivado", icon:"🧵" },
+        { label:"Canal de onboarding", value:"400 msgs", icon:"📚" },
+        { label:"Contratos on-chain", value:"3+ confirmados", icon:"⛓️" },
+        { label:"Horas de hackathon", value:"~10h", icon:"⏱️" },
+        { label:"Agentes activos", value:"2/5", icon:"🤖" },
+        { label:"Proyectos con deploy", value:"2+ confirmados", icon:"🚀" },
+        { label:"Potencial post-blitz", value:"3 proyectos", icon:"⭐" },
+      ].map(m => (
+        <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-4 text-center">
+          <div class="text-2xl mb-2">{m.icon}</div>
+          <div class="text-xl font-bold text-white mb-1">{m.value}</div>
+          <div class="text-xs text-gray-400">{m.label}</div>
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,44 @@
+---
+export interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = "Reporte completo del Monad Blitz CDMX — Feb 21 2026" } = Astro.props;
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title} | Monad Blitz CDMX</title>
+  </head>
+  <body class="bg-[#0a0a0f] text-gray-100 min-h-screen font-sans">
+    <!-- Navbar -->
+    <nav class="border-b border-purple-900/40 sticky top-0 z-50 bg-[#0a0a0f]/95 backdrop-blur-sm">
+      <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="/" class="flex items-center gap-2 group">
+          <span class="text-2xl">🟣</span>
+          <span class="font-bold text-white group-hover:text-purple-400 transition-colors">Monad Blitz CDMX</span>
+          <span class="text-xs text-purple-400 border border-purple-700/50 rounded px-1.5 py-0.5">Feb 21 · 2026</span>
+        </a>
+        <div class="flex items-center gap-1 text-sm overflow-x-auto">
+          <a href="/" class="px-3 py-1.5 rounded-lg hover:bg-purple-900/30 hover:text-purple-300 transition-colors whitespace-nowrap">📊 Reporte</a>
+          <a href="/proyectos" class="px-3 py-1.5 rounded-lg hover:bg-purple-900/30 hover:text-purple-300 transition-colors whitespace-nowrap">🛠️ Proyectos</a>
+          <a href="/agentes" class="px-3 py-1.5 rounded-lg hover:bg-purple-900/30 hover:text-purple-300 transition-colors whitespace-nowrap">🤖 Agentes</a>
+          <a href="/insights" class="px-3 py-1.5 rounded-lg hover:bg-purple-900/30 hover:text-purple-300 transition-colors whitespace-nowrap">💡 Insights</a>
+        </div>
+      </div>
+    </nav>
+    <!-- Main -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+      <slot />
+    </main>
+    <!-- Footer -->
+    <footer class="border-t border-purple-900/30 mt-16 py-8 text-center text-gray-500 text-sm">
+      <p>Generado por <span class="text-purple-400">devrel-banana 🍌</span> + <span class="text-purple-400">aibus-dumbleclaw 🧙</span></p>
+      <p class="mt-1">Monad Blitz CDMX · Sábado 21 Feb 2026 · ~1,430+ mensajes analizados</p>
+    </footer>
+  </body>
+</html>

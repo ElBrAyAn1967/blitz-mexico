@@ -1,0 +1,178 @@
+---
+import Layout from '../layouts/Layout.astro';
+const threads = [
+  { emoji: "📚", name: "Monad101 Blitz", msgs: 400, time: "18:58", status: "Onboarding masivo", color: "blue" },
+  { emoji: "🛒", name: "Monazon", msgs: 323, time: "19:19", status: "Contratos deployados", color: "green" },
+  { emoji: "🌱", name: "Eco Eeelien", msgs: 317, time: "21:26", status: "Frontend + contratos listos", color: "emerald" },
+  { emoji: "🇲🇽", name: "Axel & equipo (Solidario MX)", msgs: 196, time: "18:35", status: "Deployado en Vercel", color: "yellow" },
+  { emoji: "💜", name: "MARP", msgs: 107, time: "21:14", status: "Pitch + contrato live", color: "purple" },
+  { emoji: "📊", name: "Clob.mad", msgs: 50, time: "20:22", status: "Archivado → pivotó a MARP", color: "gray" },
+  { emoji: "🏥", name: "MediTrack", msgs: 30, time: "21:40", status: "MVP UI construido", color: "red" },
+  { emoji: "📱", name: "AgenteConsumo", msgs: 7, time: "21:00", status: "Arquitectura definida", color: "orange" },
+];
+const agents = [
+  { name: "devrel-banana 🍌", threads: 8, hours: "~8h", specialty: "Onboarding, arquitectura, pitches", active: true },
+  { name: "aibus-dumbleclaw 🧙", threads: 5, hours: "~3h", specialty: "Debugging, builds, UIs", active: true },
+  { name: "Fruterito", threads: 0, hours: "—", specialty: "Sin actividad registrada", active: false },
+  { name: "kukulcan", threads: 0, hours: "—", specialty: "Sin actividad registrada", active: false },
+  { name: "Scarfdrilo", threads: 0, hours: "—", specialty: "Sin actividad registrada", active: false },
+];
+const errors = [
+  { n: 1, title: "git clone en dir no vacío", sol: "npx degit --force", severity: "HIGH" },
+  { n: 2, title: "WalletConnect projectId inválido", sol: "Registrar en cloud.walletconnect.com", severity: "MED" },
+  { n: 3, title: "Chain ID incorrecto (mainnet vs testnet)", sol: "Usar siempre 10143", severity: "HIGH" },
+  { n: 4, title: "npm install antes de que termine degit", sol: "Comandos uno por uno", severity: "MED" },
+  { n: 5, title: "forge create en lugar de forge script", sol: "SIEMPRE forge script --broadcast", severity: "HIGH" },
+];
+---
+<Layout title="Reporte Maestro">
+  <!-- Hero -->
+  <div class="text-center py-12 mb-12">
+    <div class="inline-flex items-center gap-2 bg-purple-900/30 border border-purple-700/40 rounded-full px-4 py-2 text-purple-300 text-sm mb-6">
+      <span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+      Sábado 21 de Febrero 2026 · Ciudad de México
+    </div>
+    <h1 class="text-5xl md:text-6xl font-bold mb-4">
+      <span class="text-white">Monad Blitz</span>
+      <span class="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent"> CDMX</span>
+    </h1>
+    <p class="text-gray-400 text-lg max-w-2xl mx-auto">Reporte completo generado por <span class="text-purple-400">devrel-banana 🍌</span> + <span class="text-purple-400">aibus-dumbleclaw 🧙</span> — análisis de todos los threads del hackathon</p>
+
+    <!-- Stats hero -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 max-w-3xl mx-auto">
+      {[
+        { label: "Mensajes totales", value: "~1,430+", icon: "💬" },
+        { label: "Proyectos activos", value: "8", icon: "🛠️" },
+        { label: "Horas de hackathon", value: "~10h", icon: "⏱️" },
+        { label: "Agentes activos", value: "2", icon: "🤖" },
+      ].map(s => (
+        <div class="bg-purple-900/20 border border-purple-800/30 rounded-xl p-4">
+          <div class="text-3xl mb-1">{s.icon}</div>
+          <div class="text-2xl font-bold text-white">{s.value}</div>
+          <div class="text-xs text-gray-400 mt-1">{s.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Timeline -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+      <span class="text-purple-400">📈</span> Curva de Aprendizaje — Timeline del Día
+    </h2>
+    <div class="relative pl-8">
+      <div class="absolute left-3 top-0 bottom-0 w-0.5 bg-purple-900/50"></div>
+      {[
+        { time: "15:43", event: "devrel-banana 🍌 se presenta en #blitz-general", tag: "Inicio" },
+        { time: "18:35", event: "Primer thread: Axel & equipo — setup básico", tag: "Proyectos" },
+        { time: "18:58", event: "Monad101 Blitz — onboarding masivo comienza (400 msgs)", tag: "Onboarding" },
+        { time: "19:19", event: "Monazon thread abierto — ToryDom con 5 bugs críticos", tag: "Debug" },
+        { time: "20:22", event: "Clob.mad thread abierto", tag: "Proyectos" },
+        { time: "21:00", event: "AgenteConsumo thread abierto", tag: "Proyectos" },
+        { time: "21:14", event: "MARP thread abierto — el más avanzado técnicamente", tag: "Proyectos" },
+        { time: "21:26", event: "Eco Eeelien thread — ESP32 + IA + Monad (concepto más innovador)", tag: "Proyectos" },
+        { time: "21:40", event: "MediTrack thread — llegaron tarde, aibus construyó MVP completo", tag: "Build" },
+        { time: "23:29", event: "Últimos mensajes de MARP — pitch prep final en Gamma", tag: "Pitch" },
+      ].map(e => (
+        <div class="relative mb-4 flex items-start gap-4">
+          <div class="absolute -left-5 w-2.5 h-2.5 rounded-full bg-purple-500 mt-1.5 ring-4 ring-[#0a0a0f]"></div>
+          <span class="text-purple-400 font-mono text-sm w-12 shrink-0 mt-0.5">{e.time}</span>
+          <span class="text-xs bg-purple-900/40 text-purple-300 border border-purple-800/40 rounded px-2 py-0.5 shrink-0">{e.tag}</span>
+          <span class="text-gray-300 text-sm">{e.event}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Threads table -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+      <span class="text-purple-400">🧵</span> Todos los Threads
+    </h2>
+    <div class="overflow-x-auto rounded-xl border border-purple-900/30">
+      <table class="w-full text-sm">
+        <thead class="bg-purple-900/20 text-purple-300 text-xs uppercase tracking-wider">
+          <tr>
+            <th class="text-left px-4 py-3">Proyecto</th>
+            <th class="text-right px-4 py-3">Mensajes</th>
+            <th class="text-left px-4 py-3">Hora inicio (UTC)</th>
+            <th class="text-left px-4 py-3">Estado final</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-purple-900/20">
+          {threads.map((t, i) => (
+            <tr class="hover:bg-purple-900/10 transition-colors">
+              <td class="px-4 py-3 font-medium">{t.emoji} {t.name}</td>
+              <td class="px-4 py-3 text-right">
+                <span class="font-mono font-bold text-purple-300">{t.msgs}</span>
+              </td>
+              <td class="px-4 py-3 font-mono text-gray-400">{t.time} UTC</td>
+              <td class="px-4 py-3 text-gray-300">{t.status}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Agents summary -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+      <span class="text-purple-400">🤖</span> Actividad de Agentes
+    </h2>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {agents.map(a => (
+        <div class={`rounded-xl border p-5 ${a.active ? 'bg-purple-900/20 border-purple-700/40' : 'bg-gray-900/30 border-gray-800/40 opacity-60'}`}>
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-bold text-white">{a.name}</span>
+            <span class={`w-2.5 h-2.5 rounded-full ${a.active ? 'bg-green-400' : 'bg-gray-600'}`}></span>
+          </div>
+          <div class="space-y-1 text-sm text-gray-400">
+            <div>Threads activos: <span class="text-white font-mono">{a.threads}</span></div>
+            <div>Tiempo activo: <span class="text-white">{a.hours}</span></div>
+            <div class="text-xs mt-2 text-gray-500">{a.specialty}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Top errors -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+      <span class="text-red-400">🚨</span> Errores más comunes del Blitz
+    </h2>
+    <div class="space-y-3">
+      {errors.map(e => (
+        <div class="flex items-start gap-4 bg-gray-900/40 border border-gray-800/40 rounded-xl p-4">
+          <span class={`text-xs font-bold px-2 py-1 rounded shrink-0 mt-0.5 ${e.severity === 'HIGH' ? 'bg-red-900/50 text-red-400 border border-red-800/50' : 'bg-yellow-900/40 text-yellow-400 border border-yellow-800/40'}`}>
+            {e.severity}
+          </span>
+          <div class="flex-1">
+            <div class="font-medium text-white text-sm">{e.title}</div>
+            <div class="text-xs text-gray-400 mt-1">✅ Solución: <code class="text-purple-300 bg-purple-900/30 px-1 rounded">{e.sol}</code></div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- CTA links -->
+  <section class="grid md:grid-cols-3 gap-4">
+    <a href="/proyectos" class="bg-purple-900/20 border border-purple-700/40 hover:border-purple-500/60 rounded-xl p-6 transition-all group">
+      <div class="text-3xl mb-3">🛠️</div>
+      <h3 class="font-bold text-white mb-1 group-hover:text-purple-300 transition-colors">Ver todos los proyectos</h3>
+      <p class="text-sm text-gray-400">Análisis detallado de cada equipo, stack, errores y curva de aprendizaje</p>
+    </a>
+    <a href="/agentes" class="bg-purple-900/20 border border-purple-700/40 hover:border-purple-500/60 rounded-xl p-6 transition-all group">
+      <div class="text-3xl mb-3">🤖</div>
+      <h3 class="font-bold text-white mb-1 group-hover:text-purple-300 transition-colors">Actividad de agentes</h3>
+      <p class="text-sm text-gray-400">Timeline hora por hora de devrel-banana y aibus-dumbleclaw</p>
+    </a>
+    <a href="/insights" class="bg-purple-900/20 border border-purple-700/40 hover:border-purple-500/60 rounded-xl p-6 transition-all group">
+      <div class="text-3xl mb-3">💡</div>
+      <h3 class="font-bold text-white mb-1 group-hover:text-purple-300 transition-colors">Insights y recomendaciones</h3>
+      <p class="text-sm text-gray-400">Friction points, potencial post-blitz y recomendaciones para el siguiente evento</p>
+    </a>
+  </section>
+</Layout>

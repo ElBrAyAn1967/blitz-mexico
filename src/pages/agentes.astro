@@ -1,0 +1,157 @@
+---
+import Layout from '../layouts/Layout.astro';
+const bananaTimeline = [
+  { time: "15:43", channel: "blitz-general", action: "🎉 Presentación: 'Soy Ana Banana, agente DevRel full-stack de Frutero para el Monad Blitz CDMX'" },
+  { time: "18:35", channel: "Axel & equipo", action: "🔧 Abre thread, comienza onboarding — setup de Git, Node, template" },
+  { time: "18:58", channel: "Monad101 Blitz", action: "📚 Onboarding masivo: guía PASO 1-5, comandos listos para copiar" },
+  { time: "19:19", channel: "Monazon", action: "🛒 Entra al thread de ToryDom, comienza revisión del código" },
+  { time: "19:45–21:13", channel: "Monazon", action: "🐛 Debug de chain IDs y RPCs incorrectas (junto con aibus)" },
+  { time: "19:50", channel: "Monad101 Blitz", action: "📚 Continúa onboarding: template + niveles (Nuevo/Intermedio/Pro)" },
+  { time: "20:07", channel: "Monad101 Blitz", action: "⚡ Paso 5-7: Foundry install, dependencias, VSCode" },
+  { time: "20:15", channel: "Axel & equipo", action: "🔧 Git remote setup con repo de Axl5136/Blitz-Proyect-2026" },
+  { time: "20:22", channel: "Clob.mad", action: "📊 Entra al thread, propone stack Foundry + Next.js, genera estructura" },
+  { time: "20:34", channel: "Axel & equipo", action: "🔍 Verifica que Node v22 está ok" },
+  { time: "20:35–20:40", channel: "Axel & equipo", action: "🐛 Loop: git clone → degit → --force hasta resolución ✅" },
+  { time: "20:44", channel: "Clob.mad", action: "🏗️ Genera estructura completa del proyecto CLOB + prompt para Cursor" },
+  { time: "21:06", channel: "Monazon", action: "📋 Reporte a Mel (@troopdegen): '5 bugs críticos corregidos, wallet fondeada'" },
+  { time: "21:14", channel: "MARP", action: "💜 Entra al thread, pregunta si tienen repo iniciado" },
+  { time: "21:15", channel: "MARP", action: "📐 Stack + foundry.toml + starter link + esqueleto MARP.sol" },
+  { time: "21:26", channel: "Eco Eeelien", action: "🌱 Bienvenida a 39eliens, pregunta sobre el proyecto" },
+  { time: "21:35", channel: "Eco Eeelien", action: "📦 División de trabajo: Líder (contratos) + Colaborador (frontend), incluye addresses" },
+  { time: "21:40", channel: "MediTrack", action: "🏥 Entra al thread, explora 4 casos de uso blockchain para médicos" },
+  { time: "21:41", channel: "MediTrack", action: "🚀 Recomienda starter, ofrece guía paso a paso" },
+  { time: "21:42", channel: "Eco Eeelien", action: "📤 Instrucciones completas: git init + push a GitHub + deploy en Vercel" },
+  { time: "21:47", channel: "MediTrack", action: "🛠️ Construye scaffolding: Next.js + TypeScript + Tailwind + Privy + wagmi" },
+  { time: "~22:13", channel: "Monazon", action: "🏗️ Describe arquitectura completa: SQLite + Drizzle ORM + Next.js Server Actions" },
+  { time: "~23:06", channel: "MARP", action: "📊 Genera prompt completo de slides Lean Canvas (EN)" },
+  { time: "~23:08", channel: "MARP", action: "🇲🇽 Versión en español del pitch completo" },
+  { time: "~23:27", channel: "MARP", action: "🇺🇸 Versión en inglés del pitch (bilingüe)" },
+  { time: "~23:29", channel: "MARP", action: "🎨 Instrucciones Gamma.app: Dark theme, color #836EF9" },
+];
+const aibusTimeline = [
+  { time: "19:45", channel: "Monazon", action: "🔍 Detecta 5 bugs críticos: chain IDs, RPCs, imports duplicados, README typo" },
+  { time: "20:44", channel: "Clob.mad", action: "🤖 Genera prompt completo para Cursor con arquitectura CLOB detallada" },
+  { time: "21:17", channel: "MARP", action: "🎨 Propone estrategia 'modo cirujano': mock data → layout → wallet" },
+  { time: "21:58", channel: "MediTrack", action: "✅ Construye MVP completo: Vista Doctor + Vista Paciente (HTML funcional)" },
+  { time: "22:28", channel: "Eco Eeelien", action: "🌐 Construye frontend HTML completo: ESP32-CAM → IA → Monad → ECO" },
+  { time: "22:35", channel: "Eco Eeelien", action: "🐛 Detecta WalletConnect projectId inválido, documenta para fix" },
+];
+---
+<Layout title="Actividad de Agentes">
+  <div class="mb-8">
+    <h1 class="text-4xl font-bold mb-2">🤖 Actividad de Agentes</h1>
+    <p class="text-gray-400">Timeline completo hora por hora — Sábado 21 de Febrero 2026</p>
+  </div>
+
+  <!-- Comparativa rápida -->
+  <div class="grid md:grid-cols-2 gap-6 mb-12">
+    <div class="bg-purple-900/20 border border-purple-700/40 rounded-2xl p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-3xl">🍌</span>
+        <div>
+          <h2 class="text-xl font-bold text-white">devrel-banana</h2>
+          <p class="text-purple-400 text-sm">Ana Banana · DevRel Frutero</p>
+        </div>
+        <span class="ml-auto w-3 h-3 bg-green-400 rounded-full"></span>
+      </div>
+      <div class="grid grid-cols-3 gap-3 mb-4">
+        {[{l:"Threads", v:"8"},{l:"Activo", v:"~8h"},{l:"Mensajes", v:"200+"}].map(s=>(
+          <div class="text-center bg-purple-900/30 rounded-lg p-2">
+            <div class="text-lg font-bold text-white">{s.v}</div>
+            <div class="text-xs text-gray-400">{s.l}</div>
+          </div>
+        ))}
+      </div>
+      <div class="text-sm text-gray-300 space-y-1">
+        <div>🏆 <strong>Especialidad:</strong> Onboarding, arquitectura, pitches, deploy</div>
+        <div>⏰ Primera acción: 15:43 UTC</div>
+        <div>⏰ Última acción: ~23:29 UTC</div>
+        <div>💡 Estilo: Guía paso a paso, explica el "por qué"</div>
+      </div>
+    </div>
+
+    <div class="bg-purple-900/20 border border-purple-700/40 rounded-2xl p-6">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="text-3xl">🧙</span>
+        <div>
+          <h2 class="text-xl font-bold text-white">aibus-dumbleclaw</h2>
+          <p class="text-purple-400 text-sm">PMO Ops · Frutero Club</p>
+        </div>
+        <span class="ml-auto w-3 h-3 bg-green-400 rounded-full"></span>
+      </div>
+      <div class="grid grid-cols-3 gap-3 mb-4">
+        {[{l:"Threads", v:"5"},{l:"Activo", v:"~3h"},{l:"Mensajes", v:"80+"}].map(s=>(
+          <div class="text-center bg-purple-900/30 rounded-lg p-2">
+            <div class="text-lg font-bold text-white">{s.v}</div>
+            <div class="text-xs text-gray-400">{s.l}</div>
+          </div>
+        ))}
+      </div>
+      <div class="text-sm text-gray-300 space-y-1">
+        <div>🏆 <strong>Especialidad:</strong> Debugging, construir UIs, prompts para agentes</div>
+        <div>⏰ Primera acción: ~19:45 UTC</div>
+        <div>⏰ Última acción: ~22:35 UTC</div>
+        <div>💡 Estilo: Hace el trabajo directamente, entrega código</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Timeline devrel-banana -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6">🍌 Timeline devrel-banana</h2>
+    <div class="relative pl-6">
+      <div class="absolute left-2 top-0 bottom-0 w-0.5 bg-purple-800/50"></div>
+      {bananaTimeline.map(e => (
+        <div class="relative mb-3 flex items-start gap-3">
+          <div class="absolute -left-4 w-2 h-2 rounded-full bg-purple-500 mt-1.5 ring-3 ring-[#0a0a0f]"></div>
+          <span class="font-mono text-xs text-purple-400 w-20 shrink-0 mt-0.5">{e.time}</span>
+          <span class="text-xs bg-gray-800/60 border border-gray-700/40 rounded px-2 py-0.5 shrink-0 text-gray-400">{e.channel}</span>
+          <span class="text-sm text-gray-300">{e.action}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Timeline aibus -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6">🧙 Timeline aibus-dumbleclaw</h2>
+    <div class="relative pl-6">
+      <div class="absolute left-2 top-0 bottom-0 w-0.5 bg-purple-800/50"></div>
+      {aibusTimeline.map(e => (
+        <div class="relative mb-3 flex items-start gap-3">
+          <div class="absolute -left-4 w-2 h-2 rounded-full bg-purple-500 mt-1.5 ring-3 ring-[#0a0a0f]"></div>
+          <span class="font-mono text-xs text-purple-400 w-20 shrink-0 mt-0.5">{e.time}</span>
+          <span class="text-xs bg-gray-800/60 border border-gray-700/40 rounded px-2 py-0.5 shrink-0 text-gray-400">{e.channel}</span>
+          <span class="text-sm text-gray-300">{e.action}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Pre-blitz aibus -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-4">📋 aibus-dumbleclaw — Pre-Blitz</h2>
+    <div class="bg-gray-900/40 border border-gray-800/40 rounded-xl p-5 space-y-2 text-sm text-gray-300">
+      <div>🗓️ <strong>Feb 18:</strong> Reportó estado del Sprint Board — Monad Blitz CDMX #1 en High priority</div>
+      <div>🗓️ <strong>Feb 18:</strong> Creó tareas en Notion: repo, venue, anuncio del evento</div>
+      <div>🗓️ <strong>Feb 19:</strong> Creó tarea de fotógrafo/videógrafo para el evento</div>
+      <div>🗓️ <strong>Feb 20:</strong> Sprint Board update — Brian tenía repos GDL, MTY, CDMX 2 in progress</div>
+    </div>
+  </section>
+
+  <!-- Agentes inactivos -->
+  <section>
+    <h2 class="text-2xl font-bold mb-4">👀 Agentes sin actividad en el Blitz</h2>
+    <div class="grid md:grid-cols-3 gap-4">
+      {["Fruterito", "kukulcan", "Scarfdrilo"].map(a => (
+        <div class="bg-gray-900/30 border border-gray-800/30 rounded-xl p-4 opacity-60">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-gray-600"></span>
+            <span class="font-medium text-gray-400">{a}</span>
+          </div>
+          <p class="text-xs text-gray-600 mt-2">Sin mensajes detectados en los threads del blitz. Pueden haber estado activos en otros canales no analizados.</p>
+        </div>
+      ))}
+    </div>
+  </section>
+</Layout>
