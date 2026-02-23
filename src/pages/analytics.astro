@@ -4,30 +4,26 @@ import { getCollection } from 'astro:content';
 const allProjects = await getCollection('reportes');
 const projects = allProjects.filter(p => p.data.slug !== 'summary');
 
-// Compute KPIs
 const totalProjects = projects.length;
 const totalMembers = projects.reduce((s, p) => s + p.data.members, 0);
 const totalMessages = projects.reduce((s, p) => s + p.data.messages, 0);
 const deployedContracts = projects.reduce((s, p) => s + p.data.contracts.filter(c => c.deployed).length, 0);
 const reposVerified = projects.filter(p => p.data.repo).length;
 const allErrors = projects.flatMap(p => p.data.errors.map(e => ({ ...e, project: p.data.title })));
+const completionRate = Math.round((projects.filter(p => p.data.contracts.some(c => c.deployed)).length / totalProjects) * 100);
 
-// Tech frequency
 const techFreq: Record<string, number> = {};
 projects.forEach(p => p.data.techStack.forEach(t => { techFreq[t] = (techFreq[t] || 0) + 1; }));
 const techSorted = Object.entries(techFreq).sort((a, b) => b[1] - a[1]);
 
-// Area distribution
 const areaFreq: Record<string, number> = {};
 projects.forEach(p => { areaFreq[p.data.area] = (areaFreq[p.data.area] || 0) + 1; });
 
-// Progress data (sorted desc)
 const progressData = projects
   .filter(p => p.data.phase > 0)
   .sort((a, b) => b.data.phase - a.data.phase)
   .map(p => ({ name: p.data.title, phase: p.data.phase, status: p.data.status }));
 
-// Error categories
 const errorCats: Record<string, number> = {};
 allErrors.forEach(e => {
   let cat = 'Otro';
@@ -41,313 +37,480 @@ allErrors.forEach(e => {
   errorCats[cat] = (errorCats[cat] || 0) + 1;
 });
 
-// Status distribution
 const statusFreq: Record<string, number> = {};
 projects.forEach(p => { statusFreq[p.data.status] = (statusFreq[p.data.status] || 0) + 1; });
-
-// Severity counts
-const severityCounts: Record<string, number> = {};
-allErrors.forEach(e => { severityCounts[e.severity] = (severityCounts[e.severity] || 0) + 1; });
-
-const completionRate = Math.round((projects.filter(p => p.data.contracts.some(c => c.deployed)).length / totalProjects) * 100);
 ---
 <html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Analytics — Monad Blitz CDMX</title>
+  <title>Dashboard Analitico — Monad Blitz CDMX</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     :root {
-      --bg: #0f0a1a;
-      --card: #1a1128;
-      --border: #2d2244;
-      --text: #e2ddf0;
-      --muted: #8b82a8;
+      --bg: #09071a;
+      --surface: #110e24;
+      --card: #171333;
+      --card-hover: #1e1940;
+      --border: #2a2452;
+      --border-glow: #6d28d9;
+      --text: #eae6f7;
+      --muted: #9890b8;
+      --dim: #6b6190;
       --primary: #a855f7;
-      --primary-dim: #7c3aed;
+      --primary-light: #c084fc;
       --orange: #ff9500;
-      --red: #f6464f;
-      --green: #9ed22d;
+      --red: #ef4444;
+      --green: #22c55e;
       --blue: #3b82f6;
       --cyan: #06b6d4;
       --pink: #ec4899;
       --amber: #f59e0b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; padding: 1.5rem; }
-    .container { max-width: 1200px; margin: 0 auto; }
-    a { color: var(--primary); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .nav { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2rem; flex-wrap: wrap; }
-    .nav a { color: var(--muted); font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem; }
-    .nav a:hover { color: var(--primary); text-decoration: none; }
-    .nav svg { width: 16px; height: 16px; }
-    h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem; }
-    .subtitle { color: var(--muted); margin-bottom: 2rem; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
 
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-    .kpi { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; text-align: center; }
-    .kpi .num { font-size: 2.2rem; font-weight: 700; }
-    .kpi .lbl { font-size: 0.8rem; color: var(--muted); margin-top: 0.15rem; }
-    .kpi .ico { margin-bottom: 0.5rem; }
-    .kpi .ico svg { width: 24px; height: 24px; stroke: var(--primary); }
-    .kpi.orange .num { color: var(--orange); }
-    .kpi.green .num { color: var(--green); }
-    .kpi.red .num { color: var(--red); }
-    .kpi.blue .num { color: var(--blue); }
-    .kpi.purple .num { color: var(--primary); }
-
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 480px), 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
-    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
-    .card h3 { font-size: 1rem; font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-    .card h3 svg { width: 18px; height: 18px; stroke: var(--primary); }
-    .card canvas { max-height: 320px; }
-
-    .error-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    .error-table th { background: rgba(168,85,247,0.15); color: var(--primary); padding: 0.6rem 0.75rem; text-align: left; font-weight: 600; }
-    .error-table td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); }
-    .error-table tr:hover td { background: rgba(168,85,247,0.05); }
-    .tag { display: inline-block; padding: 0.15em 0.5em; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
-    .tag-critical { background: rgba(246,70,79,0.2); color: var(--red); }
-    .tag-high { background: rgba(255,149,0,0.2); color: var(--orange); }
-    .tag-medium { background: rgba(245,158,11,0.2); color: var(--amber); }
-    .tag-low { background: rgba(158,210,45,0.2); color: var(--green); }
-    .tag-resolved { background: rgba(59,130,246,0.2); color: var(--blue); }
-    .tag-unresolved { background: rgba(246,70,79,0.2); color: var(--red); }
-
-    .insights-list { list-style: none; }
-    .insights-list li { padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; gap: 0.75rem; }
-    .insights-list li:last-child { border-bottom: none; }
-    .insights-list svg { width: 20px; height: 20px; stroke: var(--primary); flex-shrink: 0; margin-top: 0.2rem; }
-
-    @media (max-width: 768px) {
-      .grid-2 { grid-template-columns: 1fr; }
-      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-      body { padding: 1rem; }
-      h1 { font-size: 1.5rem; }
-      .nav { gap: 1rem; }
-      .card canvas { max-height: 250px; }
-      .error-table { font-size: 0.75rem; }
-      .error-table th, .error-table td { padding: 0.4rem 0.5rem; }
+    /* NAV */
+    .topbar {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(9,7,26,0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
     }
-    @media (max-width: 400px) {
-      .kpi-grid { grid-template-columns: 1fr; }
-      .kpi .num { font-size: 1.8rem; }
+    .topbar-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 56px;
+    }
+    .logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; }
+    .logo-dot { width: 10px; height: 10px; background: var(--primary); border-radius: 50%; box-shadow: 0 0 8px var(--primary); }
+    .logo-text { font-weight: 700; font-size: 0.95rem; color: var(--text); }
+    .logo-badge { font-size: 0.65rem; background: var(--primary); color: white; padding: 0.15em 0.5em; border-radius: 4px; font-weight: 600; margin-left: 0.4rem; }
+    .nav-links { display: flex; gap: 0.25rem; }
+    .nav-link {
+      display: flex; align-items: center; gap: 0.4rem;
+      padding: 0.5rem 0.85rem; border-radius: 8px;
+      color: var(--muted); font-size: 0.85rem; font-weight: 500;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .nav-link:hover { color: var(--text); background: var(--card); }
+    .nav-link.active { color: var(--primary-light); background: rgba(168,85,247,0.1); }
+    .nav-link svg { width: 16px; height: 16px; }
+
+    /* MAIN */
+    .main { max-width: 1280px; margin: 0 auto; padding: 2rem; }
+
+    /* HERO */
+    .hero { margin-bottom: 2.5rem; }
+    .hero-label {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.25);
+      border-radius: 20px; padding: 0.35rem 1rem; font-size: 0.8rem; color: var(--primary-light);
+      margin-bottom: 1rem;
+    }
+    .hero-label .pulse { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .hero h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+    .hero h1 span { background: linear-gradient(135deg, var(--primary), var(--pink)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { color: var(--muted); font-size: 1.05rem; max-width: 600px; }
+
+    /* KPI CARDS */
+    .kpi-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; margin-bottom: 2.5rem; }
+    .kpi {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.25rem 1rem; text-align: center;
+      transition: all 0.25s; position: relative; overflow: hidden;
+    }
+    .kpi:hover { border-color: var(--border-glow); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(168,85,247,0.1); }
+    .kpi::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent); opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .kpi:hover::before { opacity: 1; }
+    .kpi-icon { margin-bottom: 0.75rem; }
+    .kpi-icon svg { width: 28px; height: 28px; stroke-width: 1.5; }
+    .kpi-num { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; }
+    .kpi-label { font-size: 0.75rem; color: var(--dim); margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+
+    /* SECTION HEADERS */
+    .section-header {
+      display: flex; align-items: center; gap: 0.75rem;
+      margin-bottom: 1.5rem; padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-header svg { width: 22px; height: 22px; stroke: var(--primary); }
+    .section-header h2 { font-size: 1.35rem; font-weight: 700; }
+    .section-header .count {
+      font-size: 0.75rem; background: rgba(168,85,247,0.15); color: var(--primary-light);
+      padding: 0.2em 0.6em; border-radius: 10px; font-weight: 600;
+    }
+
+    /* CHART GRID */
+    .chart-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; margin-bottom: 2.5rem; }
+    .chart-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.5rem; transition: border-color 0.25s;
+    }
+    .chart-card:hover { border-color: var(--border-glow); }
+    .chart-title {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.9rem; font-weight: 600; color: var(--text); margin-bottom: 1.25rem;
+    }
+    .chart-title svg { width: 18px; height: 18px; stroke: var(--primary); }
+    .chart-card canvas { max-height: 300px; }
+
+    /* METRICS CARD */
+    .metric-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.75rem 0; border-bottom: 1px solid rgba(42,36,82,0.5);
+    }
+    .metric-row:last-child { border-bottom: none; }
+    .metric-label { color: var(--muted); font-size: 0.9rem; }
+    .metric-value { font-weight: 700; font-size: 1.1rem; }
+
+    /* ERROR TABLE */
+    .error-wrap { overflow-x: auto; border-radius: 12px; border: 1px solid var(--border); }
+    .error-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .error-table thead { background: rgba(168,85,247,0.08); }
+    .error-table th {
+      padding: 0.75rem 1rem; text-align: left; font-weight: 600; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.05em; color: var(--primary-light);
+      border-bottom: 1px solid var(--border);
+    }
+    .error-table td { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(42,36,82,0.3); vertical-align: top; }
+    .error-table tr:hover td { background: rgba(168,85,247,0.03); }
+    .error-table .cause { font-size: 0.8rem; color: var(--dim); margin-top: 0.25rem; }
+    .tag {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.2em 0.65em; border-radius: 6px; font-size: 0.75rem; font-weight: 600;
+    }
+    .tag-critical { background: rgba(239,68,68,0.15); color: #fca5a5; }
+    .tag-high { background: rgba(255,149,0,0.15); color: #fcd34d; }
+    .tag-medium { background: rgba(245,158,11,0.15); color: #fbbf24; }
+    .tag-low { background: rgba(34,197,94,0.15); color: #86efac; }
+    .tag-yes { background: rgba(34,197,94,0.15); color: #86efac; }
+    .tag-no { background: rgba(239,68,68,0.15); color: #fca5a5; }
+
+    /* INSIGHTS */
+    .insight-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: 1.25rem 1.5rem; margin-bottom: 0.75rem;
+      display: flex; gap: 1rem; align-items: flex-start;
+      transition: border-color 0.25s;
+    }
+    .insight-card:hover { border-color: var(--border-glow); }
+    .insight-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .insight-icon svg { width: 20px; height: 20px; }
+    .insight-icon.red { background: rgba(239,68,68,0.15); }
+    .insight-icon.red svg { stroke: var(--red); }
+    .insight-icon.orange { background: rgba(255,149,0,0.15); }
+    .insight-icon.orange svg { stroke: var(--orange); }
+    .insight-icon.green { background: rgba(34,197,94,0.15); }
+    .insight-icon.green svg { stroke: var(--green); }
+    .insight-icon.blue { background: rgba(59,130,246,0.15); }
+    .insight-icon.blue svg { stroke: var(--blue); }
+    .insight-icon.purple { background: rgba(168,85,247,0.15); }
+    .insight-icon.purple svg { stroke: var(--primary); }
+    .insight-content h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
+    .insight-content p { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) { .kpi-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 768px) {
+      .chart-grid { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .main { padding: 1rem; }
+      .hero h1 { font-size: 1.75rem; }
+      .nav-links { display: none; }
+      .topbar-inner { padding: 0; }
+    }
+    @media (max-width: 480px) {
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .kpi-num { font-size: 1.6rem; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <nav class="nav">
-      <a href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Inicio</a>
-      <a href="/proyectos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> Proyectos</a>
-      <a href="/agentes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg> Agentes</a>
-      <a href="/insights"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Insights</a>
-    </nav>
 
-    <h1>Dashboard Analitico</h1>
-    <p class="subtitle">Datos generados dinamicamente desde los archivos MD — {totalProjects} proyectos analizados</p>
+  <!-- NAVIGATION -->
+  <nav class="topbar">
+    <div class="topbar-inner">
+      <a href="/" class="logo">
+        <span class="logo-dot"></span>
+        <span class="logo-text">Monad Blitz CDMX</span>
+        <span class="logo-badge">Feb 2026</span>
+      </a>
+      <div class="nav-links">
+        <a href="/" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Inicio
+        </a>
+        <a href="/analytics" class="nav-link active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          Dashboard
+        </a>
+        <a href="/proyectos" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          Proyectos
+        </a>
+        <a href="/agentes" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg>
+          Agentes
+        </a>
+        <a href="/insights" class="nav-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+          Insights
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main">
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-label">
+        <span class="pulse"></span>
+        Datos en tiempo real desde archivos MD
+      </div>
+      <h1>Dashboard <span>Analitico</span></h1>
+      <p>Analisis completo del hackathon — {totalProjects} proyectos, {totalMembers}+ participantes, {totalMessages}+ mensajes analizados</p>
+    </div>
 
     <!-- KPIs -->
     <div class="kpi-grid">
-      <div class="kpi purple">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
-        <div class="num">{totalProjects}</div><div class="lbl">Proyectos</div>
+      <div class="kpi">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="1.5"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="kpi-num" style="color:var(--primary)">{totalProjects}</div>
+        <div class="kpi-label">Proyectos</div>
       </div>
-      <div class="kpi orange">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <div class="num">~{totalMembers}</div><div class="lbl">Participantes</div>
+      <div class="kpi">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="kpi-num" style="color:var(--orange)">{totalMembers}+</div>
+        <div class="kpi-label">Participantes</div>
       </div>
-      <div class="kpi green">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-        <div class="num">{deployedContracts}</div><div class="lbl">Contratos Deployados</div>
+      <div class="kpi">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <div class="kpi-num" style="color:var(--green)">{deployedContracts}</div>
+        <div class="kpi-label">Contratos Deploy</div>
       </div>
-      <div class="kpi blue">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
-        <div class="num">{reposVerified}</div><div class="lbl">Repos Verificados</div>
+      <div class="kpi">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+        <div class="kpi-num" style="color:var(--blue)">{reposVerified}</div>
+        <div class="kpi-label">Repos Verificados</div>
       </div>
-      <div class="kpi purple">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-        <div class="num">{totalMessages}+</div><div class="lbl">Mensajes Discord</div>
+      <div class="kpi">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="1.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="kpi-num" style="color:var(--cyan)">{totalMessages}+</div>
+        <div class="kpi-label">Mensajes</div>
       </div>
-      <div class="kpi red">
-        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg></div>
-        <div class="num">{allErrors.length}</div><div class="lbl">Errores Documentados</div>
+      <div class="kpi">
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <div class="kpi-num" style="color:var(--red)">{allErrors.length}</div>
+        <div class="kpi-label">Errores</div>
       </div>
     </div>
 
-    <!-- Charts Row 1 -->
-    <div class="grid-2">
-      <div class="card">
-        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Tecnologias Mas Usadas</h3>
+    <!-- CHARTS: Tech + Area -->
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <h2>Distribucion Tecnologica</h2>
+      <span class="count">{Object.keys(techFreq).length} tecnologias</span>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          Stack Tecnologico — Frecuencia de Uso
+        </div>
         <canvas id="techChart"></canvas>
       </div>
-      <div class="card">
-        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg> Area del Proyecto</h3>
+      <div class="chart-card">
+        <div class="chart-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          Verticales / Areas de Proyecto
+        </div>
         <canvas id="areaChart"></canvas>
       </div>
     </div>
 
-    <!-- Charts Row 2 -->
-    <div class="grid-2">
-      <div class="card">
-        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg> Avance por Equipo (%)</h3>
+    <!-- CHARTS: Progress + Errors -->
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      <h2>Avance y Errores</h2>
+      <span class="count">{completionRate}% deploy rate</span>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+          Porcentaje de Avance por Equipo
+        </div>
         <canvas id="progressChart"></canvas>
       </div>
-      <div class="card">
-        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Errores por Categoria</h3>
+      <div class="chart-card">
+        <div class="chart-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg>
+          Clasificacion de Errores
+        </div>
         <canvas id="errorCatChart"></canvas>
       </div>
     </div>
 
-    <!-- Charts Row 3 -->
-    <div class="grid-2">
-      <div class="card">
-        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg> Status de Proyectos</h3>
+    <!-- CHARTS: Status + Metrics -->
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      <h2>Estado General y Metricas</h2>
+    </div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <div class="chart-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Status de Proyectos al Cierre
+        </div>
         <canvas id="statusChart"></canvas>
       </div>
-      <div class="card">
-        <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Metricas Clave</h3>
-        <div style="display:grid;gap:1rem;padding:1rem 0;">
-          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);">
-            <span style="color:var(--muted)">Tasa de deploy onchain</span>
-            <span style="font-weight:700;color:var(--primary)">{completionRate}%</span>
+      <div class="chart-card">
+        <div class="chart-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          Metricas Clave del Evento
+        </div>
+        <div style="padding:0.5rem 0;">
+          <div class="metric-row">
+            <span class="metric-label">Tasa de deploy onchain</span>
+            <span class="metric-value" style="color:var(--primary)">{completionRate}%</span>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);">
-            <span style="color:var(--muted)">Promedio miembros/equipo</span>
-            <span style="font-weight:700;color:var(--orange)">{(totalMembers / totalProjects).toFixed(1)}</span>
+          <div class="metric-row">
+            <span class="metric-label">Promedio miembros por equipo</span>
+            <span class="metric-value" style="color:var(--orange)">{(totalMembers / totalProjects).toFixed(1)}</span>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);">
-            <span style="color:var(--muted)">Promedio msgs/proyecto</span>
-            <span style="font-weight:700;color:var(--blue)">{Math.round(totalMessages / totalProjects)}</span>
+          <div class="metric-row">
+            <span class="metric-label">Mensajes promedio por proyecto</span>
+            <span class="metric-value" style="color:var(--blue)">{Math.round(totalMessages / totalProjects)}</span>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;border-bottom:1px solid var(--border);">
-            <span style="color:var(--muted)">Errores resueltos</span>
-            <span style="font-weight:700;color:var(--green)">{allErrors.filter(e => e.resolved).length}/{allErrors.length}</span>
+          <div class="metric-row">
+            <span class="metric-label">Errores resueltos vs total</span>
+            <span class="metric-value" style="color:var(--green)">{allErrors.filter(e => e.resolved).length} / {allErrors.length}</span>
           </div>
-          <div style="display:flex;justify-content:space-between;padding:0.5rem 0;">
-            <span style="color:var(--muted)">Tecnologias unicas</span>
-            <span style="font-weight:700;color:var(--cyan)">{Object.keys(techFreq).length}</span>
+          <div class="metric-row">
+            <span class="metric-label">Tecnologias unicas usadas</span>
+            <span class="metric-value" style="color:var(--cyan)">{Object.keys(techFreq).length}</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">Proyecto con mas avance</span>
+            <span class="metric-value" style="color:var(--green)">{progressData[0]?.name} ({progressData[0]?.phase}%)</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Error Table -->
-    <div class="card" style="margin-bottom:1.5rem;">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Registro Detallado de Errores</h3>
-      <div style="overflow-x:auto;">
-        <table class="error-table">
-          <thead><tr><th>Equipo</th><th>Error</th><th>Causa Raiz</th><th>Severidad</th><th>Estado</th></tr></thead>
-          <tbody>
-            {allErrors.map(e => (
-              <tr>
-                <td>{e.project}</td>
-                <td>{e.description}</td>
-                <td style="font-size:0.8rem;color:var(--muted)">{e.cause}</td>
-                <td><span class={`tag tag-${e.severity}`}>{e.severity}</span></td>
-                <td><span class={`tag ${e.resolved ? 'tag-resolved' : 'tag-unresolved'}`}>{e.resolved ? 'Resuelto' : 'Pendiente'}</span></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+    <!-- ERROR TABLE -->
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <h2>Registro de Errores y Blockers</h2>
+      <span class="count">{allErrors.length} errores</span>
+    </div>
+    <div class="error-wrap" style="margin-bottom:2.5rem;">
+      <table class="error-table">
+        <thead><tr><th>Equipo</th><th>Error / Blocker</th><th>Severidad</th><th>Estado</th></tr></thead>
+        <tbody>
+          {allErrors.map(e => (
+            <tr>
+              <td style="font-weight:600;white-space:nowrap;">{e.project}</td>
+              <td>
+                {e.description}
+                <div class="cause">{e.cause}</div>
+              </td>
+              <td><span class={`tag tag-${e.severity}`}>{e.severity.toUpperCase()}</span></td>
+              <td><span class={`tag ${e.resolved ? 'tag-yes' : 'tag-no'}`}>{e.resolved ? 'Resuelto' : 'Pendiente'}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
 
-    <!-- Insights -->
-    <div class="card">
-      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> Insights Clave para Futuros Blitz</h3>
-      <ul class="insights-list">
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <div><strong style="color:var(--red)">Seguridad:</strong> {allErrors.filter(e => e.cause.toLowerCase().includes('token') || e.description.toLowerCase().includes('token')).length} equipos expusieron tokens en chats publicos. Recomendacion: canales privados por equipo + training basico de seguridad.</div>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <div><strong style="color:var(--orange)">Deploy Pipeline:</strong> La mayoria de equipos lucho mas con deploy que con el codigo. Recomendacion: Workshop de 15 min de deploy antes del evento.</div>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-          <div><strong style="color:var(--green)">Team Size:</strong> Equipos de 2-3 avanzaron mas. Solo devs se quedaron en concepto. Recomendacion: minimo 2 por equipo.</div>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-          <div><strong style="color:var(--primary)">Area mas popular:</strong> {Object.entries(areaFreq).sort((a,b) => b[1]-a[1])[0]?.[0] || 'N/A'} ({Object.entries(areaFreq).sort((a,b) => b[1]-a[1])[0]?.[1] || 0} proyectos). Recomendacion: tracks tematicos para diversificar.</div>
-        </li>
-        <li>
-          <svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-          <div><strong style="color:var(--blue)">Tasa de completion:</strong> {completionRate}% deployaron contratos en testnet. Meta para proximo Blitz: 40%+.</div>
-        </li>
-      </ul>
+    <!-- INSIGHTS -->
+    <div class="section-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+      <h2>Insights para Futuros Eventos</h2>
+    </div>
+    <div style="margin-bottom:2rem;">
+      <div class="insight-card">
+        <div class="insight-icon red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="insight-content">
+          <h4>Seguridad de Credenciales</h4>
+          <p>{allErrors.filter(e => (e.cause + e.description).toLowerCase().includes('token')).length} equipos expusieron tokens/keys en chats publicos. Los agentes lo detectaron y alertaron. Accion: canales privados por equipo + training de seguridad pre-evento.</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon orange"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/></svg></div>
+        <div class="insight-content">
+          <h4>Deploy Pipeline como Mayor Blocker</h4>
+          <p>La mayoria lucho mas con Vercel, Foundry y GitHub que con el codigo. Accion: workshop de 15 min de deploy al inicio del evento.</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+        <div class="insight-content">
+          <h4>Team Size Sweet Spot: 2-3 Personas</h4>
+          <p>Equipos de 2-3 avanzaron significativamente mas. Solo devs se estancaron en concepto. Accion: minimo 2 personas por equipo en futuros blitz.</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <div class="insight-content">
+          <h4>Tasa de Completion: {completionRate}%</h4>
+          <p>Solo {completionRate}% deployaron contratos en testnet. Area dominante: {Object.entries(areaFreq).sort((a,b) => b[1]-a[1])[0]?.[0]}. Meta para proximo Blitz: 40%+ deploys. Incluir tracks tematicos para diversificar.</p>
+        </div>
+      </div>
+      <div class="insight-card">
+        <div class="insight-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg></div>
+        <div class="insight-content">
+          <h4>Agentes IA: Alto Impacto pero con Limites</h4>
+          <p>devrel-banana y aibus-dumbleclaw atendieron todos los proyectos pero sufrieron rate limits. Accion: rate limiting propio + fallback entre agentes + queue system.</p>
+        </div>
+      </div>
     </div>
   </div>
 
   <script define:vars={{ techSorted, areaFreq, progressData, errorCats, statusFreq }}>
-    const COLORS = ['#a855f7','#ff9500','#f6464f','#9ed22d','#3b82f6','#06b6d4','#ec4899','#f59e0b','#10b981','#64748b','#8b5cf6','#ef4444'];
+    const C = ['#a855f7','#ff9500','#22c55e','#3b82f6','#06b6d4','#ec4899','#f59e0b','#ef4444','#10b981','#8b5cf6','#64748b','#f97316'];
+    Chart.defaults.color = '#9890b8';
+    Chart.defaults.borderColor = '#2a2452';
+    Chart.defaults.font.family = 'Inter';
 
-    Chart.defaults.color = '#8b82a8';
-    Chart.defaults.borderColor = '#2d2244';
-
-    // Tech Chart
     new Chart(document.getElementById('techChart'), {
-      type: 'bar',
-      data: {
-        labels: techSorted.map(t => t[0]),
-        datasets: [{ data: techSorted.map(t => t[1]), backgroundColor: COLORS.slice(0, techSorted.length), borderRadius: 6 }]
-      },
-      options: { indexAxis: 'y', responsive: true, plugins: { legend: { display: false } }, scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+      type:'bar', data:{ labels:techSorted.map(t=>t[0]), datasets:[{data:techSorted.map(t=>t[1]),backgroundColor:C.slice(0,techSorted.length),borderRadius:8,barThickness:24}]},
+      options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{stepSize:1},grid:{color:'rgba(42,36,82,0.4)'}},y:{grid:{display:false}}}}
     });
 
-    // Area Chart
-    const areaEntries = Object.entries(areaFreq).sort((a,b) => b[1]-a[1]);
+    const ae=Object.entries(areaFreq).sort((a,b)=>b[1]-a[1]);
     new Chart(document.getElementById('areaChart'), {
-      type: 'doughnut',
-      data: {
-        labels: areaEntries.map(a => a[0]),
-        datasets: [{ data: areaEntries.map(a => a[1]), backgroundColor: COLORS.slice(0, areaEntries.length) }]
-      },
-      options: { responsive: true, plugins: { legend: { position: 'right', labels: { padding: 12 } } } }
+      type:'doughnut', data:{labels:ae.map(a=>a[0]),datasets:[{data:ae.map(a=>a[1]),backgroundColor:C.slice(0,ae.length),borderWidth:0,hoverOffset:8}]},
+      options:{responsive:true,cutout:'60%',plugins:{legend:{position:'right',labels:{padding:16,usePointStyle:true,pointStyleWidth:10}}}}
     });
 
-    // Progress Chart
     new Chart(document.getElementById('progressChart'), {
-      type: 'bar',
-      data: {
-        labels: progressData.map(p => p.name),
-        datasets: [{
-          label: '% Avance',
-          data: progressData.map(p => p.phase),
-          backgroundColor: progressData.map(p => p.phase >= 30 ? '#9ed22d' : p.phase >= 15 ? '#ff9500' : '#f6464f'),
-          borderRadius: 4,
-        }]
-      },
-      options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, max: 50, ticks: { callback: v => v + '%' } } } }
+      type:'bar', data:{labels:progressData.map(p=>p.name),datasets:[{label:'% Avance',data:progressData.map(p=>p.phase),backgroundColor:progressData.map(p=>p.phase>=30?'#22c55e':p.phase>=15?'#ff9500':'#ef4444'),borderRadius:6,barThickness:28}]},
+      options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,max:50,ticks:{callback:v=>v+'%'},grid:{color:'rgba(42,36,82,0.4)'}},x:{grid:{display:false},ticks:{maxRotation:45}}}}
     });
 
-    // Error Categories
-    const errEntries = Object.entries(errorCats);
+    const ee=Object.entries(errorCats);
     new Chart(document.getElementById('errorCatChart'), {
-      type: 'pie',
-      data: {
-        labels: errEntries.map(e => e[0]),
-        datasets: [{ data: errEntries.map(e => e[1]), backgroundColor: COLORS.slice(0, errEntries.length) }]
-      },
-      options: { responsive: true, plugins: { legend: { position: 'right', labels: { padding: 12 } } } }
+      type:'doughnut', data:{labels:ee.map(e=>e[0]),datasets:[{data:ee.map(e=>e[1]),backgroundColor:C.slice(0,ee.length),borderWidth:0,hoverOffset:8}]},
+      options:{responsive:true,cutout:'55%',plugins:{legend:{position:'right',labels:{padding:16,usePointStyle:true,pointStyleWidth:10}}}}
     });
 
-    // Status Chart
-    const statusMap = { 'completed': 'Completado', 'in-progress': 'En Progreso', 'concept': 'Concepto', 'minimal': 'Minimo' };
-    const statusColors = { 'completed': '#9ed22d', 'in-progress': '#ff9500', 'concept': '#3b82f6', 'minimal': '#f6464f' };
-    const statusEntries = Object.entries(statusFreq);
+    const sm={'completed':'Completado','in-progress':'En Progreso','concept':'Concepto','minimal':'Minimo'};
+    const sc={'completed':'#22c55e','in-progress':'#ff9500','concept':'#3b82f6','minimal':'#ef4444'};
+    const se=Object.entries(statusFreq);
     new Chart(document.getElementById('statusChart'), {
-      type: 'doughnut',
-      data: {
-        labels: statusEntries.map(s => statusMap[s[0]] || s[0]),
-        datasets: [{ data: statusEntries.map(s => s[1]), backgroundColor: statusEntries.map(s => statusColors[s[0]] || '#64748b') }]
-      },
-      options: { responsive: true, plugins: { legend: { position: 'right', labels: { padding: 12 } } } }
+      type:'doughnut', data:{labels:se.map(s=>sm[s[0]]||s[0]),datasets:[{data:se.map(s=>s[1]),backgroundColor:se.map(s=>sc[s[0]]||'#64748b'),borderWidth:0,hoverOffset:8}]},
+      options:{responsive:true,cutout:'55%',plugins:{legend:{position:'right',labels:{padding:16,usePointStyle:true,pointStyleWidth:10}}}}
     });
   </script>
 </body>
