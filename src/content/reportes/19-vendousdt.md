@@ -9,6 +9,7 @@ area: "P2P"
 phase: 20
 status: "in-progress"
 techStack:
+  - "TypeScript"
   - "Next.js"
   - "Vercel"
 contracts: []
@@ -17,25 +18,34 @@ deployUrl: "https://vendousdt.vercel.app/"
 messages: 0
 errors: []
 ---
-# 💱 VENDO USDT — P2P Crypto Trading
+# 💱 VENDO USDT — P2P Trading via Chat
 
 ## Monad Blitz CDMX — Sábado 22 de Febrero 2026
 
 ---
 
-## 📋 Descripción del Proyecto
-**VENDO USDT** — Plataforma P2P para compra/venta de USDT mediante chats de mensajería.
+## 📋 Descripción del Proyecto (DevNads)
 
-## 👥 Miembros del Equipo
+> P2P MEDIANTE CHATS DE MENSAJERIA
+
+**Features:**
+- Compra/venta P2P de USDT
+- Integración con chats de mensajería
+- Sin intermediarios
+
+## 👥 Equipo (DevNads Oficial)
 - **CRYPTOMATA** — Desarrollador
 
 ## 🔧 Stack Técnico
-- **Frontend:** Next.js
+- **Frontend:** Next.js + TypeScript
 - **Deploy:** Vercel
 
-## 🔗 Links
+## 📜 Contratos
+No deployó contratos propios.
+
+## 🔗 Links Oficiales
 - **Demo:** https://vendousdt.vercel.app/
-- **GitHub:** github.com/Scarfdrilo/vendousdt
+- **GitHub:** https://github.com/Scarfdrilo/vendousdt
 
 ## ✅ Estado Final
 🟡 **En progreso** — Plataforma P2P básica.

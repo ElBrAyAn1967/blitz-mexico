@@ -4,9 +4,8 @@ slug: "monazon"
 icon: "shopping-cart"
 team:
   - name: "Tory Dom"
-    discord: "torydom_53239"
 members: 1
-area: "Marketplace"
+area: "Payments/Consumer"
 phase: 30
 status: "in-progress"
 techStack:
@@ -15,11 +14,9 @@ techStack:
   - "Drizzle ORM"
   - "wagmi/viem"
   - "TypeScript"
-contracts:
-  - name: "N/A (USDC transfers)"
-    deployed: false
+contracts: []
 repo: "https://github.com/ToryDom/Monazon"
-deployUrl: "https://monazon.vercel.app"
+deployUrl: "https://monazon.vercel.app/"
 messages: 323
 errors:
   - description: "Imagenes no cargan en Vercel"
@@ -31,54 +28,63 @@ errors:
     severity: "low"
     resolved: true
 ---
-# 🛒 Monazon — Reporte de Equipo
+# 🛒 Monazon — Global Payments for LATAM
 
 ## Monad Blitz CDMX — Sábado 22 de Febrero 2026
 
 ---
 
-## 📋 Descripción del Proyecto
-Marketplace de pagos globales con stablecoins en Monad. Permite comprar productos usando criptomonedas con un flujo similar a Amazon.
+## 📋 Descripción del Proyecto (DevNads)
 
-## 👥 Miembros del Equipo
-- **Tory Dom** (torydom) — Líder del equipo
+> Plataforma para que cualquier vendedor en Latinoamérica pueda vender globalmente y cobrar en dólares digitales, sin banco y sin fricción, usando la velocidad de Monad.
+
+**Problemas que resuelve:**
+- Comisiones altas
+- Bloqueos bancarios
+- Sin acceso a USD
+- Pagos tardan días
+- Confianza
+
+**Road Map:**
+1. Función de pago - Vendedor genera link para pago
+2. Smart contract/Escrow - Pago sale hasta confirmación del cliente
+3. Creación de Reputación - Guarda reputación on-chain
+4. Fondos a Bancos Tradicionales
+5. Microcréditos en base a reputación
+
+## 👥 Equipo (DevNads Oficial)
+- **Tory Dom** — Desarrollador principal
 
 ## 🔧 Stack Técnico
-- **Frontend:** Next.js + wagmi/viem
-- **Smart Contracts:** Solidity + Foundry
+- **Frontend:** Next.js + Tailwind CSS
+- **Database:** Drizzle ORM
+- **Web3:** wagmi/viem
+- **Pagos:** USDC/stablecoins
 - **Blockchain:** Monad Testnet (Chain ID 10143)
-- **Pagos:** Arquitectura de stablecoins
 
-## ⏰ Timeline de Actividad
-- **~16:00 UTC** — Creación del thread, inicio del proyecto
-- **16:00–22:00 UTC** — Desarrollo intenso con mucha interacción con agentes
-- **22:00+ UTC** — Debugging de chain IDs y problemas de configuración
+## 📜 Contratos
+No deployó contratos propios - usa transferencias USDC directas.
 
-## 🚨 Errores y Blockers (Detallado)
+## 🔗 Links Oficiales
+- **Demo:** https://monazon.vercel.app/
+- **GitHub:** https://github.com/ToryDom/Monazon
 
-### 1. Chain ID incorrecto (CRÍTICO)
-- **Problema:** El frontend apuntaba al chain ID de **Monad mainnet** en vez de testnet
-- **Error:** Transacciones fallaban porque la wallet estaba en testnet pero la app pedía mainnet
-- **Solución:** aibus-dumbleclaw identificó el error y corrigió los chain IDs a `10143`
-- **Tiempo perdido:** ~1-2 horas debugging
+## 🚨 Errores Documentados
 
-### 2. Arquitectura de stablecoins
-- **Problema:** No sabían cómo estructurar los pagos con stablecoins en Monad
-- **Solución:** devrel-banana explicó la arquitectura y opciones disponibles
+### 1. Case-sensitive paths (MEDIUM)
+- **Problema:** Imágenes no cargaban en Vercel
+- **Causa:** `Laptop.png` vs `laptop.png`
+- **Solución:** Corregir nombres de archivos
+- **Estado:** ✅ Resuelto
 
-## 📈 Curva de Aprendizaje
-- **Nivel inicial:** Intermedio — tenían experiencia en web dev pero poca en web3
-- **Principal desafío:** Entender la diferencia entre testnet/mainnet y configurar chain IDs correctamente
-- **Progreso:** Lograron avanzar significativamente con ayuda de los agentes
-- **Lección clave:** Siempre verificar que el chain ID apunte a la red correcta
-
-## 🤖 Soporte de Agentes
-- **devrel-banana:** Ayudó con arquitectura de stablecoins y bugs de chain ID
-- **aibus-dumbleclaw:** Fix de chain IDs incorrectos (apuntaban a mainnet)
+### 2. Assets no optimizados (LOW)
+- **Problema:** Imágenes de 13MB
+- **Solución:** Comprimir assets
+- **Estado:** ✅ Resuelto
 
 ## 📊 Métricas
-- **Total mensajes en thread:** 323
-- **Estado final:** En progreso — marketplace funcional pero sin deploy confirmado en testnet
+- **Mensajes en Discord:** 323
+- **Errores resueltos:** 2/2
 
 ## ✅ Estado Final
-🟡 **En progreso** — Avanzaron bastante pero el bug de chain ID les costó tiempo valioso
+🟡 **En progreso** — Marketplace funcional con pagos USDC. Sin smart contracts propios pero producto viable.

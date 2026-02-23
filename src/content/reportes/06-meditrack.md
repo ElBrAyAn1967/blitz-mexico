@@ -3,126 +3,64 @@ title: "MediTrack"
 slug: "meditrack"
 icon: "heart-pulse"
 team:
-  - name: "ailwdhy"
-members: 4
+  - name: "Andry Carmona"
+  - name: "Sat Mitar"
+  - name: "Ailed Duran"
+members: 3
 area: "Health/MedTech"
-phase: 50
+phase: 35
 status: "in-progress"
 techStack:
   - "Next.js"
   - "TypeScript"
   - "Tailwind CSS"
-  - "Privy"
+  - "Reown"
   - "wagmi/viem"
-  - "Foundry"
-  - "Solidity"
-contracts:
-  - name: "MediPay"
-    deployed: false
-    description: "Pagos médicos on-chain"
+contracts: []
 repo: "https://github.com/Scarfdrilo/meditrack"
 deployUrl: "https://meditrack-ruby.vercel.app"
 messages: 30
 errors: []
 ---
-# 🏥 MediTrack — Reporte de Equipo
+# 🏥 MediTrack — Blockchain Medical Records
 
 ## Monad Blitz CDMX — Sábado 22 de Febrero 2026
 
 ---
 
-## 📋 Descripción del Proyecto
-Plataforma para conectar médicos y pacientes on-chain. Permite almacenar registros médicos de forma segura en blockchain, facilitar pagos entre pacientes y doctores, y trackear historial de tratamientos.
+## 📋 Descripción del Proyecto (DevNads)
 
-## 👥 Miembros del Equipo
-- **ailwdhy** — Desarrollador principal
-- 3 colaboradores adicionales
+> Plataforma blockchain que devuelve al paciente el control de su historial clínico, optimizando la conexión entre médicos, farmacias y laboratorios.
+
+**Features:**
+- **Citas Médicas Digitales:** Motor del sistema con pagos inmediatos y registros clínicos inmutables
+- **Impulso Farmacéutico:** Canal publicitario ético basado en datos reales y anonimizados
+- **Valor Agregado:** Eliminación del fraude, soberanía de datos, transacciones financieras integradas
+
+**Tecnologías Monad:**
+- Transacciones online en Monad testnet
+- Autenticación con Reown
+
+## 👥 Equipo (DevNads Oficial)
+- **Andry Carmona** — Desarrollo
+- **Sat Mitar** — Desarrollo
+- **Ailed Duran** — Desarrollo
 
 ## 🔧 Stack Técnico
 - **Frontend:** Next.js + TypeScript + Tailwind
-- **Auth:** Privy
+- **Auth:** Reown (WalletConnect)
 - **Web3:** wagmi/viem
-- **Smart Contracts:** Solidity + Foundry
-- **Blockchain:** Monad Testnet (Chain ID 10143)
+- **Blockchain:** Monad Testnet
 
-## 📜 Contratos Desarrollados
+## 📜 Contratos
+No deployó contratos en el hackathon - enfoque en frontend.
 
-### MediPay.sol
-```solidity
-contract MediPay {
-    struct Payment {
-        address patient;
-        address doctor;
-        uint256 amount;
-        uint256 timestamp;
-        string serviceType;
-    }
-    
-    mapping(address => Payment[]) public patientHistory;
-    mapping(address => Payment[]) public doctorHistory;
-    
-    function payDoctor(address doctor, uint256 amount, string serviceType) external;
-    function payPharmacy(address pharmacy, uint256 amount) external;
-    function getPaymentHistory(address patient) external view returns (Payment[] memory);
-}
-```
-
-## 📂 Estructura del Repo
-```
-meditrack/
-├── contracts/
-│   └── MediPay.sol
-├── frontend/
-│   ├── app/
-│   │   ├── doctor/     # Vista Doctor
-│   │   └── patient/    # Vista Paciente
-│   └── components/
-├── foundry.toml
-└── package.json
-```
-
-## ⏰ Timeline de Actividad
-- **~00:00 UTC (6pm CDMX)** — Inicio tardío del proyecto
-- **00:00–02:00 UTC** — Scaffolding Next.js + Privy
-- **02:00+ UTC** — Desarrollo del MVP de UI + contrato
-
-## 🚨 Errores y Blockers
-
-### 1. Inicio tardío
-- **Problema:** Comenzaron ~6pm hora CDMX
-- **Impacto:** Menos tiempo disponible para desarrollo
-
-### 2. Dual UI complexity
-- **Problema:** Diseñar UX para doctor Y paciente
-- **Solución:** aibus-dumbleclaw construyó ambas vistas
-
-## 📈 Curva de Aprendizaje
-- **Nivel inicial:** Intermedio — experiencia en web dev
-- **Principal desafío:** Dos tipos de usuario en pocas horas
-- **Progreso:** ⭐⭐⭐ BUENO — MVP funcional
-- **Lección clave:** Health-tech requiere mucha UX para diferentes roles
-
-## 🤖 Soporte de Agentes
-- **devrel-banana:** Scaffolding Next.js + Privy
-- **aibus-dumbleclaw:** MVP completo de UI (Doctor + Paciente)
+## 🔗 Links Oficiales
+- **Demo:** https://meditrack-ruby.vercel.app
+- **GitHub:** https://github.com/Scarfdrilo/meditrack
 
 ## 📊 Métricas
-- **Total mensajes en thread:** 30
-- **Contrato escrito:** ✅ MediPay.sol
-- **Contrato deployado:** ❌ No
-- **Frontend:** ✅ MVP con vistas Doctor/Paciente
-
-## 💡 Insights para DevRel
-
-**Por qué importa:**
-- Pagos médicos en México = mucho efectivo
-- Blockchain = trazabilidad de pagos
-- Privacidad = crítica en health data
-
-**Potencial post-Blitz:**
-- Integración con sistemas de citas
-- Partnership con clínicas
-- Compliance con datos médicos
+- **Mensajes en Discord:** 30
 
 ## ✅ Estado Final
-🟡 **En progreso** — MVP de frontend funcional con contrato escrito. Llegaron tarde pero lograron armar algo. aibus-dumbleclaw fue clave para la UI.
+🟡 **En progreso** — Frontend funcional con vistas Doctor/Paciente. Sin smart contracts.

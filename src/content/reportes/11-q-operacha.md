@@ -1,13 +1,14 @@
 ---
-title: "Q-Operacha"
-slug: "q-operacha"
+title: "Qoperacha"
+slug: "qoperacha"
 icon: "coins"
 team:
-  - name: "Chris"
-  - name: "LexBP11"
+  - name: "Christopher"
+  - name: "Luca"
+  - name: "Daniel"
 members: 3
-area: "DeFi/Fintech"
-phase: 45
+area: "DeFi"
+phase: 55
 status: "in-progress"
 techStack:
   - "Scaffold-ETH 2"
@@ -20,12 +21,11 @@ contracts:
   - name: "CoperachaInteligente"
     deployed: true
     address: "0xa1Fa467A046Cd3DD9eE2De2b2043cDa4175E3b9C"
-    description: "Cooperative savings with AI risk"
 repo: "https://github.com/LexBP11/qoperacha_hack"
-deployUrl: "https://qoperacha.vercel.app"
+deployUrl: "https://qoperachahack.vercel.app/"
 messages: 73
 errors:
-  - description: "deployedContracts.ts vacio"
+  - description: "deployedContracts.ts vacío"
     cause: "No corrieron yarn deploy antes del frontend"
     severity: "critical"
     resolved: true
@@ -34,112 +34,61 @@ errors:
     severity: "critical"
     resolved: true
 ---
-# 🎰 Q-Operacha — Cooperative Savings + AI Risk
+# 🎰 Qoperacha — AI Risk Shield for DeFi
 
 ## Monad Blitz CDMX — Sábado 22 de Febrero 2026
 
 ---
 
-## 📋 Descripción del Proyecto
-**Q-Operacha** — Motor de riesgo con IA para ahorros cooperativos (tandas). Combina el modelo tradicional de cooperacha mexicana con análisis de riesgo automatizado para proteger a los participantes.
+## 📋 Descripción del Proyecto (DevNads)
 
-## 👥 Miembros del Equipo
-- **Chris** — Desarrollador principal
-- **LexBP11** — Co-desarrollo
-- +1 colaborador
+> En el mercado DeFi, un segundo de volatilidad puede borrar el patrimonio de años, y la reacción humana siempre llega demasiado tarde. Qoperacha es el escudo predictivo que elimina este riesgo: un gestor autónomo que utiliza agentes de IA para detectar crisis y proteger tu capital en la red Monad en menos de un segundo, antes de que el mercado colapse.
+
+**Features:**
+- Detección de crisis con IA
+- Protección de capital automática
+- Reacción en menos de 1 segundo
+- Gestor autónomo
+
+## 👥 Equipo (DevNads Oficial)
+- **Christopher** — Desarrollo
+- **Luca** — Desarrollo
+- **Daniel** — Desarrollo
 
 ## 🔧 Stack Técnico
 - **Frontend:** Scaffold-ETH 2 (Next.js)
 - **Smart Contracts:** Hardhat + Solidity
 - **Backend AI:** Python + FastAPI
-- **Web3:** web3.py para interacción backend
-- **Blockchain:** Monad Testnet (Chain ID 10143)
+- **Web3:** web3.py
+- **Blockchain:** Monad Testnet
 
-## 📜 Contratos Deployados
+## 📜 Contratos Deployados ✅ VERIFICADO ON-CHAIN
 
-### CoperachaInteligente.sol ✅ DEPLOYED
-```solidity
-contract CoperachaInteligente {
-    struct Cooperacha {
-        address[] participants;
-        uint256 contribution;
-        uint256 currentRound;
-        uint256 totalRounds;
-        mapping(address => uint256) riskScore;
-    }
-    
-    function createCooperacha(uint256 contribution, uint256 rounds) external;
-    function join(uint256 cooperachaId) external;
-    function contribute(uint256 cooperachaId) external payable;
-    function distribute(uint256 cooperachaId) external;
-    function updateRiskScore(address participant, uint256 score) external;
-}
-```
+| Contrato | Address |
+|----------|---------|
+| CoperachaInteligente | `0xa1Fa467A046Cd3DD9eE2De2b2043cDa4175E3b9C` |
 
-## 📂 Estructura del Repo
-```
-qoperacha_hack/
-├── packages/
-│   ├── hardhat/
-│   │   └── contracts/
-│   │       └── CoperachaInteligente.sol
-│   └── nextjs/
-│       └── Scaffold-ETH 2 frontend
-├── backend/
-│   ├── risk_engine.py
-│   └── api.py (FastAPI)
-└── README.md
-```
+## 🔗 Links Oficiales
+- **Demo:** https://qoperachahack.vercel.app/
+- **GitHub:** https://github.com/LexBP11/qoperacha_hack
 
-## ⏰ Timeline de Actividad
-- **~16:00 UTC** — Inicio con Scaffold-ETH 2
-- **16:00–20:00 UTC** — Desarrollo del contrato
-- **20:00–23:00 UTC** — Backend de riesgo en Python
-- **23:00+ UTC** — Debugging de errores críticos
+## 🚨 Errores Documentados
 
-## 🚨 Errores y Blockers (DETALLADO)
-
-### 1. deployedContracts.ts vacío (CRÍTICO)
+### 1. deployedContracts.ts vacío (CRITICAL)
 - **Problema:** Frontend no encontraba el contrato
-- **Causa:** No corrieron `yarn deploy` antes de iniciar frontend
-- **Error:** `Contract address undefined`
-- **Solución:** Ejecutar deploy y regenerar artifacts
-- **Tiempo perdido:** ~45 min
+- **Causa:** No ejecutaron `yarn deploy`
+- **Estado:** ✅ Resuelto
 
-### 2. Python 0x missing selector (CRÍTICO)
-- **Problema:** Transacciones desde Python fallaban
+### 2. web3.py missing selector (CRITICAL)
+- **Problema:** Transacciones Python fallaban
 - **Causa:** web3.py enviaba tx sin function selector
-- **Error:** `Invalid transaction data`
 - **Solución:** Usar `contract.functions.method().build_transaction()`
-- **Tiempo perdido:** ~1 hora
-
-## 📈 Curva de Aprendizaje
-- **Nivel inicial:** Avanzado en DeFi, intermedio en Python-Web3
-- **Principal desafío:** Conectar Python backend con smart contracts
-- **Progreso:** ⭐⭐⭐ BUENO — Deploy exitoso + backend funcional
-- **Lección clave:** web3.py tiene gotchas vs ethers.js
-
-## 🤖 Soporte de Agentes
-- **devrel-banana:** Debugging Scaffold-ETH, deploy flow
-- **aibus-dumbleclaw:** Fix web3.py, arquitectura
+- **Estado:** ✅ Resuelto
 
 ## 📊 Métricas
-- **Total mensajes en thread:** 73
-- **Contrato deployado:** ✅ CoperachaInteligente
-- **Frontend:** ✅ qoperacha.vercel.app
-- **Backend AI:** ✅ FastAPI funcional
-
-## 💡 Insights para DevRel
-
-**Por qué importa:**
-- Cooperachas = tandas formalizadas
-- AI risk = protección contra defaults
-- Híbrido Python + Solidity = arquitectura común
-
-**Potencial post-Blitz:**
-- Risk scoring más sofisticado
-- Integración con historial crediticio
-- Model para microlending
+- **Mensajes en Discord:** 73
+- **Contratos deployados:** 1
+- **Errores resueltos:** 2/2
 
 ## ✅ Estado Final
-🟡 **En progreso** — Sistema híbrido funcionando. Contrato deployado + frontend + backend. Los errores críticos retrasaron pero se resolvieron. Arquitectura interesante.
+🟡 **En progreso** — Contrato deployado, backend AI funcional. Sistema híbrido Python + Solidity.

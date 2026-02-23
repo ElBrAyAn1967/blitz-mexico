@@ -3,9 +3,9 @@ title: "Strope Pay"
 slug: "strope-pay"
 icon: "credit-card"
 team:
-  - name: "0xChijioke"
+  - name: "Ricardo Fuentes"
 members: 1
-area: "DeFi/Fintech"
+area: "Payments/Stablecoins"
 phase: 55
 status: "in-progress"
 techStack:
@@ -18,132 +18,71 @@ techStack:
 contracts:
   - name: "SubscriptionManager"
     deployed: false
-    description: "Pagos recurrentes on-chain"
 repo: "https://github.com/usainbluntmx/strope-pay"
+deployUrl: "https://strope-pay.vercel.app/"
 messages: 0
 errors: []
 ---
-# 💳 Strope Pay — Subscription Manager
+# 💳 Strope Pay — On-chain Subscriptions
 
 ## Monad Blitz CDMX — Sábado 22 de Febrero 2026
 
 ---
 
-## 📋 Descripción del Proyecto
-**Strope Pay** — Sistema de suscripciones on-chain tipo Stripe. Permite a merchants crear planes de pago recurrentes y a usuarios suscribirse con tokens ERC20. Pagos ejecutables por cualquiera cuando el intervalo se cumple.
+## 📋 Descripción del Proyecto (DevNads)
 
-## 👥 Miembros del Equipo
-- **0xChijioke** — Desarrollador full-stack
+> Strope Pay es una dApp enfocada en permitirle al usuario pagar servicios y suscripciones mediante stablecoins y de forma completamente onchain. Una versión mucho más atractiva que Stripe, pero con la diferencia de que:
+> 1. El usuario no necesita una tarjeta bancaria para realizar sus pagos
+> 2. No necesita una tarjeta cripto donde, de igual manera, se le pide KYC
+> 3. El usuario controla al 100% lo que paga y cuando lo paga
+
+**Ventajas vs Stripe:**
+- Sin tarjeta bancaria
+- Sin KYC
+- Control total del usuario
+- Pagos on-chain
+
+## 👥 Equipo (DevNads Oficial)
+- **Ricardo Fuentes** — Desarrollador principal
 
 ## 🔧 Stack Técnico
-- **Frontend:** Next.js + Reown AppKit
-- **Smart Contracts:** Solidity + Hardhat
+- **Frontend:** Next.js + TypeScript
+- **Smart Contracts:** Hardhat + Solidity
+- **Auth:** Reown AppKit
 - **Web3:** wagmi/viem
-- **Deploy:** Multi-chain (Arbitrum, Base, Monad)
-- **Blockchain:** Monad Testnet (Chain ID 10143)
+- **Blockchain:** Monad Testnet
 
 ## 📜 Contratos Desarrollados
 
-### SubscriptionManager.sol ⭐ DESTACADO
+### SubscriptionManager.sol
 ```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.28;
-
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-
-contract SubscriptionManager {
-    uint256 public subscriptionCount;
-
-    struct Subscription {
-        address subscriber;
-        address merchant;
-        address token;
-        uint256 amount;
-        uint256 interval;
-        uint256 nextPayment;
-        bool active;
-    }
-
-    mapping(uint256 => Subscription) public subscriptions;
-
-    event SubscriptionCreated(uint256 indexed subscriptionId, ...);
-    event PaymentExecuted(uint256 indexed subscriptionId, uint256 nextPayment);
-    event SubscriptionCancelled(uint256 indexed subscriptionId);
-
-    function createSubscription(
-        address _merchant,
-        address _token,
-        uint256 _amount,
-        uint256 _interval
-    ) external {
-        // Validates and creates subscription
-        subscriptionCount++;
-        subscriptions[subscriptionCount] = Subscription({...});
-    }
-
-    function executePayment(uint256 _subscriptionId) external {
-        // Anyone can call when interval elapsed
-        // Transfers from subscriber to merchant
-        sub.nextPayment += sub.interval;
-    }
-
-    function cancelSubscription(uint256 _subscriptionId) external {
-        // Only subscriber can cancel
-    }
+struct Subscription {
+    address subscriber;
+    address merchant;
+    address token;
+    uint256 amount;
+    uint256 interval;
+    uint256 nextPayment;
+    bool active;
 }
+
+function createSubscription(...) external;
+function executePayment(subscriptionId) external;  // Anyone can call
+function cancelSubscription(subscriptionId) external;
 ```
 
-**Características clave:**
-- ✅ Cualquiera puede ejecutar el pago (keeper-friendly)
-- ✅ Soporte multi-token (cualquier ERC20)
-- ✅ Intervalos flexibles (diario, semanal, mensual)
-- ✅ Cancel anytime por el suscriptor
+**Features:**
+- Cualquiera puede ejecutar el pago (keeper-friendly)
+- Soporte multi-token (cualquier ERC20)
+- Intervalos flexibles
+- Cancel anytime
 
-## 📂 Estructura del Repo
-```
-strope-pay/
-├── backend/
-│   ├── contracts/
-│   │   ├── SubscriptionManager.sol
-│   │   └── mocks/
-│   │       └── ERC20Mock.sol
-│   ├── scripts/
-│   └── hardhat.config.js
-├── frontend/
-│   └── Next.js app
-└── README.md (16KB - muy completo)
-```
+## 🔗 Links Oficiales
+- **Demo:** https://strope-pay.vercel.app/
+- **GitHub:** https://github.com/usainbluntmx/strope-pay
 
-## ⏰ Timeline de Actividad
-- Desarrollo principalmente offline
-- Template EVM pre-configurado usado como base
-
-## 📈 Curva de Aprendizaje
-- **Nivel inicial:** Avanzado — desarrollador experimentado
-- **Principal desafío:** Diseño de keeper system para pagos
-- **Progreso:** ⭐⭐⭐⭐ MUY BUENO — Contrato limpio y reutilizable
-- **Lección clave:** Suscripciones on-chain son primitivo faltante
-
-## 📊 Métricas
-- **Total mensajes en thread:** N/A (trabajo offline)
-- **Contrato escrito:** ✅ SubscriptionManager.sol
-- **Contrato deployado:** ❌ Pendiente
-- **README:** ✅ 16KB - documentación excelente
-
-## 💡 Insights para DevRel
-
-**Por qué importa:**
-- Suscripciones = modelo de negocio dominante (SaaS)
-- On-chain = sin intermediarios, sin chargebacks
-- Keeper-friendly = automatizable con Chainlink/Gelato
-
-**Potencial post-Blitz:**
-- Template para cualquier dApp con suscripciones
-- Integración con stablecoins para pricing estable
-- Keeper network para ejecución automática
-
-**Componente reutilizable:**
-Este contrato es un building block que cualquier proyecto puede usar.
+## 💡 Innovación
+**Suscripciones on-chain.** Primitivo faltante en el ecosistema.
 
 ## ✅ Estado Final
-🟡 **Contrato completo** — Código limpio, bien documentado, listo para deploy. Uno de los contratos más reutilizables del Blitz. Falta deploy y testing.
+🟡 **En progreso** — Contrato limpio y reutilizable, pendiente deploy.

@@ -19,7 +19,6 @@ techStack:
 contracts:
   - name: "PaymentLink"
     deployed: false
-    description: "Smart contract para pagos via URL"
 repo: "https://github.com/Scarfdrilo/monadpay"
 deployUrl: "https://monadpay-mu.vercel.app/"
 messages: 0
@@ -31,16 +30,28 @@ errors: []
 
 ---
 
-## 📋 Descripción del Proyecto
-**MonadPay** — Solución de pagos que convierte una simple URL en una transacción on-chain en Monad. Pagos crypto tan fáciles como compartir un link.
+## 📋 Descripción del Proyecto (DevNads)
 
-**Características:**
-- Pagos via QR/URL sin copiar direcciones
-- Mobile-first para pagos presenciales
-- Recibos on-chain como comprobante inmutable
-- Soporte para MON nativo y tokens ERC20
+> MonadPay es una solución de pagos que convierte una simple URL en una transacción on-chain en la blockchain de Monad.
+> 
+> El proyecto está diseñado para hacer que los pagos con crypto sean tan fáciles como compartir un link. En lugar de copiar direcciones, seleccionar tokens o interactuar con dApps complejas, el usuario solo escanea un QR o abre un link, confirma el pago en su wallet y listo.
 
-## 👥 Miembros del Equipo
+**Features:**
+- URL → transacción on-chain
+- QR codes para pagos presenciales
+- Mobile-first (optimizado para iPhone)
+- Soporte MON nativo y ERC20
+- Recibos on-chain inmutables
+
+**Desafío técnico superado:**
+Codificar parámetros de pago (destinatario, monto, token, descripción) en una URL compartible usando Base64.
+
+**Características de Monad usadas:**
+- ⚡ Alto throughput — pagos simultáneos sin congestión
+- 💰 Costos bajos — micropagos viables
+- 🚀 Finalidad rápida — confirmación casi instantánea
+
+## 👥 Equipo (DevNads Oficial)
 - **Cindy Jimenez** — Desarrollador full-stack
 
 ## 🔧 Stack Técnico
@@ -50,11 +61,14 @@ errors: []
 - **Blockchain:** Monad Testnet
 
 ## 📜 Contratos
-- **PaymentLink.sol** — Codifica parámetros de pago en URL usando Base64
+- `PaymentLink.sol` — Pagos via URL con recibos on-chain
 
-## 🔗 Links
+## 🔗 Links Oficiales
 - **Demo:** https://monadpay-mu.vercel.app/
-- **GitHub:** github.com/Scarfdrilo/monadpay
+- **GitHub:** https://github.com/Scarfdrilo/monadpay
+
+## 💡 Innovación
+**Pagos tan fáciles como compartir un link.** QR → Pago → Confirmado.
 
 ## ✅ Estado Final
-🟡 **En progreso** — Payment links funcionando, smart contract en desarrollo.
+🟡 **En progreso** — Payment links funcionales, smart contract en desarrollo.

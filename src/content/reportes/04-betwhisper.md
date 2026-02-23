@@ -3,42 +3,68 @@ title: "Betwhisper"
 slug: "betwhisper"
 icon: "bot"
 team:
-  - name: "anthonysurfermx"
+  - name: "Anthony Chavez"
 members: 1
-area: "AI/Agents"
-phase: 40
+area: "Prediction Market"
+phase: 45
 status: "in-progress"
 techStack:
-  - "Next.js"
+  - "Swift"
+  - "Gemini 2.5 Flash"
+  - "Claude"
   - "ElevenLabs"
   - "Polymarket API"
-  - "Voice AI"
+  - "secp256k1"
 contracts: []
 repo: "https://github.com/anthonysurfermx/Betwhisper"
+deployUrl: "https://betwhisper.ai"
 messages: 0
 errors: []
 ---
-# 🎤 Betwhisper — Voice AI Prediction Assistant
+# 🎤 Betwhisper — Voice-Powered Prediction Markets
 
 ## Monad Blitz CDMX — Sábado 22 de Febrero 2026
 
 ---
 
-## 📋 Descripción del Proyecto
-**Betwhisper** — Asistente de voz con IA para análisis de mercados de predicción. Integra ElevenLabs para voz y Polymarket para datos de mercado.
+## 📋 Descripción del Proyecto (DevNads)
 
-## 👥 Miembros del Equipo
-- **anthonysurfermx** — Desarrollador principal
+> BetWhisper is a voice-powered prediction markets agent for Polymarket, built on Monad. Users wearing Meta Ray-Ban smart glasses can search markets, analyze bot activity with Agent Radar, get AI explanations, and place on-chain bets, all through natural conversation without touching their phone.
+
+**Features:**
+- Voice-powered betting via Meta Ray-Ban glasses
+- Agent Radar para detectar bots
+- AI explanations de mercados
+- Cross-chain execution (MON en Monad, CLOB en Polygon)
+- Social betting groups con AI gating
+- Full web interface en betwhisper.ai
+
+**Tech destacado:**
+- Gemini 2.5 Flash para audio nativo en tiempo real
+- Claude para análisis de mercados
+- secp256k1 wallet con Keychain storage
+
+## 👥 Equipo (DevNads Oficial)
+- **Anthony Chavez** — Desarrollador principal
 
 ## 🔧 Stack Técnico
-- **Voice:** ElevenLabs TTS
+- **Voice AI:** Gemini 2.5 Flash (native audio)
+- **Analysis:** Claude
+- **TTS:** ElevenLabs
 - **Data:** Polymarket API
-- **Frontend:** Next.js
-- **Blockchain:** Monad Testnet (planned)
+- **Mobile:** Swift (iOS)
+- **Wallet:** secp256k1 + Keychain
+- **Blockchain:** Monad + Polygon
 
-## 📊 Métricas
-- **Contratos deployados:** ❌ No (enfoque en integración de APIs)
-- **Repo:** github.com/anthonysurfermx/Betwhisper
+## 📜 Contratos
+No deployó contratos propios - integra con Polymarket existente.
+
+## 🔗 Links Oficiales
+- **Demo:** https://betwhisper.ai
+- **GitHub:** https://github.com/anthonysurfermx/Betwhisper
+
+## 💡 Innovación
+**Voice-first UX + Smart Glasses.** Único proyecto que integra Meta Ray-Ban para interacción hands-free.
 
 ## ✅ Estado Final
-🟡 **En progreso** — Integración de voz + Polymarket funcional. Sin smart contracts propios.
+🟡 **En progreso** — Voice AI funcional, integración Polymarket, sin contratos propios.

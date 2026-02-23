@@ -6,40 +6,51 @@ team:
   - name: "Lalo"
   - name: "Bure"
 members: 2
-area: "DeFi/Predictions"
+area: "Predictions"
 phase: 30
 status: "in-progress"
 techStack:
   - "Next.js"
+  - "TypeScript"
   - "Vercel"
-  - "Prediction Markets"
 contracts: []
 repo: "https://github.com/lalocripto/prediction-market"
 deployUrl: "https://prediction-market-khaki.vercel.app"
 messages: 0
 errors: []
 ---
-# ⚽ El MONdial — World Cup Predictions
+# ⚽ El MONdial — World Cup 2026 Predictions
 
 ## Monad Blitz CDMX — Sábado 22 de Febrero 2026
 
 ---
 
-## 📋 Descripción del Proyecto
-**El MONdial** — Plataforma de apuestas y predicciones para los partidos de la Copa del Mundo 2026. Permite hacer cualquier tipo de apuesta alrededor de los partidos.
+## 📋 Descripción del Proyecto (DevNads)
 
-## 👥 Miembros del Equipo
-- **Lalo** — lalocripto
+> Un sitio donde puedes hacer cualquier tipo de apuestas alrededor de los partidos de la copa del mundo 2026.
+
+**Features:**
+- Apuestas sobre partidos del Mundial 2026
+- Cualquier tipo de predicción
+- Mercados de predicción
+
+## 👥 Equipo (DevNads Oficial)
+- **Lalo** (lalocripto) — Desarrollo
 - **Bure** — Desarrollo
 
 ## 🔧 Stack Técnico
-- **Frontend:** Next.js
-- **Prediction Logic:** Smart contracts (planned)
+- **Frontend:** Next.js + TypeScript
 - **Deploy:** Vercel
 
-## 🔗 Links
+## 📜 Contratos
+No deployó contratos propios.
+
+## 🔗 Links Oficiales
 - **Demo:** https://prediction-market-khaki.vercel.app
-- **GitHub:** github.com/lalocripto/prediction-market
+- **GitHub:** https://github.com/lalocripto/prediction-market
+
+## 💡 Innovación
+**Timing perfecto.** Mundial 2026 será en México - mercado local relevante.
 
 ## ✅ Estado Final
-🟡 **En progreso** — Mercado de predicciones para el Mundial 2026.
+🟡 **En progreso** — Frontend de predicciones para el Mundial.

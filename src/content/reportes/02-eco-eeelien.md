@@ -3,12 +3,11 @@ title: "Eco Eeelien"
 slug: "eco-eeelien"
 icon: "leaf"
 team:
-  - name: "39eliens"
-    discord: "39eliens"
-  - name: "Carlos Navarrete"
+  - name: "Nadia Elizabeth Escalante Solano"
+  - name: "Carlos Navarrete Tapia"
 members: 2
-area: "IoT/Hardware"
-phase: 70
+area: "Regen/IoT"
+phase: 85
 status: "completed"
 techStack:
   - "Next.js"
@@ -16,33 +15,30 @@ techStack:
   - "Tailwind CSS"
   - "ESP32-CAM"
   - "Solidity"
-  - "AI Image Classification"
+  - "USDC"
 contracts:
   - name: "EcoToken"
     deployed: true
     address: "0x03b5e6f27e1b1a1ae5aa990074209fcfae473222"
-    description: "ERC20 reward token"
   - name: "RecyclingRegistry"
     deployed: true
     address: "0x18590db5176e85785fb859b4b96e99b0a4d2f817"
-    description: "Registry of recycling events"
   - name: "ChallengeManager"
     deployed: true
     address: "0x1507efa34a2f9e33ed491526132bfaf6a5c50c97"
-    description: "Gamification challenges"
   - name: "VoucherNFT"
     deployed: true
     address: "0x188496b92fb6580dfd9159c40fd5bf4fb438d729"
-    description: "NFT vouchers for rewards"
 repo: "https://github.com/eeelien/eco-eeelien-monad"
+deployUrl: "https://eco-eeelien-monad-git-main-eeeliens-projects.vercel.app/"
 messages: 342
 errors:
   - description: "Chain ID incorrecto en frontend"
-    cause: "Docs decian 41454, correcto es 10143"
+    cause: "Docs decían 41454, correcto es 10143"
     severity: "critical"
     resolved: true
   - description: "Token de GitHub expuesto en chat"
-    cause: "39eliens compartio token en Discord"
+    cause: "Compartieron token en Discord público"
     severity: "critical"
     resolved: true
 ---
@@ -52,65 +48,60 @@ errors:
 
 ---
 
-## 📋 Descripción del Proyecto
-**Eco Eeelien** — Plataforma de reciclaje tokenizado que combina IoT (ESP32-CAM) + IA para clasificar residuos y recompensar con tokens en Monad. Los usuarios escanean sus residuos con una cámara, la IA clasifica el tipo de material, y reciben EcoTokens como recompensa.
+## 📋 Descripción del Proyecto (DevNads)
 
-## 👥 Miembros del Equipo
-- **39eliens** — Desarrollo principal, IoT
-- **Carlos Navarrete** — Co-desarrollo
+> Es una plataforma de reciclaje con recompensa con USDC. Monad es la blockchain donde se registran las transacciones de reciclaje y se distribuyen los tokens ECO como recompensa a los usuarios. Con ESP32.
+
+**Flujo:**
+1. Usuario escanea residuos con ESP32-CAM
+2. IA clasifica tipo de material
+3. Sistema registra en RecyclingRegistry
+4. Usuario recibe EcoTokens como recompensa
+5. Tokens canjeables por vouchers NFT
+
+## 👥 Equipo (DevNads Oficial)
+- **Nadia Elizabeth Escalante Solano** — Desarrollo principal
+- **Carlos Navarrete Tapia** — Co-desarrollo
 
 ## 🔧 Stack Técnico
 - **Hardware:** ESP32-CAM (cámara IoT)
-- **IA:** Clasificación de imágenes para tipos de residuos
-- **Smart Contracts:** Solidity + Foundry (4 contratos)
-- **Frontend:** Next.js + Tailwind + WalletConnect
-- **Deploy:** Vercel
+- **IA:** Clasificación de imágenes
+- **Smart Contracts:** Solidity + Foundry
+- **Frontend:** Next.js + Tailwind
 - **Blockchain:** Monad Testnet (Chain ID 10143)
 
-## 📜 Contratos Deployados (4) ✅ VERIFICADOS ON-CHAIN
+## 📜 Contratos Deployados ✅ VERIFICADOS ON-CHAIN
 
-| Contrato | Address |
-|----------|---------|
-| EcoToken | `0x03b5e6f27e1b1a1ae5aa990074209fcfae473222` |
-| RecyclingRegistry | `0x18590db5176e85785fb859b4b96e99b0a4d2f817` |
-| ChallengeManager | `0x1507efa34a2f9e33ed491526132bfaf6a5c50c97` |
-| VoucherNFT | `0x188496b92fb6580dfd9159c40fd5bf4fb438d729` |
+| Contrato | Address | Función |
+|----------|---------|---------|
+| EcoToken | `0x03b5e6f27e1b1a1ae5aa990074209fcfae473222` | ERC20 rewards |
+| RecyclingRegistry | `0x18590db5176e85785fb859b4b96e99b0a4d2f817` | Registro de reciclaje |
+| ChallengeManager | `0x1507efa34a2f9e33ed491526132bfaf6a5c50c97` | Gamificación |
+| VoucherNFT | `0x188496b92fb6580dfd9159c40fd5bf4fb438d729` | NFT vouchers |
 
-## ⏰ Timeline de Actividad
-- **~15:30 UTC** — Inicio, arquitectura IoT + blockchain
-- **16:00–19:00 UTC** — Desarrollo de 4 smart contracts
-- **19:00–21:00 UTC** — Deploy exitoso en Monad Testnet
-- **21:00–00:00 UTC** — Frontend + WalletConnect + Vercel deploy
+## 🔗 Links Oficiales
+- **Demo:** https://eco-eeelien-monad-git-main-eeeliens-projects.vercel.app/
+- **GitHub:** https://github.com/eeelien/eco-eeelien-monad
 
-## 🚨 Errores y Blockers (DETALLADO)
+## 🚨 Errores Documentados
 
-### 1. Chain ID incorrecto (CRÍTICO)
-- **Problema:** Frontend usaba chain ID de docs viejos
-- **Error:** `Wrong network` en todas las transacciones
-- **Causa:** Docs decían 41454, correcto es 10143
-- **Solución:** Actualizar chain config
-- **Tiempo perdido:** ~1 hora
+### 1. Chain ID incorrecto (CRITICAL)
+- **Problema:** Frontend usaba chain ID de docs viejos (41454)
+- **Correcto:** 10143
+- **Estado:** ✅ Resuelto
 
-### 2. Token de GitHub expuesto (CRÍTICO)
-- **Problema:** 39eliens pegó token en Discord público
-- **Impacto:** Seguridad comprometida
-- **Solución:** Token revocado inmediatamente
-
-## 📈 Curva de Aprendizaje
-- **Nivel inicial:** Intermedio-avanzado — experiencia en IoT, nuevos en Solidity
-- **Principal desafío:** Pasar de IoT/hardware a smart contracts en 1 día
-- **Progreso:** ⭐⭐⭐⭐⭐ EXCELENTE — 4 contratos deployados + frontend funcional
-- **Lección clave:** IoT + blockchain es viable pero requiere abstracción de capas
-
-## 🤖 Soporte de Agentes
-- **devrel-banana:** Deploy de contratos, arquitectura, Vercel
-- **aibus-dumbleclaw:** Fix WalletConnect, chain config, frontend
+### 2. Token de GitHub expuesto (CRITICAL)
+- **Problema:** Token compartido en Discord público
+- **Acción:** Token revocado inmediatamente
+- **Estado:** ✅ Resuelto
 
 ## 📊 Métricas
-- **Total mensajes en thread:** 342 (más activo del Blitz)
-- **Contratos deployados:** ✅ 4 contratos en Monad Testnet
-- **Frontend deployado:** ✅ En Vercel
-- **Hardware:** ✅ ESP32-CAM integrado (parcial)
+- **Mensajes en Discord:** 342 (más activo)
+- **Contratos deployados:** 4
+- **Errores resueltos:** 2/2
+
+## 💡 Innovación
+**Único proyecto con hardware IoT.** ESP32-CAM + IA + Blockchain = verificación física de reciclaje.
 
 ## ✅ Estado Final
-🟢 **COMPLETADO** — Proyecto más activo y completo del Blitz. 4 contratos deployados con addresses verificadas. Combinación única de IoT + IA + blockchain.
+🟢 **COMPLETADO** — Proyecto más completo del Blitz. 4 contratos on-chain, frontend funcional, hardware IoT integrado.

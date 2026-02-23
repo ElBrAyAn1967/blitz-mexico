@@ -1,149 +1,72 @@
 ---
-title: "Persea Protocol"
+title: "PERSÉA Protocol"
 slug: "persea-protocol"
 icon: "sprout"
 team:
-  - name: "Brian Lopez"
-    discord: "lpbrayan0"
-  - name: "Ane"
-members: 2
-area: "Social Impact"
-phase: 60
+  - name: "Petra"
+  - name: "Diego Rivero"
+  - name: "Anette Rivera"
+members: 3
+area: "DeFi/Supply Chain"
+phase: 40
 status: "in-progress"
 techStack:
+  - "TypeScript"
+  - "Foundry"
   - "Solidity"
-  - "Hardhat"
   - "Next.js"
-  - "Supply Chain"
 contracts:
-  - name: "AvocadoBatch"
-    deployed: false
-  - name: "CertificationNFT"
-    deployed: false
-  - name: "SupplyChain"
-    deployed: false
-  - name: "Marketplace"
-    deployed: false
-  - name: "Escrow"
+  - name: "ImpactFundKintsu"
     deployed: false
 repo: "https://github.com/Luis-Cwk/persea-protocol"
+deployUrl: "https://frontend-beta-swart-12.vercel.app/"
 messages: 17
 errors: []
 ---
-# 🥑 Persea Protocol — Reporte de Equipo
+# 🥑 PERSÉA Protocol — Avocado Waste Traceability
 
 ## Monad Blitz CDMX — Sábado 22 de Febrero 2026
 
 ---
 
-## 📋 Descripción del Proyecto
-Protocolo de trazabilidad de aguacates desde huerta hasta consumidor. Usa blockchain para trackear el ciclo de vida del aguacate mexicano, certificar origen orgánico/fair trade, e incentivar el reciclaje de residuos.
+## 📋 Descripción del Proyecto (DevNads)
 
-## 👥 Miembros del Equipo
-- **Brian Lopez** (lpbrayan0) — Co-fundador, DevRel de Frutero
-- **Ane** — Co-desarrollo
+> PERSÉA Protocol es una plataforma descentralizada que digitaliza la trazabilidad y el aprovechamiento de todos los residuos del aguacate michoacano: hueso, cáscara, pulpa descartada y biomasa de poda.
 
-## 🔧 Stack Técnico
-- **Smart Contracts:** Solidity (5 contratos)
-- **Framework:** Hardhat
-- **Frontend:** Next.js (planned)
-- **Blockchain:** Monad Testnet (Chain ID 10143)
+**Residuos trackeados:**
+- Hueso de aguacate
+- Cáscara
+- Pulpa descartada
+- Biomasa de poda
 
-## 📜 Contratos Desarrollados (5)
-
-### 1. AvocadoBatch.sol
-```solidity
-// Tracking de lotes de aguacate
-struct Batch {
-    bytes32 id;
-    address origin;      // Huerta de origen
-    uint256 timestamp;
-    string metadata;     // Variedad, peso, etc.
-}
-```
-
-### 2. CertificationNFT.sol
-```solidity
-// NFTs de certificación
-- Organic certification
-- Fair Trade certification
-- Origin verification
-```
-
-### 3. SupplyChain.sol
-```solidity
-// Trazabilidad completa
-- registerHarvest()
-- registerTransport()
-- registerDistribution()
-- registerRetail()
-```
-
-### 4. Marketplace.sol
-```solidity
-// Trading P2P de lotes
-- listBatch()
-- buyBatch()
-- verifyOrigin()
-```
-
-### 5. Escrow.sol
-```solidity
-// Pagos seguros
-- createEscrow()
-- release()
-- dispute()
-```
-
-## 📂 Estructura del Repo
-```
-persea-protocol/
-├── contracts/
-│   ├── AvocadoBatch.sol
-│   ├── CertificationNFT.sol
-│   ├── SupplyChain.sol
-│   ├── Marketplace.sol
-│   └── Escrow.sol
-├── scripts/
-├── test/
-└── hardhat.config.js
-```
-
-## ⏰ Timeline de Actividad
-- **~16:30 UTC** — Creación del thread
-- **16:30–19:00 UTC** — Arquitectura de 5 contratos
-- **19:00+ UTC** — Desarrollo de contratos
-
-## 🚨 Errores y Blockers
-- Sin errores técnicos reportados
-- Brian dividió tiempo entre este proyecto y coordinación del evento
-
-## 📈 Curva de Aprendizaje
-- **Nivel inicial:** Avanzado — Brian es DevRel técnico
-- **Principal desafío:** Modelo de datos de trazabilidad completo
-- **Progreso:** ⭐⭐⭐⭐ MUY BUENO — Arquitectura completa, 5 contratos escritos
-- **Lección clave:** Supply chain on-chain necesita interoperabilidad con sistemas físicos (QR, IoT)
-
-## 🤖 Soporte de Agentes
-- Interacción mínima — Brian trabajó independiente
-
-## 📊 Métricas
-- **Total mensajes en thread:** 17
-- **Contratos escritos:** 5
-- **Contratos deployados:** ❌ No (falta de tiempo)
-- **Arquitectura:** ✅ Completa
-
-## 💡 Insights para DevRel
-
-**Por qué importa:**
+**Valor:**
 - México = #1 productor mundial de aguacate
 - Trazabilidad = premium pricing para exportación
 - Blockchain = confianza en certificaciones
 
-**Potencial post-Blitz:**
-- Integración con cooperativas de aguacate en Michoacán
-- Partnership con certificadoras orgánicas
-- Template para supply chain de otros productos
+## 👥 Equipo (DevNads Oficial)
+- **Petra** — Desarrollo
+- **Diego Rivero** — Desarrollo
+- **Anette Rivera** — Desarrollo
+
+## 🔧 Stack Técnico
+- **Smart Contracts:** Solidity + Foundry
+- **Frontend:** Next.js + TypeScript
+- **Blockchain:** Monad Testnet
+
+## 📜 Contratos Desarrollados
+- `ImpactFundKintsu.sol` — Fondo de impacto
+- Arquitectura de trazabilidad (no deployado)
+
+## 🔗 Links Oficiales
+- **Demo:** https://frontend-beta-swart-12.vercel.app/
+- **GitHub:** https://github.com/Luis-Cwk/persea-protocol
+
+## 📊 Métricas
+- **Mensajes en Discord:** 17
+
+## 💡 Innovación
+**Problema LATAM real.** Trazabilidad de aguacate michoacano con blockchain.
 
 ## ✅ Estado Final
-🟡 **Arquitectura completa** — 5 contratos bien diseñados pero sin deploy. Brian estaba también coordinando el evento. Proyecto con potencial real para agro-tech mexicano.
+🟡 **En progreso** — Arquitectura definida, contratos en desarrollo. Caso de uso real para agro-tech mexicano.

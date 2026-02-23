@@ -1,13 +1,18 @@
 ---
-title: "BOTazo / AgenteConsumo"
-slug: "botazo-agenteconsumo"
+title: "BOTAZO"
+slug: "botazo"
 icon: "bot"
 team:
-  - name: "Nallely Lopez"
-members: 1
-area: "AI/Agents"
-phase: 8
-status: "concept"
+  - name: "Miriam Mejía Rojas"
+  - name: "Lizeth Nallely López García"
+  - name: "Gerardo Aguirre"
+  - name: "Alan Cardoso"
+  - name: "Hector Centeno"
+  - name: "Edgar Ramirez"
+members: 6
+area: "AI Agent"
+phase: 25
+status: "in-progress"
 techStack:
   - "React"
   - "Vite"
@@ -15,48 +20,51 @@ techStack:
   - "Shadcn"
   - "Framer Motion"
 contracts: []
+repo: "https://github.com/Axolo-Tech/botazo-savings-buddy"
+deployUrl: "https://botazo-savings-buddy.lovable.app/dashboard"
 messages: 7
 errors: []
 ---
-# 📱 BOTazo / AgenteConsumo — Reporte de Equipo
+# 📱 BOTAZO — AI Savings Agent
 
 ## Monad Blitz CDMX — Sábado 22 de Febrero 2026
 
 ---
 
-## 📋 Descripción del Proyecto
-**BOTazo** — PWA (Progressive Web App) de tracking de consumo personal. Permite a los usuarios registrar y analizar sus hábitos de consumo con una interfaz mobile-first.
+## 📋 Descripción del Proyecto (DevNads)
 
-## 👥 Miembros del Equipo
-- **Nallely López** — Desarrolladora principal
+> BOTAZO es un agente inteligente de ahorro personal que detecta y te avisa de las mejores ofertas en el momento exacto en que las necesitas.
+
+**Features:**
+- Detección automática de ofertas
+- Notificaciones en tiempo real
+- Tracking de ahorro personal
+- AI-powered recommendations
+
+## 👥 Equipo (DevNads Oficial) — 6 PERSONAS
+- **Miriam Mejía Rojas**
+- **Lizeth Nallely López García**
+- **Gerardo Aguirre**
+- **Alan Cardoso**
+- **Hector Centeno**
+- **Edgar Ramirez**
 
 ## 🔧 Stack Técnico
-- **Frontend:** React + Vite (PWA mobile-first)
-- **Blockchain:** Monad Testnet (pendiente integración)
+- **Frontend:** React + Vite
+- **UI:** Tailwind CSS + Shadcn
+- **Animations:** Framer Motion
+- **Platform:** Lovable.app
 
-## ⏰ Timeline de Actividad
-- **~17:00 UTC** — Creación del thread, definición del proyecto
-- **17:00–20:00 UTC** — Setup de la arquitectura PWA
+## 📜 Contratos
+No deployó contratos - enfoque en AI agent.
 
-## 🚨 Errores y Blockers
-
-### 1. Definición del scope
-- **Problema:** Balancear funcionalidad de tracking con integración blockchain
-- **Solución:** Se priorizó la experiencia mobile-first antes que la integración on-chain
-
-## 📈 Curva de Aprendizaje
-- **Nivel inicial:** Principiante-intermedio en web3
-- **Principal desafío:** PWA development + blockchain en un solo día
-- **Progreso:** Inicio del proyecto con arquitectura definida
-- **Lección clave:** Priorizar UX sobre crypto features para consumer apps
-
-## 🤖 Soporte de Agentes
-- **aibus-dumbleclaw:** Soporte con arquitectura PWA mobile-first
+## 🔗 Links Oficiales
+- **Demo:** https://botazo-savings-buddy.lovable.app/dashboard
+- **GitHub:** https://github.com/Axolo-Tech/botazo-savings-buddy
 
 ## 📊 Métricas
-- **Total mensajes en thread:** 7
-- **Contrato deployado:** ❌ No
-- **PWA funcional:** En progreso
+- **Mensajes en Discord:** 7
+- **Tamaño del equipo:** 6 (segundo más grande)
 
 ## ✅ Estado Final
-🔴 **Inicio temprano** — Thread con poca actividad (7 mensajes). El proyecto quedó en fase de definición/arquitectura.
+🟡 **En progreso** — PWA con agente de ahorro. Sin blockchain integration aún.
