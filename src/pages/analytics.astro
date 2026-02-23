@@ -279,6 +279,11 @@ projects.forEach(p => { statusFreq[p.data.status] = (statusFreq[p.data.status] |
       </div>
       <h1>Dashboard <span>Analitico</span></h1>
       <p>Analisis completo del hackathon — {totalProjects} proyectos, {totalMembers}+ participantes, {totalMessages}+ mensajes analizados</p>
+      <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: rgba(255,149,0,0.1); border: 1px solid rgba(255,149,0,0.25); border-radius: 8px;">
+        <p style="font-size: 0.85rem; color: var(--orange); margin: 0;">
+          ⚠️ <strong>Contexto:</strong> ~70% de participantes NO eran técnicos. El {completionRate}% de proyectos con contratos on-chain es un excelente ratio considerando el perfil del evento.
+        </p>
+      </div>
     </div>
 
     <!-- KPIs -->

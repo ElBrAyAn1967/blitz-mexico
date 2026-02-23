@@ -17,10 +17,10 @@ techStack:
   - "Solidity"
   - "USDC"
 contracts:
-  - name: "EcoToken"
+  - name: "EcoToken (v1)"
     deployed: true
     address: "0x03b5e6f27e1b1a1ae5aa990074209fcfae473222"
-  - name: "RecyclingRegistry"
+  - name: "RecyclingRegistry (v1)"
     deployed: true
     address: "0x18590db5176e85785fb859b4b96e99b0a4d2f817"
   - name: "ChallengeManager"
@@ -29,6 +29,12 @@ contracts:
   - name: "VoucherNFT"
     deployed: true
     address: "0x188496b92fb6580dfd9159c40fd5bf4fb438d729"
+  - name: "EcoToken (v2)"
+    deployed: true
+    address: "0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9"
+  - name: "RecyclingRegistry (v2)"
+    deployed: true
+    address: "0x7fFCcdD4b9Ae0a3cfCdA86c954AE8a1816Ec74C3"
 repo: "https://github.com/eeelien/eco-eeelien-monad"
 deployUrl: "https://eco-eeelien-monad-git-main-eeeliens-projects.vercel.app/"
 messages: 342
@@ -72,12 +78,21 @@ errors:
 
 ## 📜 Contratos Deployados ✅ VERIFICADOS ON-CHAIN
 
+**Versión 1:**
 | Contrato | Address | Función |
 |----------|---------|---------|
 | EcoToken | `0x03b5e6f27e1b1a1ae5aa990074209fcfae473222` | ERC20 rewards |
 | RecyclingRegistry | `0x18590db5176e85785fb859b4b96e99b0a4d2f817` | Registro de reciclaje |
 | ChallengeManager | `0x1507efa34a2f9e33ed491526132bfaf6a5c50c97` | Gamificación |
 | VoucherNFT | `0x188496b92fb6580dfd9159c40fd5bf4fb438d729` | NFT vouchers |
+
+**Versión 2 (actualizada):**
+| Contrato | Address | Función |
+|----------|---------|---------|
+| EcoToken (ECO) | `0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9` | ERC20 rewards v2 |
+| RecyclingRegistry | `0x7fFCcdD4b9Ae0a3cfCdA86c954AE8a1816Ec74C3` | Registro v2 |
+
+**Total:** 6 contratos on-chain (~96 KB de bytecode)
 
 ## 🔗 Links Oficiales
 - **Demo:** https://eco-eeelien-monad-git-main-eeeliens-projects.vercel.app/
@@ -97,11 +112,11 @@ errors:
 
 ## 📊 Métricas
 - **Mensajes en Discord:** 342 (más activo)
-- **Contratos deployados:** 4
+- **Contratos deployados:** 6 (v1: 4, v2: 2)
 - **Errores resueltos:** 2/2
 
 ## 💡 Innovación
 **Único proyecto con hardware IoT.** ESP32-CAM + IA + Blockchain = verificación física de reciclaje.
 
 ## ✅ Estado Final
-🟢 **COMPLETADO** — Proyecto más completo del Blitz. 4 contratos on-chain, frontend funcional, hardware IoT integrado.
+🟢 **COMPLETADO** — Proyecto más completo del Blitz. 6 contratos on-chain (2 versiones), frontend funcional, hardware IoT integrado.
