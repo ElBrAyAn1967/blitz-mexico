@@ -1,7 +1,43 @@
 ---
-title: "🌱 Eco Eeelien — Reporte de Equipo"
+title: "Eco Eeelien"
+slug: "eco-eeelien"
+icon: "leaf"
+team:
+  - name: "39eliens"
+    discord: "39eliens"
+  - name: "Carlos Navarrete"
+members: 2
+area: "IoT/Hardware"
+phase: 25
+status: "completed"
+techStack:
+  - "Next.js"
+  - "Foundry"
+  - "Tailwind CSS"
+  - "ESP32-CAM"
+  - "Solidity"
+contracts:
+  - name: "EcoToken"
+    deployed: true
+    address: "0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9"
+  - name: "RecyclingRegistry"
+    deployed: true
+  - name: "VoucherNFT"
+    deployed: true
+  - name: "ChallengeManager"
+    deployed: true
+repo: "https://github.com/eeelien/eco-eeelien-monad"
+messages: 342
+errors:
+  - description: "Chain ID incorrecto en frontend"
+    cause: "Docs decian 41454, correcto es 10143"
+    severity: "critical"
+    resolved: true
+  - description: "Token de GitHub expuesto en chat"
+    cause: "39eliens compartio token en Discord"
+    severity: "critical"
+    resolved: true
 ---
-
 # 🌱 Eco Eeelien — Reporte de Equipo
 
 ## Monad Blitz CDMX — Sábado 22 de Febrero 2026
@@ -59,19 +95,6 @@ Plataforma de reciclaje tokenizado que combina IoT (ESP32-CAM) + IA para clasifi
 - **Total mensajes en thread:** 317
 - **Contrato deployado:** ✅ EcoToken en `0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9`
 - **Frontend deployado:** ✅ En Vercel
-
-## 🔗 Repositorio y Contratos (Verificado desde GitHub)
-
-- **Repo:** [github.com/eeelien/eco-eeelien-monad](https://github.com/eeelien/eco-eeelien-monad)
-- **Stack verificado:** Next.js + Tailwind, Foundry para contratos, ESP32-CAM (hardware)
-- **4 contratos (todos Solidity ^0.8.28, OpenZeppelin):**
-  1. **`EcoToken.sol`** — ERC-20 "ECO" con patrón de minters autorizados
-  2. **`RecyclingRegistry.sol`** — Operadores ESP32 registran botellas. Recompensas: 5 ECO/plástico, 10 ECO/aluminio
-  3. **`VoucherNFT.sol`** — ERC-721 cupones. Usuarios queman ECO para obtener vouchers de partners (ej: "Starbucks CDMX 30%"). Códigos verificables únicos.
-  4. **`ChallengeManager.sol`** — Gamificación: challenges semanales/totales/por tipo con bonos ECO
-- **Arquitectura:** ESP32-CAM (operador) → RecyclingRegistry → EcoToken mint → VoucherNFT burn/redeem
-- **Deploy:** Vercel, contratos en Monad testnet (EcoToken: `0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9`)
-- **Patrón notable:** Sistema completo de 4 contratos interconectados con hardware IoT — el más arquitectónicamente ambicioso del Blitz
 
 ## ✅ Estado Final
 🟢 **COMPLETADO** — Proyecto más activo del Blitz. Deploy exitoso de contrato + frontend. Uno de los 2 únicos equipos que lograron deployar contratos en Monad Testnet.

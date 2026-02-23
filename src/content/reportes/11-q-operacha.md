@@ -1,17 +1,41 @@
 ---
-title: "🎰 Q-Operacha — Reporte de Equipo"
+title: "Q-Operacha"
+slug: "q-operacha"
+icon: "coins"
+team:
+  - name: "Chris"
+members: 3
+area: "DeFi/Fintech"
+phase: 20
+status: "in-progress"
+techStack:
+  - "Scaffold-ETH"
+  - "Hardhat"
+  - "Next.js"
+  - "Python"
+  - "FastAPI"
+  - "web3.py"
+contracts:
+  - name: "CoperachaInteligente"
+    deployed: true
+repo: "https://github.com/LexBP11/qoperacha_hack"
+deployUrl: "https://qoperacha.vercel.app"
+messages: 73
+errors:
+  - description: "deployedContracts.ts vacio"
+    cause: "No corrieron yarn deploy antes del frontend"
+    severity: "critical"
+    resolved: true
+  - description: "Python data 0x missing selector"
+    cause: "web3.py enviaba tx sin function selector"
+    severity: "critical"
+    resolved: true
 ---
-
 # 🎰 Q-Operacha — Reporte de Equipo
 
 ## Monad Blitz CDMX — Sábado 22 de Febrero 2026
 
 ---
-
-## 📋 Datos Verificados (Recolección Manual — Brian Lopez)
-- **Miembros del equipo:** 3
-- **Fase al cierre:** 20%
-- **Descripción oficial:** Motor de riesgo con IA para DeFi (99% / Q-Operacha)
 
 ## 📋 Descripción del Proyecto
 Motor de riesgo con IA para DeFi. Analiza protocolos DeFi y calcula scores de riesgo para usuarios antes de que inviertan.
@@ -37,17 +61,6 @@ Motor de riesgo con IA para DeFi. Analiza protocolos DeFi y calcula scores de ri
 
 ## 📊 Métricas
 - **Total mensajes en thread:** ~50 (compartido con Clob.mad/99% Fe)
-
-## 🔗 Repositorio y Contratos (Verificado desde GitHub)
-
-- **Repo:** [github.com/LexBP11/qoperacha_hack](https://github.com/LexBP11/qoperacha_hack)
-- **Stack verificado:** Scaffold-ETH 2 + Hardhat + Next.js, Python FastAPI backend
-- **Contrato principal:** `CoperachaInteligente.sol` (Solidity >=0.8.0)
-  - Crowdfunding con protección IA: `aportar()` (depósito), `ejecutarProteccionIA()` (modifier `soloIA` — agente Python llama cuando volatilidad >80%), `desactivarProteccion()`, `retirar()` (solo admin)
-  - Events: `AportacionRecibida`, `ProteccionActivada`
-  - Backend Python usa web3.py para llamar la función de protección
-- **Deploy:** Frontend en Vercel
-- **Patrón notable:** Híbrido on-chain/off-chain — un agente Python monitorea volatilidad y ejecuta funciones protegidas del contrato via modifier `soloIA`
 
 ## ✅ Estado Final
 🟡 **Concepto** — Proyecto técnicamente ambicioso, quedó en fase conceptual.

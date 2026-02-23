@@ -1,8 +1,19 @@
 ---
-title: "📊 SUMMARY — Monad Blitz CDMX"
+title: "SUMMARY"
+slug: "summary"
+icon: "bar-chart"
+team: []
+members: 0
+area: "Meta"
+phase: 0
+status: "completed"
+techStack: []
+contracts: []
+messages: 0
+errors: []
 ---
 
-# 📊 SUMMARY — Monad Blitz CDMX
+# SUMMARY — Monad Blitz CDMX
 
 ## Sábado 22 de Febrero 2026
 
@@ -16,40 +27,24 @@ El Monad Blitz CDMX fue un hackathon presencial de 1 día con **~15 proyectos re
 
 ## 📋 Tabla Resumen de Todos los Equipos
 
-| # | Proyecto | Miembros | Msgs | Contrato Deploy | Estado | Fase (Brian) | Repo Verificado |
-|---|----------|----------|------|-----------------|--------|--------------|-----------------|
-| 1 | 🛒 Monazon | Tory Dom | 323 | ❌ (USDC transfers) | 🟡 En progreso | — | ✅ [Monazon](https://github.com/ToryDom/Monazon) |
-| 2 | 🌱 Eco Eeelien | 2 (39eliens/Carlos) | 317+25 | ✅ EcoToken + 3 más | 🟢 **COMPLETADO** | 25% | ✅ [eco-eeelien-monad](https://github.com/eeelien/eco-eeelien-monad) |
-| 3 | 💜 MARP | Clavely | 107 | ✅ AgentReputation | 🟢 **COMPLETADO** | — | — |
-| 4 | ~~🇲🇽 Solidario México~~ | — | — | — | ❌ **ELIMINADO** | Duplicado → ver #14 | — |
-| 5 | ⚔️ FanSlayer/Monad101 | 3 | 400 | ❌ | 🟢 Deploy Vercel | 38.12% | — |
-| 6 | 🏥 MediTrack | 4 | 30 | ❌ | 🟡 MVP frontend | 25% | — |
-| 7 | 📊 CLOB.nad | 2 | ~123 | ❌ | 🟡 En progreso | Iniciando | — |
-| 8 | 📱 BOTazo | Nallely López | 7 | ❌ | 🔴 Inicio | — | — |
-| 9 | 🥑 Persea Protocol | Brian Lopez, Ane | 17 | ❌ | 🟡 Concepto | — | — |
-| 10 | 🔄 Antaria/Tandas | 1 (Enrique) | 15 | ❌ | 🟡 Concepto | Construcción contratos | — |
-| 11 | 🎰 99%/Q-Operacha | 3 | ~50 | CoperachaInteligente | 🟡 Concepto | 20% | ✅ [qoperacha_hack](https://github.com/LexBP11/qoperacha_hack) |
-| 12 | 🌍 Ecoelien (original) | 2 (39eliens/Carlos) | 25 | — | ↗️ Migrado | 25% | — |
-| 13 | 🧬 Genomad | Brian Lopez | 5 | ❌ | 🔴 Minimal | — | — |
-| 14 | 💚 ClearHope/Solidario MX | 4 (Axel, misteroby17, jose.ewe +1) | 194+4 | ImpactFundKintsu | 🟡 En progreso | 20% | ✅ [solidario-mexico](https://github.com/AlanRLG/solidario-mexico) |
-| 15 | ☢️ PREVENTDEMIC | SergioFenix | 1 | ❌ | 🔴 Solo creación | — | — |
-| 16 | 👋 Hola | — | 2 | ❌ | 🔴 Test | — | — |
-| 17 | 🔬 7AYLABS | 6 | — | ❌ | 🟡 En progreso | Construcción Smart Contracts | — |
-
----
-
-## 🔗 Repos Verificados desde GitHub
-
-De los 15 proyectos, **4 repos fueron verificados** con código fuente público:
-
-| Proyecto | Repo | Stack | Contratos |
-|----------|------|-------|-----------|
-| Monazon | [ToryDom/Monazon](https://github.com/ToryDom/Monazon) | Next.js + Drizzle + wagmi/viem | Sin contrato custom (USDC transfers) |
-| Eco Eeelien | [eeelien/eco-eeelien-monad](https://github.com/eeelien/eco-eeelien-monad) | Next.js + Foundry + ESP32-CAM | EcoToken, RecyclingRegistry, VoucherNFT, ChallengeManager |
-| Q-Operacha | [LexBP11/qoperacha_hack](https://github.com/LexBP11/qoperacha_hack) | Scaffold-ETH 2 + Hardhat + Python | CoperachaInteligente.sol |
-| ClearHope | [AlanRLG/solidario-mexico](https://github.com/AlanRLG/solidario-mexico) | Vite + React + Foundry | ImpactFundKintsu.sol (Kintsu staking) |
-
-**🧰 Template oficial del hackathon:** [fruteroclub/monad-blitz-starter](https://github.com/fruteroclub/monad-blitz-starter) — ERC1155 + Next.js + Privy (stack recomendado)
+| # | Proyecto | Miembros | Msgs | Contrato Deploy | Estado |
+|---|----------|----------|------|-----------------|--------|
+| 1 | 🛒 Monazon | Tory Dom | 323 | ❌ | 🟡 En progreso |
+| 2 | 🌱 Eco Eeelien | 39eliens, Carlos Navarrete | 317+25 | ✅ EcoToken | 🟢 **COMPLETADO** |
+| 3 | 💜 MARP | Clavely | 107 | ✅ AgentReputation | 🟢 **COMPLETADO** |
+| 4 | 🇲🇽 Solidario México | jose.ewe, Axel, misteroby17 | 194 | ❌ | 🟡 En progreso |
+| 5 | ⚔️ FanSlayer/Monad101 | Onii (oni6213) | 400 | ❌ | 🟢 Deploy Vercel |
+| 6 | 🏥 MediTrack | ailwdhy | 30 | ❌ | 🟡 MVP frontend |
+| 7 | 📊 99% Fe / Clob.mad | chris | ~123 | ❌ | 🟡 En progreso |
+| 8 | 📱 BOTazo | Nallely López | 7 | ❌ | 🔴 Inicio |
+| 9 | 🥑 Persea Protocol | Brian Lopez, Ane | 17 | ❌ | 🟡 Concepto |
+| 10 | 🔄 Antaria/Tandas | Enrique | 15 | ❌ | 🟡 Concepto |
+| 11 | 🎰 Q-Operacha | chris | ~50 | ❌ | 🟡 Concepto |
+| 12 | 🌍 Ecoelien (original) | 39eliens | 25 | — | ↗️ Migrado |
+| 13 | 🧬 Genomad | Brian Lopez | 5 | ❌ | 🔴 Minimal |
+| 14 | 🆘 Davnificados | — | 4 | ❌ | 🔴 Minimal |
+| 15 | ☢️ PREVENTDEMIC | SergioFenix | 1 | ❌ | 🔴 Solo creación |
+| 16 | 👋 Hola | — | 2 | ❌ | 🔴 Test |
 
 ---
 

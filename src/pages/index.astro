@@ -1,28 +1,60 @@
 ---
 import Layout from '../layouts/Layout.astro';
-const threads = [
-  { emoji: "📚", name: "Monad101 Blitz", msgs: 400, time: "18:58", status: "Onboarding masivo", color: "blue" },
-  { emoji: "🛒", name: "Monazon", msgs: 323, time: "19:19", status: "Contratos deployados", color: "green" },
-  { emoji: "🌱", name: "Ecoeeelien Monad", msgs: 317, time: "21:26", status: "2 contratos live en testnet ✅ (25%)", color: "emerald" },
-  { emoji: "🇲🇽", name: "Solidario México (Axel)", msgs: 196, time: "18:35", status: "Deployado en Vercel ✅", color: "yellow" },
-  { emoji: "💜", name: "MARP", msgs: 107, time: "21:14", status: "Contrato live + pitch bilingüe ✅", color: "purple" },
-  { emoji: "📊", name: "CLOB.nad", msgs: 50, time: "20:22", status: "2 miembros — Iniciando", color: "gray" },
-  { emoji: "🏥", name: "Registros Médicos", msgs: 30, time: "21:40", status: "4 miembros — MVP UI (25%)", color: "red" },
-  { emoji: "📱", name: "AgenteConsumo (BOTazo)", msgs: 7, time: "21:00", status: "PWA mobile-first", color: "orange" },
-];
-const agents = [
-  { name: "devrel-banana 🍌", threads: 8, hours: "~8h", specialty: "Onboarding, arquitectura, pitches", active: true },
-  { name: "aibus-dumbleclaw 🧙", threads: 5, hours: "~3h", specialty: "Debugging, builds, UIs", active: true },
-  { name: "Fruterito", threads: 0, hours: "—", specialty: "Sin actividad registrada", active: false },
-  { name: "kukulcan", threads: 0, hours: "—", specialty: "Sin actividad registrada", active: false },
-  { name: "Scarfdrilo", threads: 0, hours: "—", specialty: "Sin actividad registrada", active: false },
-];
-const errors = [
-  { n: 1, title: "git clone en dir no vacío", sol: "npx degit --force", severity: "HIGH" },
-  { n: 2, title: "WalletConnect projectId inválido", sol: "Registrar en cloud.walletconnect.com", severity: "MED" },
-  { n: 3, title: "Chain ID incorrecto (mainnet vs testnet)", sol: "Usar siempre 10143", severity: "HIGH" },
-  { n: 4, title: "npm install antes de que termine degit", sol: "Comandos uno por uno", severity: "MED" },
-  { n: 5, title: "forge create en lugar de forge script", sol: "SIEMPRE forge script --broadcast", severity: "HIGH" },
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('reportes');
+const projects = allProjects
+  .filter(p => p.data.slug !== 'summary')
+  .sort((a, b) => b.data.phase - a.data.phase);
+
+const totalMessages = projects.reduce((s, p) => s + p.data.messages, 0);
+const totalMembers = projects.reduce((s, p) => s + p.data.members, 0);
+const deployedContracts = projects.reduce((s, p) => s + p.data.contracts.filter(c => c.deployed).length, 0);
+const totalErrors = projects.reduce((s, p) => s + p.data.errors.length, 0);
+const topProjects = projects.filter(p => p.data.phase >= 15);
+
+// Lucide icon SVG paths mapped by name
+const icons: Record<string, string> = {
+  'shopping-cart': '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  'leaf': '<path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 20 .5 20 .5s-4.4 4.5-2.4 10.2A7 7 0 0 1 11 20Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  'brain': '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M12 5v13"/>',
+  'gamepad-2': '<line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5Z"/>',
+  'heart-pulse': '<path d="M19.5 12.572l-7.5 7.428l-7.5-7.428A5 5 0 0 1 12 6.006a5 5 0 0 1 7.5 6.572"/><path d="M12 6L8.707 9.293a1 1 0 0 0 0 1.414l.586.586a1 1 0 0 0 1.414 0L12 10l1.293 1.293a1 1 0 0 0 1.414 0l.586-.586a1 1 0 0 0 0-1.414z"/>',
+  'bar-chart-3': '<path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/>',
+  'bot': '<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
+  'sprout': '<path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/><path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z"/><path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z"/>',
+  'repeat': '<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
+  'coins': '<circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/>',
+  'dna': '<path d="M2 15c6.667-6 13.333 0 20-6"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="m17 6-2.5-2.5"/><path d="m14 8-1-1"/><path d="m7 18 2.5 2.5"/><path d="m3.5 14.5.5.5"/><path d="m20 9 .5.5"/><path d="m6.5 12.5 1 1"/><path d="m16.5 10.5 1 1"/><path d="m10 16 1.5 1.5"/>',
+  'hand-heart': '<path d="M11 14h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 16"/><path d="m7 20 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9"/><path d="M2 15h3"/><path d="M19.5 8.5c.7-.7 1.5-1.6 1.5-2.7A2.73 2.73 0 0 0 16 4a2.78 2.78 0 0 0-5 1.8c0 1.2.8 2 1.5 2.8L16 12Z"/>',
+  'shield-alert': '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
+  'message-circle': '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  'building-2': '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>',
+};
+
+function getIcon(name: string): string {
+  return icons[name] || icons['message-circle'];
+}
+
+const statusColors: Record<string, string> = {
+  'completed': 'bg-green-900/40 text-green-400 border-green-700/40',
+  'in-progress': 'bg-blue-900/40 text-blue-400 border-blue-700/40',
+  'concept': 'bg-yellow-900/40 text-yellow-400 border-yellow-700/40',
+  'minimal': 'bg-gray-800/40 text-gray-400 border-gray-700/40',
+};
+
+const statusLabels: Record<string, string> = {
+  'completed': 'Completado',
+  'in-progress': 'En progreso',
+  'concept': 'Concepto',
+  'minimal': 'Minimal',
+};
+
+const stats = [
+  { label: "Mensajes totales", value: `${totalMessages.toLocaleString()}+`, iconSvg: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>' },
+  { label: "Proyectos", value: projects.length.toString(), iconSvg: '<path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>' },
+  { label: "Participantes", value: `${totalMembers}+`, iconSvg: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>' },
+  { label: "Contratos deployados", value: deployedContracts.toString(), iconSvg: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>' },
 ];
 ---
 <Layout title="Reporte Maestro">
@@ -30,24 +62,20 @@ const errors = [
   <div class="text-center py-12 mb-12">
     <div class="inline-flex items-center gap-2 bg-purple-900/30 border border-purple-700/40 rounded-full px-4 py-2 text-purple-300 text-sm mb-6">
       <span class="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-      Sábado 21 de Febrero 2026 · Ciudad de México
+      Sabado 22 de Febrero 2026 · Ciudad de Mexico
     </div>
     <h1 class="text-5xl md:text-6xl font-bold mb-4">
       <span class="text-white">Monad Blitz</span>
       <span class="bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent"> CDMX</span>
     </h1>
-    <p class="text-gray-400 text-lg max-w-2xl mx-auto">Reporte completo generado por <span class="text-purple-400">devrel-banana 🍌</span> + <span class="text-purple-400">aibus-dumbleclaw 🧙</span> — análisis de todos los threads del hackathon</p>
+    <p class="text-gray-400 text-lg max-w-2xl mx-auto">Reporte completo generado por <span class="text-purple-400">devrel-banana</span> + <span class="text-purple-400">aibus-dumbleclaw</span> — datos dinamicos desde frontmatter</p>
 
-    <!-- Stats hero -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-10 max-w-3xl mx-auto">
-      {[
-        { label: "Mensajes totales", value: "~1,430+", icon: "💬" },
-        { label: "Proyectos totales", value: "13+", icon: "🛠️" },
-        { label: "Devs participantes", value: "35+", icon: "👩‍💻" },
-        { label: "Agentes activos", value: "2/5", icon: "🤖" },
-      ].map(s => (
+      {stats.map(s => (
         <div class="bg-purple-900/20 border border-purple-800/30 rounded-xl p-4">
-          <div class="text-3xl mb-1">{s.icon}</div>
+          <div class="flex justify-center mb-2">
+            <svg class="w-7 h-7 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><Fragment set:html={s.iconSvg} /></svg>
+          </div>
           <div class="text-2xl font-bold text-white">{s.value}</div>
           <div class="text-xs text-gray-400 mt-1">{s.label}</div>
         </div>
@@ -55,72 +83,41 @@ const errors = [
     </div>
   </div>
 
-  <!-- Ground truth projects highlight -->
+  <!-- Projects highlight -->
   <section class="mb-12">
     <div class="flex items-center justify-between mb-4">
-      <h2 class="text-2xl font-bold flex items-center gap-2"><span class="text-green-400">🎯</span> Proyectos Confirmados</h2>
+      <h2 class="text-2xl font-bold flex items-center gap-2">
+        <svg class="w-6 h-6 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+        Proyectos Confirmados
+      </h2>
       <a href="/proyectos" class="text-sm text-purple-400 hover:text-purple-300 border border-purple-800/40 rounded-lg px-3 py-1.5 hover:border-purple-600/50 transition-all">Ver todos →</a>
     </div>
     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-3">
-      {[
-        { emoji:"🎮", name:"FanSlayer", phase:"38.12% 🏆", members:3, type:"Web3 Gaming + NFTs", star:4 },
-        { emoji:"🤝", name:"Antaria", phase:"Contratos", members:1, type:"Tandas + WhatsApp", star:5 },
-        { emoji:"🥑", name:"Perséa Protocol", phase:"Pitch completo", members:null, type:"AgriTech LATAM", star:5 },
-        { emoji:"💜", name:"MARP", phase:"Contrato live ✅", members:null, type:"Agent Reputation", star:5 },
-        { emoji:"🏢", name:"7AYLABS", phase:"Smart contracts", members:6, type:"Proof of Presence", star:4 },
-        { emoji:"💚", name:"ClearHope", phase:"20%", members:4, type:"Donativos México", star:4 },
-        { emoji:"🌱", name:"Ecoeeelien", phase:"25% — 2 contratos ✅", members:2, type:"Reciclaje + tokens", star:4 },
-        { emoji:"🏥", name:"Registros Médicos", phase:"25%", members:4, type:"HealthTech", star:3 },
-      ].map(p => (
+      {topProjects.map(p => (
         <div class="bg-[#0f0f1a] border border-purple-900/30 hover:border-purple-700/50 rounded-xl p-4 transition-all group">
           <div class="flex items-start justify-between mb-2">
-            <span class="text-xl">{p.emoji}</span>
-            <span class="text-yellow-400 text-xs">{"⭐".repeat(p.star)}</span>
+            <svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><Fragment set:html={getIcon(p.data.icon)} /></svg>
+            <span class={`text-xs border rounded-full px-2 py-0.5 ${statusColors[p.data.status]}`}>{statusLabels[p.data.status]}</span>
           </div>
-          <div class="font-semibold text-white text-sm mb-1">{p.name}</div>
-          <div class="text-xs text-purple-300 mb-2">{p.type}</div>
+          <div class="font-semibold text-white text-sm mb-1">{p.data.title}</div>
+          <div class="text-xs text-purple-300 mb-2">{p.data.area}</div>
           <div class="text-xs text-gray-500 flex items-center justify-between">
-            <span>{p.phase}</span>
-            {p.members && <span>{p.members}👤</span>}
+            <span>{p.data.phase}%</span>
+            {p.data.members > 0 && <span class="flex items-center gap-1"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>{p.data.members}</span>}
+          </div>
+          <div class="mt-2 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-full" style={`width:${Math.min(p.data.phase, 100)}%`}></div>
           </div>
         </div>
       ))}
     </div>
   </section>
 
-  <!-- Timeline -->
+  <!-- All threads table -->
   <section class="mb-12">
     <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-      <span class="text-purple-400">📈</span> Curva de Aprendizaje — Timeline del Día
-    </h2>
-    <div class="relative pl-8">
-      <div class="absolute left-3 top-0 bottom-0 w-0.5 bg-purple-900/50"></div>
-      {[
-        { time: "15:43", event: "devrel-banana 🍌 se presenta en #blitz-general", tag: "Inicio" },
-        { time: "18:35", event: "Primer thread: Axel & equipo — setup básico", tag: "Proyectos" },
-        { time: "18:58", event: "Monad101 Blitz — onboarding masivo comienza (400 msgs)", tag: "Onboarding" },
-        { time: "19:19", event: "Monazon thread abierto — ToryDom con 5 bugs críticos", tag: "Debug" },
-        { time: "20:22", event: "Clob.mad thread abierto", tag: "Proyectos" },
-        { time: "21:00", event: "AgenteConsumo thread abierto", tag: "Proyectos" },
-        { time: "21:14", event: "MARP thread abierto — el más avanzado técnicamente", tag: "Proyectos" },
-        { time: "21:26", event: "Eco Eeelien thread — ESP32 + IA + Monad (concepto más innovador)", tag: "Proyectos" },
-        { time: "21:40", event: "MediTrack thread — llegaron tarde, aibus construyó MVP completo", tag: "Build" },
-        { time: "23:29", event: "Últimos mensajes de MARP — pitch prep final en Gamma", tag: "Pitch" },
-      ].map(e => (
-        <div class="relative mb-4 flex items-start gap-4">
-          <div class="absolute -left-5 w-2.5 h-2.5 rounded-full bg-purple-500 mt-1.5 ring-4 ring-[#0a0a0f]"></div>
-          <span class="text-purple-400 font-mono text-sm w-12 shrink-0 mt-0.5">{e.time}</span>
-          <span class="text-xs bg-purple-900/40 text-purple-300 border border-purple-800/40 rounded px-2 py-0.5 shrink-0">{e.tag}</span>
-          <span class="text-gray-300 text-sm">{e.event}</span>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- Threads table -->
-  <section class="mb-12">
-    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-      <span class="text-purple-400">🧵</span> Todos los Threads
+      <svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Todos los Proyectos
     </h2>
     <div class="overflow-x-auto rounded-xl border border-purple-900/30">
       <table class="w-full text-sm">
@@ -128,19 +125,22 @@ const errors = [
           <tr>
             <th class="text-left px-4 py-3">Proyecto</th>
             <th class="text-right px-4 py-3">Mensajes</th>
-            <th class="text-left px-4 py-3">Hora inicio (UTC)</th>
-            <th class="text-left px-4 py-3">Estado final</th>
+            <th class="text-left px-4 py-3">Area</th>
+            <th class="text-left px-4 py-3">Estado</th>
+            <th class="text-right px-4 py-3">Avance</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-purple-900/20">
-          {threads.map((t, i) => (
+          {projects.map(p => (
             <tr class="hover:bg-purple-900/10 transition-colors">
-              <td class="px-4 py-3 font-medium">{t.emoji} {t.name}</td>
-              <td class="px-4 py-3 text-right">
-                <span class="font-mono font-bold text-purple-300">{t.msgs}</span>
+              <td class="px-4 py-3 font-medium flex items-center gap-2">
+                <svg class="w-4 h-4 text-purple-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><Fragment set:html={getIcon(p.data.icon)} /></svg>
+                {p.data.title}
               </td>
-              <td class="px-4 py-3 font-mono text-gray-400">{t.time} UTC</td>
-              <td class="px-4 py-3 text-gray-300">{t.status}</td>
+              <td class="px-4 py-3 text-right font-mono font-bold text-purple-300">{p.data.messages}</td>
+              <td class="px-4 py-3 text-gray-400">{p.data.area}</td>
+              <td class="px-4 py-3"><span class={`text-xs border rounded-full px-2 py-0.5 ${statusColors[p.data.status]}`}>{statusLabels[p.data.status]}</span></td>
+              <td class="px-4 py-3 text-right text-white font-mono">{p.data.phase}%</td>
             </tr>
           ))}
         </tbody>
@@ -148,69 +148,49 @@ const errors = [
     </div>
   </section>
 
-  <!-- Agents summary -->
+  <!-- Errors summary -->
   <section class="mb-12">
     <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-      <span class="text-purple-400">🤖</span> Actividad de Agentes
-    </h2>
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {agents.map(a => (
-        <div class={`rounded-xl border p-5 ${a.active ? 'bg-purple-900/20 border-purple-700/40' : 'bg-gray-900/30 border-gray-800/40 opacity-60'}`}>
-          <div class="flex items-center justify-between mb-3">
-            <span class="font-bold text-white">{a.name}</span>
-            <span class={`w-2.5 h-2.5 rounded-full ${a.active ? 'bg-green-400' : 'bg-gray-600'}`}></span>
-          </div>
-          <div class="space-y-1 text-sm text-gray-400">
-            <div>Threads activos: <span class="text-white font-mono">{a.threads}</span></div>
-            <div>Tiempo activo: <span class="text-white">{a.hours}</span></div>
-            <div class="text-xs mt-2 text-gray-500">{a.specialty}</div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- Top errors -->
-  <section class="mb-12">
-    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
-      <span class="text-red-400">🚨</span> Errores más comunes del Blitz
+      <svg class="w-6 h-6 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      Errores Documentados ({totalErrors})
     </h2>
     <div class="space-y-3">
-      {errors.map(e => (
+      {projects.filter(p => p.data.errors.length > 0).map(p => p.data.errors.map(e => (
         <div class="flex items-start gap-4 bg-gray-900/40 border border-gray-800/40 rounded-xl p-4">
-          <span class={`text-xs font-bold px-2 py-1 rounded shrink-0 mt-0.5 ${e.severity === 'HIGH' ? 'bg-red-900/50 text-red-400 border border-red-800/50' : 'bg-yellow-900/40 text-yellow-400 border border-yellow-800/40'}`}>
-            {e.severity}
+          <span class={`text-xs font-bold px-2 py-1 rounded shrink-0 mt-0.5 ${e.severity === 'critical' ? 'bg-red-900/50 text-red-400 border border-red-800/50' : e.severity === 'high' ? 'bg-red-900/50 text-red-400 border border-red-800/50' : e.severity === 'medium' ? 'bg-yellow-900/40 text-yellow-400 border border-yellow-800/40' : 'bg-green-900/40 text-green-400 border border-green-800/40'}`}>
+            {e.severity.toUpperCase()}
           </span>
           <div class="flex-1">
-            <div class="font-medium text-white text-sm">{e.title}</div>
-            <div class="text-xs text-gray-400 mt-1">✅ Solución: <code class="text-purple-300 bg-purple-900/30 px-1 rounded">{e.sol}</code></div>
+            <div class="font-medium text-white text-sm">{p.data.title}: {e.description}</div>
+            <div class="text-xs text-gray-400 mt-1">
+              {e.resolved ? (
+                <span class="flex items-center gap-1"><svg class="w-3 h-3 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg> Resuelto</span>
+              ) : (
+                <span class="text-red-400">Pendiente</span>
+              )}
+              {e.cause && <span class="ml-2 text-gray-500">— {e.cause}</span>}
+            </div>
           </div>
         </div>
-      ))}
+      )))}
     </div>
   </section>
 
   <!-- CTA links -->
   <section class="grid md:grid-cols-4 gap-4">
-    <a href="/analytics" class="bg-orange-900/20 border border-orange-700/40 hover:border-orange-500/60 rounded-xl p-6 transition-all group">
-      <div class="text-3xl mb-3">📊</div>
-      <h3 class="font-bold text-white mb-1 group-hover:text-orange-300 transition-colors">Dashboard Analítico</h3>
-      <p class="text-sm text-gray-400">Gráficas de tecnologías, errores, niveles, áreas y curva de aprendizaje</p>
-    </a>
-    <a href="/proyectos" class="bg-purple-900/20 border border-purple-700/40 hover:border-purple-500/60 rounded-xl p-6 transition-all group">
-      <div class="text-3xl mb-3">🛠️</div>
-      <h3 class="font-bold text-white mb-1 group-hover:text-purple-300 transition-colors">Ver todos los proyectos</h3>
-      <p class="text-sm text-gray-400">Análisis detallado de cada equipo, stack, errores y curva de aprendizaje</p>
-    </a>
-    <a href="/agentes" class="bg-purple-900/20 border border-purple-700/40 hover:border-purple-500/60 rounded-xl p-6 transition-all group">
-      <div class="text-3xl mb-3">🤖</div>
-      <h3 class="font-bold text-white mb-1 group-hover:text-purple-300 transition-colors">Actividad de agentes</h3>
-      <p class="text-sm text-gray-400">Timeline hora por hora de devrel-banana y aibus-dumbleclaw</p>
-    </a>
-    <a href="/insights" class="bg-purple-900/20 border border-purple-700/40 hover:border-purple-500/60 rounded-xl p-6 transition-all group">
-      <div class="text-3xl mb-3">💡</div>
-      <h3 class="font-bold text-white mb-1 group-hover:text-purple-300 transition-colors">Insights y recomendaciones</h3>
-      <p class="text-sm text-gray-400">Friction points, potencial post-blitz y recomendaciones para el siguiente evento</p>
-    </a>
+    {[
+      { href:"/analytics", label:"Dashboard Analitico", desc:"Graficas de tecnologias, errores, avance y mas", iconSvg:'<path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>', color:"orange" },
+      { href:"/proyectos", label:"Ver todos los proyectos", desc:"Analisis detallado de cada equipo", iconSvg:'<path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>', color:"purple" },
+      { href:"/agentes", label:"Actividad de agentes", desc:"Timeline de devrel-banana y aibus-dumbleclaw", iconSvg:'<rect width="18" height="10" x="3" y="11" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/>', color:"purple" },
+      { href:"/insights", label:"Insights y recomendaciones", desc:"Friction points, potencial post-blitz", iconSvg:'<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/>', color:"purple" },
+    ].map(c => (
+      <a href={c.href} class={`bg-${c.color}-900/20 border border-${c.color}-700/40 hover:border-${c.color}-500/60 rounded-xl p-6 transition-all group`}>
+        <div class="flex justify-center mb-3">
+          <svg class="w-8 h-8 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><Fragment set:html={c.iconSvg} /></svg>
+        </div>
+        <h3 class="font-bold text-white mb-1 group-hover:text-purple-300 transition-colors">{c.label}</h3>
+        <p class="text-sm text-gray-400">{c.desc}</p>
+      </a>
+    ))}
   </section>
 </Layout>

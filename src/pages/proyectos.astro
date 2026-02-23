@@ -1,320 +1,134 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
 
-const groundTruth = [
-  {
-    name: "FanSlayer",
-    emoji: "🎮",
-    members: 3,
-    phase: 38.12,
-    phaseLabel: "38.12%",
-    building: "Videojuego Web3: peleas con hordas de fans zombies, ganas NFTs de artistas famosos con cada kill. Los NFTs se compran, venden e intercambian.",
-    type: "Web3 Gaming + NFTs",
-    highlight: "Más avanzado del blitz",
-    potential: 4,
-    badge: "🏆 Más avanzado",
-    badgeColor: "yellow",
-    color: "yellow",
-    source: "manual",
-    notes: "El único gaming/NFT project del blitz. 3 miembros y el mayor % de avance.",
-  },
-  {
-    name: "7AYLABS",
-    emoji: "🏢",
-    members: 6,
-    phase: null,
-    phaseLabel: "Smart contracts en construcción",
-    building: "Plataforma basada en Prueba de Presencia — recibe incentivos solo dentro de la presencia declarada on-chain.",
-    type: "Proof of Presence",
-    highlight: "Equipo más grande",
-    potential: 4,
-    badge: "👥 6 miembros",
-    badgeColor: "blue",
-    color: "blue",
-    source: "manual",
-    notes: "El equipo más grande del blitz (6 personas). Concept innovador: geolocalización + incentivos on-chain.",
-  },
-  {
-    name: "Antaria",
-    emoji: "🤝",
-    members: 1,
-    phase: null,
-    phaseLabel: "Contratos en construcción",
-    building: "Transforma las tandas tradicionales en experiencia segura y rentable con blockchain. Opera por WhatsApp — sin app adicional.",
-    type: "DeFi + LATAM Culture",
-    highlight: "1 solo miembro + WhatsApp",
-    potential: 5,
-    badge: "🌎 LATAM fit",
-    badgeColor: "green",
-    color: "green",
-    source: "manual",
-    notes: "¡UN solo miembro construyendo contratos! WhatsApp como interfaz = distribución masiva sin fricción. Tandas = caso de uso culturalmente perfecto para México.",
-  },
-  {
-    name: "MARP",
-    emoji: "💜",
-    members: null,
-    phase: 100,
-    phaseLabel: "Pitch + contrato live",
-    building: "Monad Agent Reputation Protocol — capa de reputación on-chain para agentes autónomos. 'La confianza es el nuevo alpha'.",
-    type: "Agent Infrastructure",
-    highlight: "Más completo técnicamente",
-    potential: 5,
-    badge: "⭐ Top técnico",
-    badgeColor: "purple",
-    color: "purple",
-    source: "discord",
-    contracts: [{ name: "AgentReputation.sol", addr: "Live en Monad Testnet (Chain 10143)" }],
-    notes: "Pitch bilingüe, contrato live, arquitectura sólida. 'En Ethereum costaría millones. En Monad es casi gratis.'",
-  },
-  {
-    name: "Ecoeeelien Monad",
-    emoji: "🌱",
-    members: 2,
-    phase: 25,
-    phaseLabel: "25%",
-    building: "App ecológica de reciclaje con recompensas. ESP32-CAM detecta botellas → IA clasifica → Monad registra → recibes ECO tokens.",
-    type: "IoT + IA + Blockchain",
-    highlight: "Concepto más innovador",
-    potential: 4,
-    badge: "🔬 Más innovador",
-    badgeColor: "emerald",
-    color: "emerald",
-    source: "both",
-    contracts: [
-      { name: "EcoToken (ERC20)", addr: "0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9", link: "https://monad-testnet.socialscan.io/address/0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9" },
-      { name: "RecyclingRegistry", addr: "0x7fFCcdD4b9Ae0a3cfCdA86c954AE8a1816Ec74C3", link: "https://monad-testnet.socialscan.io/address/0x7fFCcdD4b9Ae0a3cfCdA86c954AE8a1816Ec74C3" },
-      { name: "ChallengeManager", addr: "0x1507efa34a2f9e33ed491526132bfaf6a5c50c97", link: "https://monad-testnet.socialscan.io/address/0x1507efa34a2f9e33ed491526132bfaf6a5c50c97" },
-      { name: "VoucherNFT (ERC721)", addr: "0x188496b92fb6580dfd9159c40fd5bf4fb438d729", link: "https://monad-testnet.socialscan.io/address/0x188496b92fb6580dfd9159c40fd5bf4fb438d729" },
-    ],
-    notes: "2 contratos deployados y verificados en Monad Testnet. Hardware físico + IA + blockchain.",
-  },
-  {
-    name: "ClearHope",
-    emoji: "💚",
-    members: 4,
-    phase: 20,
-    phaseLabel: "20%",
-    building: "Plataforma de donativos para damnificados en México. Donaciones transparentes on-chain — sin intermediarios.",
-    type: "Social Impact + DeFi",
-    highlight: null,
-    potential: 4,
-    badge: null,
-    color: "green",
-    source: "manual",
-    notes: "4 miembros. Similar concepto a Solidario México pero equipo diferente. Blockchain da la transparencia que las plataformas de donaciones tradicionales no tienen.",
-  },
-  {
-    name: "Perséa Protocol",
-    emoji: "🥑",
-    members: null,
-    phase: null,
-    phaseLabel: "Pitch completo",
-    building: "Blockchain para la economía circular del aguacate mexicano. 870,000 ton de residuos/año = USD 320M sin capturar. SkinTrace NFTs + PitMarket + SeedData API.",
-    type: "AgriTech + Supply Chain",
-    highlight: "Mayor visión de negocio",
-    potential: 5,
-    badge: "💰 Pre-seed USD 500K",
-    badgeColor: "lime",
-    color: "lime",
-    source: "discord",
-    notes: "Pitch de 9 slides, modelo de negocio completo, roadmap hasta Serie A. Timing perfecto (ESG Europa 2027).",
-  },
-  {
-    name: "Monazon",
-    emoji: "🛒",
-    members: null,
-    phase: null,
-    phaseLabel: "Contratos deployados",
-    building: "Marketplace de pagos globales con stablecoins en Monad Testnet. 'Market for everyone'.",
-    type: "DeFi + Marketplace",
-    highlight: null,
-    potential: 3,
-    badge: null,
-    color: "orange",
-    source: "discord",
-    repo: "https://github.com/ToryDom/Monazon",
-    notes: "5 bugs críticos corregidos (chain ID, RPCs, imports). SQLite + Drizzle ORM + Next.js Server Actions.",
-  },
-  {
-    name: "Axel & equipo → Solidario México",
-    emoji: "🇲🇽",
-    members: 7,
-    phase: null,
-    phaseLabel: "Deployado en Vercel",
-    building: "Donaciones transparentes on-chain con ImpactFundKintsu. Los fondos stakeados generan yield en Kintsu vault mientras dura la campaña.",
-    type: "Social Impact + DeFi",
-    highlight: null,
-    potential: 3,
-    badge: "🚀 En Vercel",
-    badgeColor: "blue",
-    color: "blue",
-    source: "discord",
-    notes: "Equipo más grande en Discord (7 miembros). La mecánica de Kintsu para yield en donaciones es brillante.",
-  },
-  {
-    name: "qoperacha",
-    emoji: "📈",
-    members: 3,
-    phase: 20,
-    phaseLabel: "20%",
-    building: "Plataforma de trading automático según el mercado.",
-    type: "DeFi Trading",
-    highlight: null,
-    potential: 3,
-    badge: null,
-    color: "cyan",
-    source: "manual",
-    notes: "3 miembros, 99% del equipo formado. Trading algorítmico on-chain.",
-  },
-  {
-    name: "MediTrack / [Registros Médicos]",
-    emoji: "🏥",
-    members: 4,
-    phase: 25,
-    phaseLabel: "25%",
-    building: "Registro de historiales médicos en blockchain. Vista Doctor + Vista Paciente + pagos en MON.",
-    type: "HealthTech",
-    highlight: null,
-    potential: 3,
-    badge: null,
-    color: "red",
-    source: "both",
-    notes: "4 miembros (dato manual). MVP UI construido por aibus-dumbleclaw. Contrato MediTrack.sol pendiente.",
-  },
-  {
-    name: "CLOB.nad",
-    emoji: "📊",
-    members: 2,
-    phase: 0,
-    phaseLabel: "Iniciando",
-    building: "CLOB — Libro de Órdenes Límite Centralizado on Monad.",
-    type: "DeFi CLOB",
-    highlight: null,
-    potential: 2,
-    badge: "🔄 Iniciando",
-    badgeColor: "gray",
-    color: "gray",
-    source: "both",
-    notes: "2 miembros. El thread fue archivado — posiblemente mismo equipo que MARP que pivotó.",
-  },
-  {
-    name: "AgenteConsumo (BOTazo)",
-    emoji: "📱",
-    members: null,
-    phase: null,
-    phaseLabel: "Arquitectura definida",
-    building: "PWA mobile-first de tracking de consumo personal con integración on-chain.",
-    type: "Consumer App",
-    highlight: null,
-    potential: 2,
-    badge: null,
-    color: "orange",
-    source: "discord",
-    notes: "Proyecto de Brian Lopez. Pocos datos en Discord (7 msgs).",
-  },
-];
+const allProjects = await getCollection('reportes');
+const projects = allProjects
+  .filter(p => !['summary'].includes(p.data.slug))
+  .sort((a, b) => b.data.phase - a.data.phase);
+
+const totalProjects = projects.length;
+const totalMembers = projects.reduce((s, p) => s + p.data.members, 0);
+const deployedContracts = projects.reduce((s, p) => s + p.data.contracts.filter(c => c.deployed).length, 0);
+const maxPhase = Math.max(...projects.map(p => p.data.phase));
+
+const icons: Record<string, string> = {
+  'shopping-cart': '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  'leaf': '<path d="M11 20A7 7 0 0 1 9.8 6.9C15.5 4.9 20 .5 20 .5s-4.4 4.5-2.4 10.2A7 7 0 0 1 11 20Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  'brain': '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M12 5v13"/>',
+  'gamepad-2': '<line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5Z"/>',
+  'heart-pulse': '<path d="M19.5 12.572l-7.5 7.428l-7.5-7.428A5 5 0 0 1 12 6.006a5 5 0 0 1 7.5 6.572"/>',
+  'bar-chart-3': '<path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/>',
+  'bot': '<path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/>',
+  'sprout': '<path d="M7 20h10"/><path d="M10 20c5.5-2.5.8-6.4 3-10"/>',
+  'repeat': '<path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/>',
+  'coins': '<circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/>',
+  'dna': '<path d="M2 15c6.667-6 13.333 0 20-6"/>',
+  'hand-heart': '<path d="M11 14h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 16"/><path d="m7 20 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.75-2.91l-4.2 3.9"/>',
+  'shield-alert': '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
+  'message-circle': '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>',
+  'building-2': '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/>',
+};
+
+function getIcon(name: string): string {
+  return icons[name] || icons['message-circle'];
+}
+
+const statusColors: Record<string, string> = {
+  'completed': 'bg-green-900/40 text-green-400 border-green-700/40',
+  'in-progress': 'bg-blue-900/40 text-blue-400 border-blue-700/40',
+  'concept': 'bg-yellow-900/40 text-yellow-400 border-yellow-700/40',
+  'minimal': 'bg-gray-800/40 text-gray-400 border-gray-700/40',
+};
+const statusLabels: Record<string, string> = {
+  'completed': 'Completado', 'in-progress': 'En progreso', 'concept': 'Concepto', 'minimal': 'Minimal',
+};
 ---
 <Layout title="Proyectos">
   <div class="mb-8">
-    <h1 class="text-4xl font-bold mb-2">🛠️ Proyectos del Blitz</h1>
-    <p class="text-gray-400">Datos combinados: recolección manual en piso 🎯 + análisis de Discord 🤖</p>
+    <h1 class="text-4xl font-bold mb-2 flex items-center gap-3">
+      <svg class="w-8 h-8 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/></svg>
+      Proyectos del Blitz
+    </h1>
+    <p class="text-gray-400">Todos los datos provienen de los archivos MD — editables y dinamicos</p>
   </div>
 
-  <!-- Stats -->
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
     {[
-      { label: "Proyectos totales", value: "13+", icon: "🛠️" },
-      { label: "Devs participantes", value: "35+", icon: "👩‍💻" },
-      { label: "Contratos on-chain", value: "3+", icon: "⛓️" },
-      { label: "% más alto", value: "38.12%", icon: "🏆" },
+      { label: "Proyectos totales", value: totalProjects, iconSvg: '<path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>' },
+      { label: "Participantes", value: `${totalMembers}+`, iconSvg: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>' },
+      { label: "Contratos on-chain", value: deployedContracts, iconSvg: '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>' },
+      { label: "Mayor avance", value: `${maxPhase}%`, iconSvg: '<path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/>' },
     ].map(s => (
       <div class="bg-purple-900/20 border border-purple-800/30 rounded-xl p-4 text-center">
-        <div class="text-2xl mb-1">{s.icon}</div>
+        <div class="flex justify-center mb-2"><svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><Fragment set:html={s.iconSvg} /></svg></div>
         <div class="text-xl font-bold text-white">{s.value}</div>
         <div class="text-xs text-gray-400 mt-1">{s.label}</div>
       </div>
     ))}
   </div>
 
-  <!-- Legend -->
-  <div class="flex gap-3 mb-6 flex-wrap text-xs">
-    <span class="flex items-center gap-1.5 bg-green-900/20 border border-green-800/30 text-green-400 px-3 py-1.5 rounded-full">🎯 Datos manuales (alta prioridad)</span>
-    <span class="flex items-center gap-1.5 bg-purple-900/20 border border-purple-800/30 text-purple-400 px-3 py-1.5 rounded-full">🤖 Datos de Discord</span>
-    <span class="flex items-center gap-1.5 bg-blue-900/20 border border-blue-800/30 text-blue-400 px-3 py-1.5 rounded-full">✅ Ambas fuentes</span>
-  </div>
-
-  <!-- Projects grid -->
   <div class="space-y-4">
-    {groundTruth.map((p) => (
-      <div class={`rounded-2xl border p-5 transition-all ${p.potential === 5 ? 'bg-purple-900/20 border-purple-600/50 ring-1 ring-purple-500/20' : 'bg-[#0f0f1a] border-purple-900/30'}`}>
+    {projects.map(p => (
+      <div class={`rounded-2xl border p-5 transition-all ${p.data.status === 'completed' ? 'bg-purple-900/20 border-purple-600/50 ring-1 ring-purple-500/20' : 'bg-[#0f0f1a] border-purple-900/30'}`}>
         <div class="flex items-start justify-between gap-4 mb-3 flex-wrap">
           <div class="flex items-center gap-3 flex-wrap">
-            <span class="text-2xl">{p.emoji}</span>
+            <svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><Fragment set:html={getIcon(p.data.icon)} /></svg>
             <div>
-              <h2 class="text-lg font-bold text-white">{p.name}</h2>
-              <span class="text-xs text-purple-300">{p.type}</span>
+              <h2 class="text-lg font-bold text-white">{p.data.title}</h2>
+              <span class="text-xs text-purple-300">{p.data.area}</span>
             </div>
-            {p.badge && (
-              <span class={`text-xs border rounded-full px-2 py-0.5 ${p.badgeColor === 'yellow' ? 'bg-yellow-900/30 text-yellow-400 border-yellow-700/40' : p.badgeColor === 'purple' ? 'bg-purple-900/30 text-purple-300 border-purple-700/40' : p.badgeColor === 'green' ? 'bg-green-900/30 text-green-400 border-green-700/40' : p.badgeColor === 'emerald' ? 'bg-emerald-900/30 text-emerald-400 border-emerald-700/40' : p.badgeColor === 'blue' ? 'bg-blue-900/30 text-blue-400 border-blue-700/40' : 'bg-gray-800 text-gray-400 border-gray-700/40'}`}>
-                {p.badge}
-              </span>
-            )}
-            <!-- Source badge -->
-            <span class={`text-xs border rounded-full px-2 py-0.5 ${p.source === 'manual' ? 'bg-green-900/20 text-green-400 border-green-800/30' : p.source === 'both' ? 'bg-blue-900/20 text-blue-400 border-blue-800/30' : 'bg-purple-900/20 text-purple-400 border-purple-800/30'}`}>
-              {p.source === 'manual' ? '🎯 Manual' : p.source === 'both' ? '✅ Verificado' : '🤖 Discord'}
-            </span>
+            <span class={`text-xs border rounded-full px-2 py-0.5 ${statusColors[p.data.status]}`}>{statusLabels[p.data.status]}</span>
           </div>
           <div class="text-right">
-            <div class="text-yellow-400">{"⭐".repeat(p.potential)}{"☆".repeat(5 - p.potential)}</div>
-            {p.members && <div class="text-xs text-gray-400 mt-1">{p.members} miembro{p.members !== 1 ? 's' : ''}</div>}
+            {p.data.members > 0 && <div class="text-xs text-gray-400">{p.data.members} miembro{p.data.members !== 1 ? 's' : ''}</div>}
+            <div class="text-xs text-gray-500 font-mono">{p.data.messages} msgs</div>
           </div>
         </div>
 
-        <!-- Building -->
-        <p class="text-sm text-gray-300 bg-black/30 rounded-lg p-3 mb-3">{p.building}</p>
+        {p.data.techStack.length > 0 && (
+          <div class="flex flex-wrap gap-1.5 mb-3">
+            {p.data.techStack.map(t => (
+              <span class="text-xs bg-purple-900/30 text-purple-300 border border-purple-800/30 rounded px-2 py-0.5">{t}</span>
+            ))}
+          </div>
+        )}
 
         <div class="flex flex-wrap gap-4 items-start">
-          <!-- Phase bar -->
           <div class="flex-1 min-w-40">
             <div class="flex justify-between text-xs text-gray-400 mb-1">
               <span>Avance</span>
-              <span class="text-white">{p.phaseLabel}</span>
+              <span class="text-white">{p.data.phase}%</span>
             </div>
-            {p.phase !== null && (
-              <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-full" style={`width:${Math.min(p.phase, 100)}%`}></div>
-              </div>
-            )}
+            <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+              <div class="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-full" style={`width:${Math.min(p.data.phase, 100)}%`}></div>
+            </div>
           </div>
 
-          <!-- Contracts -->
-          {p.contracts && p.contracts.length > 0 && (
+          {p.data.contracts.filter(c => c.deployed).length > 0 && (
             <div class="flex-1 min-w-40">
               <div class="text-xs text-gray-400 mb-1">Contratos on-chain</div>
-              {p.contracts.map(c => (
+              {p.data.contracts.filter(c => c.deployed).map(c => (
                 <div class="text-xs">
                   <span class="text-green-400 font-medium">{c.name}</span>
-                  {c.link ? (
-                    <a href={c.link} target="_blank" class="block font-mono text-gray-500 hover:text-purple-400 truncate">{c.addr.slice(0,22)}…</a>
-                  ) : (
-                    <span class="block text-gray-500">{c.addr}</span>
-                  )}
+                  {c.address && <span class="block font-mono text-gray-500 truncate">{c.address.slice(0,22)}...</span>}
                 </div>
               ))}
             </div>
           )}
 
-          <!-- Repo -->
-          {p.repo && (
-            <div>
-              <a href={p.repo} target="_blank" class="text-xs text-purple-400 hover:text-purple-300 hover:underline">📦 GitHub repo →</a>
-            </div>
-          )}
+          <div class="flex gap-3">
+            {p.data.repo && <a href={p.data.repo} target="_blank" class="text-xs text-purple-400 hover:text-purple-300 hover:underline flex items-center gap-1"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>GitHub</a>}
+            {p.data.deployUrl && <a href={p.data.deployUrl} target="_blank" class="text-xs text-green-400 hover:text-green-300 hover:underline flex items-center gap-1"><svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" x2="21" y1="14" y2="3"/></svg>Deploy</a>}
+          </div>
         </div>
 
-        {p.notes && (
-          <p class="text-xs text-gray-500 mt-3 border-t border-gray-800/50 pt-2 italic">{p.notes}</p>
+        {p.data.errors.length > 0 && (
+          <div class="mt-3 border-t border-gray-800/50 pt-2">
+            <div class="text-xs text-gray-500">
+              {p.data.errors.length} error{p.data.errors.length > 1 ? 'es' : ''} documentado{p.data.errors.length > 1 ? 's' : ''} — {p.data.errors.filter(e => e.resolved).length} resuelto{p.data.errors.filter(e => e.resolved).length > 1 ? 's' : ''}
+            </div>
+          </div>
         )}
       </div>
     ))}

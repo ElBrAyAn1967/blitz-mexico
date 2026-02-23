@@ -1,7 +1,36 @@
 ---
-title: "🛒 Monazon — Reporte de Equipo"
+title: "Monazon"
+slug: "monazon"
+icon: "shopping-cart"
+team:
+  - name: "Tory Dom"
+    discord: "torydom_53239"
+members: 1
+area: "Marketplace"
+phase: 30
+status: "in-progress"
+techStack:
+  - "Next.js"
+  - "Tailwind CSS"
+  - "Drizzle ORM"
+  - "wagmi/viem"
+  - "TypeScript"
+contracts:
+  - name: "N/A (USDC transfers)"
+    deployed: false
+repo: "https://github.com/ToryDom/Monazon"
+deployUrl: "https://monazon.vercel.app"
+messages: 323
+errors:
+  - description: "Imagenes no cargan en Vercel"
+    cause: "Case-sensitive paths: Laptop.png vs laptop.png"
+    severity: "medium"
+    resolved: true
+  - description: "Imagenes de 13MB"
+    cause: "Assets no optimizados"
+    severity: "low"
+    resolved: true
 ---
-
 # 🛒 Monazon — Reporte de Equipo
 
 ## Monad Blitz CDMX — Sábado 22 de Febrero 2026
@@ -50,18 +79,6 @@ Marketplace de pagos globales con stablecoins en Monad. Permite comprar producto
 ## 📊 Métricas
 - **Total mensajes en thread:** 323
 - **Estado final:** En progreso — marketplace funcional pero sin deploy confirmado en testnet
-
-## 🔗 Repositorio y Contratos (Verificado desde GitHub)
-
-- **Repo:** [github.com/ToryDom/Monazon](https://github.com/ToryDom/Monazon)
-- **Stack verificado:** Next.js + Tailwind + Drizzle ORM + wagmi/viem + ethers.js
-- **Sin smart contract custom** — usa transferencias USDC en Monad
-  - USDC_ADDRESS: `0x754704Bc059F8C67012fEd69BC8A327a5aafb603`
-  - Chain config: Monad Testnet (10143) + Monad Mainnet (143) definidos
-  - Flujo `wallet_switchEthereumChain` / `wallet_addEthereumChain`
-- **Bug encontrado en repo:** Paths de imágenes case-sensitive (`Laptop.png` vs `laptop.png`) — rompe en Linux/Vercel
-- **Deploy:** [monazon.vercel.app](https://monazon.vercel.app)
-- **Patrón notable:** Marketplace tradicional web2 con pagos USDC on-chain — enfoque pragmático sin contratos custom
 
 ## ✅ Estado Final
 🟡 **En progreso** — Avanzaron bastante pero el bug de chain ID les costó tiempo valioso
