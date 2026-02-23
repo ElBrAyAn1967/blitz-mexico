@@ -1,332 +1,319 @@
 ---
 import Layout from '../layouts/Layout.astro';
 
-const projects = [
+const groundTruth = [
   {
-    id: "monazon",
-    emoji: "🛒",
-    name: "Monazon",
-    tagline: "Market for everyone",
-    msgs: 323,
-    startTime: "19:19 UTC",
-    level: "Intermedio",
-    levelColor: "yellow",
-    stack: ["Next.js", "wagmi/viem", "SQLite", "Drizzle ORM", "nanoid"],
-    contracts: [],
-    repo: "https://github.com/ToryDom/Monazon.git",
-    owner: "ToryDom",
-    agents: ["devrel-banana 🍌", "aibus-dumbleclaw 🧙"],
-    concept: "Marketplace de pagos globales con stablecoins en Monad Testnet.",
-    bugs: [
-      { n:1, error: "Chain IDs apuntando a mainnet", sol: "Cambiar a 10143", sev: "HIGH" },
-      { n:2, error: "RPCs incorrectas", sol: "https://testnet-rpc.monad.xyz", sev: "HIGH" },
-      { n:3, error: "Imports duplicados", sol: "Limpieza de imports", sev: "MED" },
-      { n:4, error: "README decía chain ID 143", sol: "Corregido a 10143", sev: "LOW" },
-      { n:5, error: "Build fallando por errores acumulados", sol: "Fix secuencial", sev: "HIGH" },
-    ],
-    learning: "Llegaron con repo existente pero 5 bugs de config. aibus hizo audit completo. Nivel intermedio.",
-    finalStatus: ["✅ Código revisado (5 bugs corregidos)", "✅ Repo validado", "✅ Testnet MON enviado", "❓ Deploy final — no confirmado"],
-    potential: 3,
-    color: "green",
+    name: "FanSlayer",
+    emoji: "🎮",
+    members: 3,
+    phase: 38.12,
+    phaseLabel: "38.12%",
+    building: "Videojuego Web3: peleas con hordas de fans zombies, ganas NFTs de artistas famosos con cada kill. Los NFTs se compran, venden e intercambian.",
+    type: "Web3 Gaming + NFTs",
+    highlight: "Más avanzado del blitz",
+    potential: 4,
+    badge: "🏆 Más avanzado",
+    badgeColor: "yellow",
+    color: "yellow",
+    source: "manual",
+    notes: "El único gaming/NFT project del blitz. 3 miembros y el mayor % de avance.",
   },
   {
-    id: "eco-eeelien",
+    name: "7AYLABS",
+    emoji: "🏢",
+    members: 6,
+    phase: null,
+    phaseLabel: "Smart contracts en construcción",
+    building: "Plataforma basada en Prueba de Presencia — recibe incentivos solo dentro de la presencia declarada on-chain.",
+    type: "Proof of Presence",
+    highlight: "Equipo más grande",
+    potential: 4,
+    badge: "👥 6 miembros",
+    badgeColor: "blue",
+    color: "blue",
+    source: "manual",
+    notes: "El equipo más grande del blitz (6 personas). Concept innovador: geolocalización + incentivos on-chain.",
+  },
+  {
+    name: "Antaria",
+    emoji: "🤝",
+    members: 1,
+    phase: null,
+    phaseLabel: "Contratos en construcción",
+    building: "Transforma las tandas tradicionales en experiencia segura y rentable con blockchain. Opera por WhatsApp — sin app adicional.",
+    type: "DeFi + LATAM Culture",
+    highlight: "1 solo miembro + WhatsApp",
+    potential: 5,
+    badge: "🌎 LATAM fit",
+    badgeColor: "green",
+    color: "green",
+    source: "manual",
+    notes: "¡UN solo miembro construyendo contratos! WhatsApp como interfaz = distribución masiva sin fricción. Tandas = caso de uso culturalmente perfecto para México.",
+  },
+  {
+    name: "MARP",
+    emoji: "💜",
+    members: null,
+    phase: 100,
+    phaseLabel: "Pitch + contrato live",
+    building: "Monad Agent Reputation Protocol — capa de reputación on-chain para agentes autónomos. 'La confianza es el nuevo alpha'.",
+    type: "Agent Infrastructure",
+    highlight: "Más completo técnicamente",
+    potential: 5,
+    badge: "⭐ Top técnico",
+    badgeColor: "purple",
+    color: "purple",
+    source: "discord",
+    contracts: [{ name: "AgentReputation.sol", addr: "Live en Monad Testnet (Chain 10143)" }],
+    notes: "Pitch bilingüe, contrato live, arquitectura sólida. 'En Ethereum costaría millones. En Monad es casi gratis.'",
+  },
+  {
+    name: "Ecoeeelien Monad",
     emoji: "🌱",
-    name: "Eco Eeelien",
-    tagline: "Recicla y Gana en Monad",
-    msgs: 317,
-    startTime: "21:26 UTC",
-    level: "Avanzado",
-    levelColor: "emerald",
-    stack: ["Next.js 14", "wagmi/viem", "Foundry", "Solidity", "ESP32-CAM"],
+    members: 2,
+    phase: 25,
+    phaseLabel: "25%",
+    building: "App ecológica de reciclaje con recompensas. ESP32-CAM detecta botellas → IA clasifica → Monad registra → recibes ECO tokens.",
+    type: "IoT + IA + Blockchain",
+    highlight: "Concepto más innovador",
+    potential: 4,
+    badge: "🔬 Más innovador",
+    badgeColor: "emerald",
+    color: "emerald",
+    source: "both",
     contracts: [
-      { name: "EcoToken (ERC20)", addr: "0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9", link: "https://monad-testnet.socialscan.io/address/0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9" },
+      { name: "EcoToken", addr: "0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9", link: "https://monad-testnet.socialscan.io/address/0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9" },
       { name: "RecyclingRegistry", addr: "0x7fFCcdD4b9Ae0a3cfCdA86c954AE8a1816Ec74C3", link: "https://monad-testnet.socialscan.io/address/0x7fFCcdD4b9Ae0a3cfCdA86c954AE8a1816Ec74C3" },
     ],
-    repo: null,
-    owner: "39eliens",
-    agents: ["devrel-banana 🍌", "aibus-dumbleclaw 🧙"],
-    concept: "Sistema de reciclaje tokenizado: ESP32-CAM detecta botella → IA clasifica material → Monad registra → recibes tokens ECO.",
-    flow: "🥤 Botella detectada → 🤖 IA clasifica → ⛓️ Registra en Monad → 💰 5-10 ECO tokens",
-    bugs: [
-      { n:1, error: "WalletConnect projectId inválido ('eco-eeelien-monad-blitz')", sol: "Registrar uno real en WalletConnect Cloud", sev: "HIGH" },
-      { n:2, error: "Build fallaba por projectId", sol: "aibus hizo el fix y push", sev: "HIGH" },
-      { n:3, error: "Push a GitHub no preparado", sol: "Instrucciones de git init + push", sev: "MED" },
-    ],
-    learning: "Concepto más innovador del blitz. Hardware + IA + blockchain es muy ambicioso para 1 día. Llegaron tarde y aun así deployaron 2 contratos.",
-    finalStatus: ["✅ EcoToken deployado en Monad Testnet", "✅ RecyclingRegistry deployado", "✅ Build exitoso (tras fix WalletConnect)", "⚠️ WalletConnect con placeholder", "❓ Deploy Vercel — no confirmado"],
+    notes: "2 contratos deployados y verificados en Monad Testnet. Hardware físico + IA + blockchain.",
+  },
+  {
+    name: "ClearHope",
+    emoji: "💚",
+    members: 4,
+    phase: 20,
+    phaseLabel: "20%",
+    building: "Plataforma de donativos para damnificados en México. Donaciones transparentes on-chain — sin intermediarios.",
+    type: "Social Impact + DeFi",
+    highlight: null,
     potential: 4,
-    color: "emerald",
+    badge: null,
+    color: "green",
+    source: "manual",
+    notes: "4 miembros. Similar concepto a Solidario México pero equipo diferente. Blockchain da la transparencia que las plataformas de donaciones tradicionales no tienen.",
   },
   {
-    id: "axel-equipo",
-    emoji: "🇲🇽",
-    name: "Axel & equipo → Solidario México",
-    tagline: "Donaciones transparentes on-chain",
-    msgs: 196,
-    startTime: "18:35 UTC",
-    level: "Principiante",
-    levelColor: "red",
-    stack: ["Next.js", "wagmi/viem", "Privy", "Tailwind", "ImpactFundKintsu.sol"],
-    contracts: [],
-    repo: "https://github.com/Axl5136/Blitz-Proyect-2026",
-    owner: "Axl5136",
-    agents: ["devrel-banana 🍌"],
-    concept: "Solidario México: plataforma de donaciones donde los fondos se stakean en Kintsu vault generando yield. Si la meta se cumple: fondos al beneficiario. Si no: los donantes recuperan su dinero.",
-    bugs: [
-      { n:1, error: "git clone en directorio no vacío", sol: "npx degit fruteroclub/monad-blitz-starter . --force", sev: "HIGH" },
-      { n:2, error: "Comandos corridos todos juntos sin esperar", sol: "Uno por uno, esperar que termine", sev: "MED" },
-      { n:3, error: "degit sin --force en dir con archivos", sol: "Agregar flag --force", sev: "MED" },
-      { n:4, error: "git clone con . falló (ya había .git)", sol: "usar degit que ignora .git existente", sev: "HIGH" },
-    ],
-    learning: "La curva de aprendizaje más larga del blitz. Windows + Git Bash = más friction. Equipo grande (7 miembros), preguntas muy básicas. Pero llegaron a deployar en Vercel.",
-    finalStatus: ["✅ Template clonado con --force", "✅ Deployado en Vercel (blitz-axel-2026)", "✅ ImpactFundKintsu.sol compilado", "✅ Privy App ID configurado", "⚠️ Contract address = ejemplo del starter, no su propio deploy"],
-    potential: 3,
-    color: "yellow",
-    deployUrl: "https://blitz-axel-2026.vercel.app",
-  },
-  {
-    id: "marp",
-    emoji: "💜",
-    name: "MARP",
-    tagline: "Monad Agent Reputation Protocol",
-    msgs: 107,
-    startTime: "21:14 UTC",
-    level: "Avanzado",
-    levelColor: "purple",
-    stack: ["Foundry", "Solidity 0.8.28", "Next.js", "viem/chains monadTestnet"],
-    contracts: [
-      { name: "AgentReputation.sol", addr: "Live en Monad Testnet (Chain 10143)", link: null },
-    ],
-    repo: null,
-    owner: "Clavely",
-    agents: ["devrel-banana 🍌", "aibus-dumbleclaw 🧙"],
-    concept: "Protocolo de reputación on-chain para agentes autónomos. 'La confianza es el nuevo alpha'. Los agentes acumulan score por sus acciones on-chain.",
-    taglineQuote: "En Ethereum costaría millones. En Monad es casi gratis.",
-    bugs: [
-      { n:1, error: "Frontend muy ambicioso para el tiempo disponible", sol: "aibus: estrategia 'modo cirujano' con mock data", sev: "MED" },
-      { n:2, error: "Pitch bilingüe necesario", sol: "devrel-banana generó prompt completo en ES + EN para Gamma", sev: "LOW" },
-    ],
-    learning: "El más maduro técnicamente. Reconocieron sus límites (tenían Clob.mad antes) y pivotearon a MARP con scope correcto. Lean Canvas aplicado perfectamente.",
-    finalStatus: ["✅ Contrato AgentReputation live en Monad Testnet", "✅ Agente real con score on-chain en vivo", "✅ Frontend: feed de agentes + dashboard", "✅ Sistema de stake y vouching funcional", "✅ Pitch bilingüe en Gamma (Dark theme, #836EF9)"],
-    potential: 5,
-    color: "purple",
-    highlight: true,
-  },
-  {
-    id: "clob-mad",
-    emoji: "📊",
-    name: "Clob.mad",
-    tagline: "Central Limit Order Book on Monad",
-    msgs: 50,
-    startTime: "20:22 UTC",
-    level: "Avanzado",
-    levelColor: "purple",
-    stack: ["Foundry", "Solidity", "React/Next.js"],
-    contracts: [],
-    repo: null,
-    owner: "Clavely (mismo que MARP)",
-    agents: ["devrel-banana 🍌", "aibus-dumbleclaw 🧙"],
-    concept: "CLOB full on-chain: libro de órdenes límite centralizado para trading de ERC-20 nativos de Monad. Archivado — pivotaron a MARP.",
-    bugs: [
-      { n:1, error: "Complejidad técnica subestimada", sol: "Pivote a MARP (scope correcto)", sev: "HIGH" },
-    ],
-    learning: "Decisión inteligente: reconocieron que un CLOB completo era demasiado ambicioso para el tiempo. El pivot fue lo correcto. El prompt de Cursor generado sirve para retomar el proyecto.",
-    finalStatus: ["❌ Proyecto archivado", "✅ Arquitectura documentada", "✅ Prompt de Cursor generado (reutilizable)", "✅ Pivote a MARP exitoso"],
-    potential: 2,
-    color: "gray",
-    archived: true,
-  },
-  {
-    id: "meditrack",
-    emoji: "🏥",
-    name: "MediTrack",
-    tagline: "Conectar médicos y pacientes on-chain",
-    msgs: 30,
-    startTime: "21:40 UTC",
-    level: "Intermedio",
-    levelColor: "blue",
-    stack: ["Next.js 16", "TypeScript", "Tailwind", "Privy", "wagmi/viem"],
-    contracts: [],
-    repo: null,
-    owner: "ailwdhy",
-    agents: ["devrel-banana 🍌", "aibus-dumbleclaw 🧙"],
-    concept: "Sistema de registros médicos + pagos de consulta en Monad. Vista Doctor para historial, Vista Paciente para pagar consultas en MON.",
-    bugs: [
-      { n:1, error: "Llegaron tarde — solo 4h antes del code freeze", sol: "aibus construyó el MVP completo directamente", sev: "HIGH" },
-      { n:2, error: "Privy App ID no configurado", sol: "dashboard.privy.io → App ID → .env.local", sev: "MED" },
-    ],
-    learning: "Healthcare + blockchain es caso de uso real. Llegaron tarde pero con idea clara. aibus construyó el MVP de UI completo. El contrato MediTrack.sol quedó como next step.",
-    finalStatus: ["✅ MVP Frontend: Vista Doctor + Vista Paciente", "✅ wagmi/viem conectado a Monad Testnet", "✅ Auto-switch de red implementado", "✅ Pagos en MON funcionales (UI)", "⚠️ Contrato MediTrack.sol: pendiente", "⚠️ Privy App ID: pendiente"],
-    potential: 3,
-    color: "blue",
-  },
-  {
-    id: "agente-consumo",
-    emoji: "📱",
-    name: "AgenteConsumo",
-    tagline: "BOTazo — Tracking de consumo",
-    msgs: 7,
-    startTime: "~21:00 UTC",
-    level: "Principiante",
-    levelColor: "orange",
-    stack: ["React", "Vite", "PWA mobile-first"],
-    contracts: [],
-    repo: null,
-    owner: "Brian Lopez (lpbrayan0)",
-    agents: ["aibus-dumbleclaw 🧙"],
-    concept: "PWA mobile-first de tracking de consumo personal con integración on-chain en Monad.",
-    bugs: [],
-    learning: "Thread menos activo del blitz. Brian también coordinaba a otros equipos ese día. Pocos datos para análisis completo.",
-    finalStatus: ["✅ Arquitectura PWA definida", "❓ Implementación — datos insuficientes"],
-    potential: 2,
-    color: "orange",
-  },
-  {
-    id: "persea",
-    emoji: "🥑",
     name: "Perséa Protocol",
-    tagline: "Del árbol al dato — trazado en cadena",
-    msgs: null,
-    startTime: "N/A (solo pitch)",
-    level: "Avanzado",
-    levelColor: "green",
-    stack: ["YOLOv8 (IA)", "ESP32 IoT", "Monad/Nomad blockchain", "App móvil offline-first", "IPFS"],
-    contracts: [],
-    repo: null,
-    owner: "Equipo Persea",
-    agents: ["devrel-banana 🍌"],
-    concept: "Blockchain para la economía circular del aguacate mexicano. Michoacán: 870,000 ton de residuos/año = USD 320M sin capturar. SkinTrace (NFTs de trazabilidad) + PitMarket (marketplace) + SeedData (API).",
-    bugs: [],
-    learning: "El proyecto más ambicioso en visión de negocio. Pitch completo de 9 slides generado por devrel-banana. Pre-seed target: USD 500K. Timing perfecto (regulación ESG Europa 2027).",
-    finalStatus: ["✅ Pitch completo generado (9 slides)", "✅ Stack tecnológico definido", "✅ Modelo de negocio con proyecciones", "❓ Contrato en Monad Testnet — no confirmado"],
+    emoji: "🥑",
+    members: null,
+    phase: null,
+    phaseLabel: "Pitch completo",
+    building: "Blockchain para la economía circular del aguacate mexicano. 870,000 ton de residuos/año = USD 320M sin capturar. SkinTrace NFTs + PitMarket + SeedData API.",
+    type: "AgriTech + Supply Chain",
+    highlight: "Mayor visión de negocio",
     potential: 5,
-    fundraise: "USD 500K Pre-Seed",
+    badge: "💰 Pre-seed USD 500K",
+    badgeColor: "lime",
     color: "lime",
+    source: "discord",
+    notes: "Pitch de 9 slides, modelo de negocio completo, roadmap hasta Serie A. Timing perfecto (ESG Europa 2027).",
+  },
+  {
+    name: "Monazon",
+    emoji: "🛒",
+    members: null,
+    phase: null,
+    phaseLabel: "Contratos deployados",
+    building: "Marketplace de pagos globales con stablecoins en Monad Testnet. 'Market for everyone'.",
+    type: "DeFi + Marketplace",
+    highlight: null,
+    potential: 3,
+    badge: null,
+    color: "orange",
+    source: "discord",
+    repo: "https://github.com/ToryDom/Monazon",
+    notes: "5 bugs críticos corregidos (chain ID, RPCs, imports). SQLite + Drizzle ORM + Next.js Server Actions.",
+  },
+  {
+    name: "Axel & equipo → Solidario México",
+    emoji: "🇲🇽",
+    members: 7,
+    phase: null,
+    phaseLabel: "Deployado en Vercel",
+    building: "Donaciones transparentes on-chain con ImpactFundKintsu. Los fondos stakeados generan yield en Kintsu vault mientras dura la campaña.",
+    type: "Social Impact + DeFi",
+    highlight: null,
+    potential: 3,
+    badge: "🚀 En Vercel",
+    badgeColor: "blue",
+    color: "blue",
+    source: "discord",
+    notes: "Equipo más grande en Discord (7 miembros). La mecánica de Kintsu para yield en donaciones es brillante.",
+  },
+  {
+    name: "qoperacha",
+    emoji: "📈",
+    members: 3,
+    phase: 20,
+    phaseLabel: "20%",
+    building: "Plataforma de trading automático según el mercado.",
+    type: "DeFi Trading",
+    highlight: null,
+    potential: 3,
+    badge: null,
+    color: "cyan",
+    source: "manual",
+    notes: "3 miembros, 99% del equipo formado. Trading algorítmico on-chain.",
+  },
+  {
+    name: "MediTrack / [Registros Médicos]",
+    emoji: "🏥",
+    members: 4,
+    phase: 25,
+    phaseLabel: "25%",
+    building: "Registro de historiales médicos en blockchain. Vista Doctor + Vista Paciente + pagos en MON.",
+    type: "HealthTech",
+    highlight: null,
+    potential: 3,
+    badge: null,
+    color: "red",
+    source: "both",
+    notes: "4 miembros (dato manual). MVP UI construido por aibus-dumbleclaw. Contrato MediTrack.sol pendiente.",
+  },
+  {
+    name: "CLOB.nad",
+    emoji: "📊",
+    members: 2,
+    phase: 0,
+    phaseLabel: "Iniciando",
+    building: "CLOB — Libro de Órdenes Límite Centralizado on Monad.",
+    type: "DeFi CLOB",
+    highlight: null,
+    potential: 2,
+    badge: "🔄 Iniciando",
+    badgeColor: "gray",
+    color: "gray",
+    source: "both",
+    notes: "2 miembros. El thread fue archivado — posiblemente mismo equipo que MARP que pivotó.",
+  },
+  {
+    name: "AgenteConsumo (BOTazo)",
+    emoji: "📱",
+    members: null,
+    phase: null,
+    phaseLabel: "Arquitectura definida",
+    building: "PWA mobile-first de tracking de consumo personal con integración on-chain.",
+    type: "Consumer App",
+    highlight: null,
+    potential: 2,
+    badge: null,
+    color: "orange",
+    source: "discord",
+    notes: "Proyecto de Brian Lopez. Pocos datos en Discord (7 msgs).",
   },
 ];
 ---
 <Layout title="Proyectos">
   <div class="mb-8">
     <h1 class="text-4xl font-bold mb-2">🛠️ Proyectos del Blitz</h1>
-    <p class="text-gray-400">Análisis detallado de cada equipo — stack, errores, curva de aprendizaje y estado final</p>
+    <p class="text-gray-400">Datos combinados: recolección manual en piso 🎯 + análisis de Discord 🤖</p>
   </div>
 
-  <!-- Filter summary -->
-  <div class="flex flex-wrap gap-3 mb-8">
-    {["🔥 Todos", "✅ Deployados", "⭐⭐⭐⭐⭐ Top potencial"].map(f => (
-      <span class="bg-purple-900/20 border border-purple-800/40 text-purple-300 text-sm px-3 py-1.5 rounded-full">{f}</span>
+  <!-- Stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+    {[
+      { label: "Proyectos totales", value: "13+", icon: "🛠️" },
+      { label: "Devs participantes", value: "35+", icon: "👩‍💻" },
+      { label: "Contratos on-chain", value: "3+", icon: "⛓️" },
+      { label: "% más alto", value: "38.12%", icon: "🏆" },
+    ].map(s => (
+      <div class="bg-purple-900/20 border border-purple-800/30 rounded-xl p-4 text-center">
+        <div class="text-2xl mb-1">{s.icon}</div>
+        <div class="text-xl font-bold text-white">{s.value}</div>
+        <div class="text-xs text-gray-400 mt-1">{s.label}</div>
+      </div>
     ))}
   </div>
 
-  <div class="space-y-6">
-    {projects.map(p => (
-      <div class={`rounded-2xl border p-6 ${p.highlight ? 'bg-purple-900/20 border-purple-600/50 ring-1 ring-purple-500/20' : p.archived ? 'bg-gray-900/30 border-gray-800/30 opacity-80' : 'bg-[#0f0f1a] border-purple-900/30'} transition-all`}>
-        <!-- Header -->
-        <div class="flex items-start justify-between gap-4 mb-4">
-          <div>
-            <div class="flex items-center gap-3 mb-1 flex-wrap">
-              <h2 class="text-xl font-bold text-white">{p.emoji} {p.name}</h2>
-              {p.highlight && <span class="text-xs bg-purple-600/40 text-purple-300 border border-purple-500/40 rounded-full px-2 py-0.5">🏆 Más completo</span>}
-              {p.archived && <span class="text-xs bg-gray-700/40 text-gray-400 border border-gray-600/40 rounded-full px-2 py-0.5">Archivado</span>}
-              {p.fundraise && <span class="text-xs bg-green-900/40 text-green-400 border border-green-700/40 rounded-full px-2 py-0.5">💰 {p.fundraise}</span>}
+  <!-- Legend -->
+  <div class="flex gap-3 mb-6 flex-wrap text-xs">
+    <span class="flex items-center gap-1.5 bg-green-900/20 border border-green-800/30 text-green-400 px-3 py-1.5 rounded-full">🎯 Datos manuales (alta prioridad)</span>
+    <span class="flex items-center gap-1.5 bg-purple-900/20 border border-purple-800/30 text-purple-400 px-3 py-1.5 rounded-full">🤖 Datos de Discord</span>
+    <span class="flex items-center gap-1.5 bg-blue-900/20 border border-blue-800/30 text-blue-400 px-3 py-1.5 rounded-full">✅ Ambas fuentes</span>
+  </div>
+
+  <!-- Projects grid -->
+  <div class="space-y-4">
+    {groundTruth.map((p) => (
+      <div class={`rounded-2xl border p-5 transition-all ${p.potential === 5 ? 'bg-purple-900/20 border-purple-600/50 ring-1 ring-purple-500/20' : 'bg-[#0f0f1a] border-purple-900/30'}`}>
+        <div class="flex items-start justify-between gap-4 mb-3 flex-wrap">
+          <div class="flex items-center gap-3 flex-wrap">
+            <span class="text-2xl">{p.emoji}</span>
+            <div>
+              <h2 class="text-lg font-bold text-white">{p.name}</h2>
+              <span class="text-xs text-purple-300">{p.type}</span>
             </div>
-            <p class="text-purple-300 text-sm italic">"{p.tagline}"</p>
+            {p.badge && (
+              <span class={`text-xs border rounded-full px-2 py-0.5 ${p.badgeColor === 'yellow' ? 'bg-yellow-900/30 text-yellow-400 border-yellow-700/40' : p.badgeColor === 'purple' ? 'bg-purple-900/30 text-purple-300 border-purple-700/40' : p.badgeColor === 'green' ? 'bg-green-900/30 text-green-400 border-green-700/40' : p.badgeColor === 'emerald' ? 'bg-emerald-900/30 text-emerald-400 border-emerald-700/40' : p.badgeColor === 'blue' ? 'bg-blue-900/30 text-blue-400 border-blue-700/40' : 'bg-gray-800 text-gray-400 border-gray-700/40'}`}>
+                {p.badge}
+              </span>
+            )}
+            <!-- Source badge -->
+            <span class={`text-xs border rounded-full px-2 py-0.5 ${p.source === 'manual' ? 'bg-green-900/20 text-green-400 border-green-800/30' : p.source === 'both' ? 'bg-blue-900/20 text-blue-400 border-blue-800/30' : 'bg-purple-900/20 text-purple-400 border-purple-800/30'}`}>
+              {p.source === 'manual' ? '🎯 Manual' : p.source === 'both' ? '✅ Verificado' : '🤖 Discord'}
+            </span>
           </div>
-          <div class="text-right shrink-0">
-            {p.msgs && <div class="text-2xl font-bold text-white">{p.msgs}</div>}
-            {p.msgs && <div class="text-xs text-gray-400">mensajes</div>}
-            <div class="flex items-center gap-1 mt-1 justify-end flex-wrap">
-              {"⭐".repeat(p.potential)}{"☆".repeat(5 - p.potential)}
-            </div>
+          <div class="text-right">
+            <div class="text-yellow-400">{"⭐".repeat(p.potential)}{"☆".repeat(5 - p.potential)}</div>
+            {p.members && <div class="text-xs text-gray-400 mt-1">{p.members} miembro{p.members !== 1 ? 's' : ''}</div>}
           </div>
         </div>
 
-        <!-- Concept -->
-        <div class="bg-black/30 rounded-lg p-3 mb-4 text-sm text-gray-300">
-          {p.concept}
-          {p.taglineQuote && <p class="mt-2 text-purple-300 italic">"{p.taglineQuote}"</p>}
-          {p.flow && <p class="mt-2 text-emerald-400 font-mono text-xs">{p.flow}</p>}
-        </div>
+        <!-- Building -->
+        <p class="text-sm text-gray-300 bg-black/30 rounded-lg p-3 mb-3">{p.building}</p>
 
-        <div class="grid md:grid-cols-3 gap-4">
-          <!-- Stack -->
-          <div>
-            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Stack</h3>
-            <div class="flex flex-wrap gap-1.5">
-              {p.stack.map(s => (
-                <span class="text-xs bg-[#1a1a2e] border border-purple-900/40 text-purple-200 rounded px-2 py-0.5">{s}</span>
-              ))}
+        <div class="flex flex-wrap gap-4 items-start">
+          <!-- Phase bar -->
+          <div class="flex-1 min-w-40">
+            <div class="flex justify-between text-xs text-gray-400 mb-1">
+              <span>Avance</span>
+              <span class="text-white">{p.phaseLabel}</span>
             </div>
-          </div>
-
-          <!-- Contracts -->
-          <div>
-            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Contratos on-chain</h3>
-            {p.contracts.length > 0 ? (
-              <div class="space-y-1">
-                {p.contracts.map(c => (
-                  <div>
-                    <div class="text-xs text-green-400 font-medium">{c.name}</div>
-                    {c.link ? (
-                      <a href={c.link} target="_blank" class="text-xs font-mono text-gray-500 hover:text-purple-400 transition-colors break-all">{c.addr.slice(0,20)}…</a>
-                    ) : (
-                      <div class="text-xs font-mono text-gray-500 break-all">{c.addr}</div>
-                    )}
-                  </div>
-                ))}
+            {p.phase !== null && (
+              <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-full" style={`width:${Math.min(p.phase, 100)}%`}></div>
               </div>
-            ) : (
-              <span class="text-xs text-gray-600">No confirmados</span>
             )}
           </div>
 
-          <!-- Info -->
-          <div>
-            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Info</h3>
-            <div class="space-y-1 text-xs text-gray-400">
-              <div>👤 <span class="text-gray-300">{p.owner}</span></div>
-              <div>⏰ <span class="text-gray-300">{p.startTime}</span></div>
-              <div>📊 Nivel: <span class={`font-medium ${p.levelColor === 'purple' ? 'text-purple-400' : p.levelColor === 'red' ? 'text-red-400' : p.levelColor === 'yellow' ? 'text-yellow-400' : 'text-emerald-400'}`}>{p.level}</span></div>
-              <div>🤖 {p.agents.join(", ")}</div>
-              {p.repo && <div>📦 <a href={p.repo} target="_blank" class="text-purple-400 hover:underline">GitHub repo</a></div>}
-              {p.deployUrl && <div>🚀 <a href={p.deployUrl} target="_blank" class="text-green-400 hover:underline">Ver deploy</a></div>}
-            </div>
-          </div>
-        </div>
-
-        <!-- Bugs -->
-        {p.bugs.length > 0 && (
-          <div class="mt-4">
-            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">🐛 Errores detectados</h3>
-            <div class="space-y-1.5">
-              {p.bugs.map(b => (
-                <div class="flex items-start gap-2 text-xs">
-                  <span class={`shrink-0 px-1.5 py-0.5 rounded font-bold ${b.sev === 'HIGH' ? 'bg-red-900/40 text-red-400' : b.sev === 'MED' ? 'bg-yellow-900/30 text-yellow-500' : 'bg-gray-800 text-gray-500'}`}>{b.sev}</span>
-                  <span class="text-gray-400">{b.error}</span>
-                  <span class="text-gray-600">→</span>
-                  <span class="text-green-400">{b.sol}</span>
+          <!-- Contracts -->
+          {p.contracts && p.contracts.length > 0 && (
+            <div class="flex-1 min-w-40">
+              <div class="text-xs text-gray-400 mb-1">Contratos on-chain</div>
+              {p.contracts.map(c => (
+                <div class="text-xs">
+                  <span class="text-green-400 font-medium">{c.name}</span>
+                  {c.link ? (
+                    <a href={c.link} target="_blank" class="block font-mono text-gray-500 hover:text-purple-400 truncate">{c.addr.slice(0,22)}…</a>
+                  ) : (
+                    <span class="block text-gray-500">{c.addr}</span>
+                  )}
                 </div>
               ))}
             </div>
-          </div>
-        )}
+          )}
 
-        <!-- Learning + Status -->
-        <div class="grid md:grid-cols-2 gap-4 mt-4">
-          <div>
-            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">📈 Curva de aprendizaje</h3>
-            <p class="text-xs text-gray-400">{p.learning}</p>
-          </div>
-          <div>
-            <h3 class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">✅ Estado final</h3>
-            <ul class="space-y-0.5">
-              {p.finalStatus.map(s => (
-                <li class="text-xs text-gray-400">{s}</li>
-              ))}
-            </ul>
-          </div>
+          <!-- Repo -->
+          {p.repo && (
+            <div>
+              <a href={p.repo} target="_blank" class="text-xs text-purple-400 hover:text-purple-300 hover:underline">📦 GitHub repo →</a>
+            </div>
+          )}
         </div>
+
+        {p.notes && (
+          <p class="text-xs text-gray-500 mt-3 border-t border-gray-800/50 pt-2 italic">{p.notes}</p>
+        )}
       </div>
     ))}
   </div>
