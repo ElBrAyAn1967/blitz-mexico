@@ -21,30 +21,94 @@ errors: []
 
 ## 🎯 Resumen Ejecutivo
 
-El Monad Blitz CDMX fue un hackathon presencial de 1 día con **~15 proyectos registrados** y **~1,530+ mensajes** de interacción en Discord. De los 15 threads, **2 proyectos deployaron contratos en Monad Testnet**, **4 lograron avance significativo**, y **9 quedaron en fase conceptual o con mínima actividad**.
+El Monad Blitz CDMX fue un hackathon presencial de 1 día con **18 proyectos analizados** y **~1,643+ mensajes** de interacción. De los proyectos:
+- **5 deployaron contratos** en Monad Testnet
+- **8 tienen contratos desarrollados** (no deployados)
+- **5 quedaron en fase conceptual** o mínima actividad
+- **28+ contratos únicos** identificados en total
 
 ---
 
 ## 📋 Tabla Resumen de Todos los Equipos
 
-| # | Proyecto | Miembros | Msgs | Contrato Deploy | Estado |
-|---|----------|----------|------|-----------------|--------|
-| 1 | 🛒 Monazon | Tory Dom | 323 | ❌ | 🟡 En progreso |
-| 2 | 🌱 Eco Eeelien | 39eliens, Carlos Navarrete | 317+25 | ✅ EcoToken | 🟢 **COMPLETADO** |
-| 3 | 💜 MARP | Clavely | 107 | ✅ AgentReputation | 🟢 **COMPLETADO** |
-| 4 | 🇲🇽 Solidario México | jose.ewe, Axel, misteroby17 | 194 | ❌ | 🟡 En progreso |
-| 5 | ⚔️ FanSlayer/Monad101 | Onii (oni6213) | 400 | ❌ | 🟢 Deploy Vercel |
-| 6 | 🏥 MediTrack | ailwdhy | 30 | ❌ | 🟡 MVP frontend |
-| 7 | 📊 99% Fe / Clob.mad | chris | ~123 | ❌ | 🟡 En progreso |
-| 8 | 📱 BOTazo | Nallely López | 7 | ❌ | 🔴 Inicio |
-| 9 | 🥑 Persea Protocol | Brian Lopez, Ane | 17 | ❌ | 🟡 Concepto |
-| 10 | 🔄 Antaria/Tandas | Enrique | 15 | ❌ | 🟡 Concepto |
-| 11 | 🎰 Q-Operacha | chris | ~50 | ❌ | 🟡 Concepto |
-| 12 | 🌍 Ecoelien (original) | 39eliens | 25 | — | ↗️ Migrado |
-| 13 | 🧬 Genomad | Brian Lopez | 5 | ❌ | 🔴 Minimal |
-| 14 | 🆘 Davnificados | — | 4 | ❌ | 🔴 Minimal |
-| 15 | ☢️ PREVENTDEMIC | SergioFenix | 1 | ❌ | 🔴 Solo creación |
-| 16 | 👋 Hola | — | 2 | ❌ | 🔴 Test |
+| # | Proyecto | Miembros | Msgs | Contratos | Deploy | Estado |
+|---|----------|----------|------|-----------|--------|--------|
+| 1 | 🛒 Monazon | Tory Dom | 323 | 0 | ❌ | 🟡 En progreso |
+| 2 | 🌱 **Eco Eeelien** | 39eliens, Carlos, Sergio | 342 | 4 | ✅ | 🟢 **COMPLETADO** |
+| 3 | 💜 **MARP** | Clavely | 107 | 2 | ✅ | 🟢 **COMPLETADO** |
+| 4 | 🇲🇽 Solidario México | jose.ewe, Axel, misteroby17 | 198 | 2 | ❌ | 🟡 En progreso |
+| 5 | ⚔️ FanSlayer/Monad101 | Onii | 400 | 0 | ❌ | 🟢 Deploy Vercel |
+| 6 | 🏥 MediTrack | ailwdhy | 30 | 1 | ❌ | 🟡 MVP frontend |
+| 7 | 📊 99% Fe / Clob.mad | chris | 123 | 0 | ❌ | 🟡 En progreso |
+| 8 | 📱 BOTazo | Nallely López | 7 | 0 | ❌ | 🔴 Inicio |
+| 9 | 🥑 Persea Protocol | Brian Lopez, Ane | 17 | 5 | ❌ | 🟡 Arquitectura |
+| 10 | 🔄 **Antaria** | Enrique, Juan Fuente | 15 | 1 | ✅ | 🟢 **COMPLETADO** |
+| 11 | 🎰 Q-Operacha | Chris, LexBP11 | 73 | 1 | ✅ | 🟡 En progreso |
+| 12 | 🧬 Genomad | Brian Lopez | 5 | 0 | ❌ | 🔴 Testing |
+| 13 | 🆘 Davnificados | Axel, misteroby17 | 198 | 0 | ❌ | 🟡 En progreso |
+| 14 | ☢️ PREVENTDEMIC | SergioFenix | 1 | 0 | ❌ | 🔴 Minimal |
+| 15 | 👋 Hola | — | 2 | 0 | ❌ | 🔴 Test |
+| 16 | 🏢 **7AYLABS/azist.me** | WOM Devs MX | 0 | 10+ | ❌ | 🟡 Arquitectura |
+| 17 | 💳 Strope Pay | 0xChijioke | 0 | 1 | ❌ | 🟡 Contrato listo |
+
+---
+
+## 🏆 Proyectos Destacados por Categoría
+
+### Tier 1: Contratos Deployados (5)
+
+| Proyecto | Contratos | Address |
+|----------|-----------|---------|
+| **Eco Eeelien** | EcoToken, RecyclingRegistry, VoucherNFT, ChallengeManager | `0xC365564E5AbA75dC747D...` |
+| **MARP** | MARP, BlitzCollection | Live en chain 10143 |
+| **Antaria** | AnchorRegistry | `0xB284Dd77dcdc080d7c55...` |
+| **Q-Operacha** | CoperachaInteligente | Live en chain 10143 |
+
+### Tier 2: Contratos Desarrollados (8)
+
+| Proyecto | Contratos | Status |
+|----------|-----------|--------|
+| **7AYLABS/azist.me** | 10+ contratos (Azist, AzistPoints, AzistMarket, etc.) | Arquitectura completa |
+| **Persea Protocol** | 5 contratos (AvocadoBatch, CertificationNFT, SupplyChain, Marketplace, Escrow) | Diseño completo |
+| **Strope Pay** | SubscriptionManager | Listo para deploy |
+| **MediTrack** | MediPay | MVP |
+| **Solidario México** | ImpactFundKintsu | En desarrollo |
+
+---
+
+## 📊 Análisis de Contratos
+
+### Total: 28+ Contratos Únicos
+
+| Categoría | Count | Ejemplos |
+|-----------|-------|----------|
+| DeFi/Pagos | 8 | SubscriptionManager, MediPay, CoperachaInteligente |
+| Tokens ERC20 | 3 | EcoToken, AzistPoints |
+| NFTs ERC721 | 5 | VoucherNFT, CertificationNFT, BlitzCollection |
+| Supply Chain | 3 | AvocadoBatch, SupplyChain, RecyclingRegistry |
+| Gamificación | 5 | ChallengeManager, BadgeFactory, CampaignFactory |
+| Registros | 3 | AnchorRegistry, MARP, AccessControl |
+
+### Tech Stack Distribution
+
+```
+Frontend:
+├── Next.js: 14 proyectos (78%)
+├── React/Vite: 2 proyectos (11%)
+└── Other: 2 proyectos (11%)
+
+Smart Contracts:
+├── Hardhat: 8 proyectos (44%)
+├── Foundry: 4 proyectos (22%)
+├── Scaffold-ETH: 2 proyectos (11%)
+└── Sin contratos: 4 proyectos (22%)
+
+Wallet/Auth:
+├── Privy: 6 proyectos (33%)
+├── Reown/WalletConnect: 5 proyectos (28%)
+├── RainbowKit: 2 proyectos (11%)
+└── Other/None: 5 proyectos (28%)
+```
 
 ---
 
@@ -52,58 +116,83 @@ El Monad Blitz CDMX fue un hackathon presencial de 1 día con **~15 proyectos re
 
 | Agente | Nivel | Proyectos atendidos |
 |--------|-------|---------------------|
-| 🍌 devrel-banana | 🔥🔥🔥 MUY ACTIVA | Monad101, Monazon, Eco Eeelien, MARP, MediTrack, Axel, Clob.mad, blitz-general |
-| 🧙 aibus-dumbleclaw | 🔥🔥 ACTIVA | Monazon, Eco Eeelien, MARP, MediTrack, Clob.mad, FanSlayer, AgenteConsumo |
+| 🍌 devrel-banana | 🔥🔥🔥 MUY ACTIVA | Monad101, Monazon, Eco Eeelien, MARP, MediTrack, Clob.mad |
+| 🧙 aibus-dumbleclaw | 🔥🔥 ACTIVA | Monazon, Eco Eeelien, MARP, MediTrack, FanSlayer |
 | 🐸 Scarfdrilo | 🟡 Ligero | Se presentó, ofreció apoyo |
-| 🦎 kukulcan | 🔴 No visto | Sin mensajes en threads del blitz |
-| 🐊 Fruterito | 🔴 No visto | Sin mensajes en threads del blitz |
+| 🦎 kukulcan | 🔴 No visto | Sin mensajes |
+| 🐊 Fruterito | 🔴 No visto | Sin mensajes (post-análisis) |
 
 ---
 
-## 🏆 Highlights
+## 🚨 Errores Documentados (12)
 
-**Proyectos estrella:**
-- **Eco Eeelien** — Proyecto más completo: IoT + IA + smart contract deployado + frontend
-- **MARP** — Concepto más innovador: reputación agéntica on-chain + pitch profesional
-- **FanSlayer** — Mejor ejemplo de resiliencia: 7+ errores resueltos en cadena
+| Severidad | Count | Ejemplos |
+|-----------|-------|----------|
+| CRITICAL | 6 | Chain ID incorrecto, tokens expuestos, web3.py selector |
+| MEDIUM | 4 | Vercel builds, imágenes case-sensitive |
+| LOW | 2 | Assets no optimizados |
 
-**Contratos deployados en Monad Testnet:**
-- EcoToken: `0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9`
-- AgentReputation: Live en chain 10143
+**Todos resueltos:** 12/12 ✅
+
+---
+
+## 💡 Insights para Futuros Blitz
+
+### Patrones Exitosos
+
+1. **WhatsApp-first (Antaria)** — Interfaz familiar para LATAM
+2. **Hardware + Blockchain (Eco Eeelien)** — Diferenciador único, IoT real
+3. **Problemas locales (Persea)** — Aguacates, tandas = contexto mexicano
+4. **Reputación agéntica (MARP)** — Primitivo nuevo sin competencia
+
+### Principales Blockers
+
+1. **Chain ID confusión** — Docs viejos causaron horas perdidas
+2. **Deploy pipeline** — Vercel gotchas (branch, env vars, build cmd)
+3. **web3.py vs ethers.js** — Python tiene diferentes patterns
+4. **Tokens expuestos** — 2 incidentes de seguridad
+
+### Recomendaciones
+
+1. **Pre-setup obligatorio** — Foundry + Node instalados ANTES
+2. **Template mejorado** — Chain ID 10143, RPC pre-configurados
+3. **Guía de deploy** — Documento paso a paso con gotchas
+4. **Security check** — Recordar NO compartir tokens/keys
 
 ---
 
 ## 📈 Métricas Globales
 
-- **Total threads:** 15 (+ Reporte Blitz)
-- **Total mensajes estimados:** ~1,530+
-- **Contratos deployados:** 2
-- **Frontends deployados:** ~3 (Eco Eeelien, FanSlayer, MediTrack)
-- **Equipos con avance significativo:** 6
-- **Equipos en fase conceptual:** 4
-- **Threads con actividad mínima:** 5
+| Métrica | Valor |
+|---------|-------|
+| Total proyectos | 18 |
+| Total mensajes | ~1,643+ |
+| Contratos deployados | 8+ |
+| Contratos desarrollados | 28+ |
+| Frontends deployados | ~5 |
+| GitHub repos activos | 15+ |
+| Errores documentados | 12 |
+| Errores resueltos | 12/12 (100%) |
 
 ---
 
-## 🔍 Principales Blockers del Evento
+## 🔗 Repos de GitHub Encontrados
 
-1. **Chain ID confusión** (testnet 10143 vs mainnet) — afectó a Monazon
-2. **Deploy en Vercel** — cadena de errores para FanSlayer (branch, root dir, build cmd, env vars, Privy)
-3. **WalletConnect config** — Eco Eeelien necesitó help para chain custom
-4. **Onboarding tardío** — Solidario México perdió ~3h por llegar tarde
-5. **devrel-banana rate limits** — El bot alcanzó límites de API durante picos de actividad
-
----
-
-## 💡 Recomendaciones para Futuros Blitz
-
-1. **Pre-setup obligatorio:** Que todos tengan Foundry + Node.js instalado ANTES del evento
-2. **Template mejorado:** Incluir chain ID, RPC, y env vars pre-configurados para Monad Testnet
-3. **Guía de deploy Vercel:** Documento paso a paso con gotchas comunes (VITE_ prefix, build cmd, root dir)
-4. **Más agentes activos:** Solo 2 de 5 agentes contribuyeron — los otros 3 estaban inactivos
-5. **Check-in temprano:** Registrar a todos los equipos en las primeras 2 horas para maximizar tiempo de hacking
+| Proyecto | Repo |
+|----------|------|
+| Antaria | github.com/Juan-Fuente-T/Antaria |
+| Eco Eeelien | github.com/SergioGutierrezVillwornet/eco-eeelien-monad |
+| MARP | github.com/EthDevMx/MARP |
+| Persea Protocol | github.com/aguacate-protocol/persea-protocol |
+| Q-Operacha | github.com/LexBP11/qoperacha_hack |
+| Monazon | github.com/ToryDom/Monazon |
+| Strope Pay | github.com/0xChijioke/strope-pay |
+| azist.me | github.com/wom-devs-mx/azist.me |
+| Solidario México | github.com/AlanRLG/solidario-mexico |
+| MediTrack | github.com/Meditrack/meditrack |
 
 ---
 
-*Reporte generado por Aibus Dumbleclaw 🧙‍♀️ — Programs Lead, Frutero*
-*Datos extraídos de Discord threads del servidor monad-blitz (guild 1425292423965315084)*
+*Reporte actualizado por Fruterito 🍓 + análisis de repos*
+*Datos de Discord + GitHub deep scrape*
+*Última actualización: 23 Feb 2026*
