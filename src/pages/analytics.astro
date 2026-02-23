@@ -1,0 +1,476 @@
+---
+// Analytics Dashboard - Monad Blitz CDMX
+---
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>📊 Analytics — Monad Blitz CDMX</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --primary: #ff9500;
+      --secondary: #f6464f;
+      --accent: #9ed22d;
+      --fg: #383838;
+      --bg: #fffbf5;
+      --card-bg: #ffffff;
+      --border: #f0ebe3;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      padding: 1.5rem;
+    }
+    .header {
+      max-width: 1200px;
+      margin: 0 auto 2rem;
+    }
+    .header h1 { color: var(--primary); font-size: 2.2rem; }
+    .header p { color: #888; font-size: 1.1rem; margin-top: 0.25rem; }
+    .back { color: var(--primary); text-decoration: none; font-weight: 600; display: inline-block; margin-bottom: 1rem; }
+    .back:hover { text-decoration: underline; }
+
+    /* KPI Cards */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      max-width: 1200px;
+      margin: 0 auto 2rem;
+    }
+    .kpi {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    .kpi .number { font-size: 2.5rem; font-weight: 700; color: var(--primary); }
+    .kpi .label { font-size: 0.85rem; color: #888; margin-top: 0.25rem; }
+    .kpi.red .number { color: var(--secondary); }
+    .kpi.green .number { color: var(--accent); }
+
+    /* Chart Grid */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto 2rem;
+    }
+    .chart-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+    .chart-card h3 {
+      color: var(--fg);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+    }
+    .chart-card canvas { max-height: 350px; }
+
+    /* Full width cards */
+    .full-width {
+      max-width: 1200px;
+      margin: 0 auto 1.5rem;
+    }
+    .chart-card.full { grid-column: 1 / -1; }
+
+    /* Error table */
+    .error-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto 1.5rem;
+      overflow-x: auto;
+    }
+    .error-section h3 {
+      color: var(--secondary);
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--secondary);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+    th { background: var(--secondary); color: white; padding: 0.6rem 0.75rem; text-align: left; }
+    td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); }
+    tr:hover td { background: #fff8f0; }
+    .tag {
+      display: inline-block;
+      padding: 0.15em 0.5em;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    .tag-critical { background: #fde2e2; color: #c0392b; }
+    .tag-medium { background: #fef3cd; color: #856404; }
+    .tag-low { background: #d4edda; color: #155724; }
+    .tag-resolved { background: #d1ecf1; color: #0c5460; }
+
+    /* Insights */
+    .insights {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto 1.5rem;
+    }
+    .insights h3 {
+      color: var(--fg);
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--accent);
+    }
+    .insight-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .insight-item:last-child { border-bottom: none; }
+    .insight-item strong { color: var(--primary); }
+
+    @media (max-width: 600px) {
+      .chart-grid { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a class="back" href="/">← Volver al índice</a>
+    <h1>📊 Reporte Analítico — Monad Blitz CDMX</h1>
+    <p>Dashboard de análisis del hackathon • Sábado 22 de Febrero 2026</p>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid">
+    <div class="kpi"><div class="number">15</div><div class="label">Proyectos Registrados</div></div>
+    <div class="kpi"><div class="number">~40</div><div class="label">Participantes</div></div>
+    <div class="kpi green"><div class="number">4</div><div class="label">Repos Verificados</div></div>
+    <div class="kpi green"><div class="number">3</div><div class="label">Contratos Deployados</div></div>
+    <div class="kpi"><div class="number">1,530+</div><div class="label">Mensajes Discord</div></div>
+    <div class="kpi red"><div class="number">12+</div><div class="label">Errores Documentados</div></div>
+  </div>
+
+  <!-- Charts -->
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>🛠️ Tecnologías Más Usadas</h3>
+      <canvas id="techChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>📂 Área del Proyecto</h3>
+      <canvas id="areaChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>📈 Nivel de Avance por Equipo</h3>
+      <canvas id="progressChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>👥 Curva de Aprendizaje (Nivel de los Participantes)</h3>
+      <canvas id="levelChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>⚠️ Errores por Categoría</h3>
+      <canvas id="errorCatChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>🤖 Mensajes por Agente IA</h3>
+      <canvas id="agentChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Error Detail Table -->
+  <div class="error-section">
+    <h3>🚨 Registro Detallado de Errores y Blockers</h3>
+    <table>
+      <thead>
+        <tr><th>Equipo</th><th>Error / Blocker</th><th>Causa Raíz</th><th>Severidad</th><th>Resuelto</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Monazon</td>
+          <td>Imágenes no cargan en Vercel</td>
+          <td>Case-sensitive paths: <code>Laptop.png</code> vs <code>laptop.png</code> (Linux en Vercel)</td>
+          <td><span class="tag tag-medium">Media</span></td>
+          <td><span class="tag tag-resolved">✅ PR #1</span></td>
+        </tr>
+        <tr>
+          <td>Monazon</td>
+          <td>Imágenes de 13MB cada una</td>
+          <td>No optimizaron assets antes de subir</td>
+          <td><span class="tag tag-low">Baja</span></td>
+          <td><span class="tag tag-resolved">✅ Optimizado ~900KB</span></td>
+        </tr>
+        <tr>
+          <td>Eco Eeelien</td>
+          <td>Chain ID incorrecto en frontend</td>
+          <td>Docs decían 41454, correcto es 10143 (Monad Testnet)</td>
+          <td><span class="tag tag-critical">Crítica</span></td>
+          <td><span class="tag tag-resolved">✅ Corregido</span></td>
+        </tr>
+        <tr>
+          <td>Q-Operacha</td>
+          <td><code>deployedContracts.ts</code> vacío</td>
+          <td>No corrieron <code>yarn deploy</code> — Scaffold-ETH necesita deploy antes de frontend</td>
+          <td><span class="tag tag-critical">Crítica</span></td>
+          <td><span class="tag tag-resolved">✅ Deploy ejecutado</span></td>
+        </tr>
+        <tr>
+          <td>Q-Operacha</td>
+          <td>Python <code>data: '0x'</code> — function selector vacío</td>
+          <td>web3.py enviaba tx sin function selector; fix: <code>0x3a4e2422</code></td>
+          <td><span class="tag tag-critical">Crítica</span></td>
+          <td><span class="tag tag-resolved">✅ Fix aplicado</span></td>
+        </tr>
+        <tr>
+          <td>FanSlayer</td>
+          <td>Build falla en Vercel</td>
+          <td>Branch incorrecto + config de build mal</td>
+          <td><span class="tag tag-medium">Media</span></td>
+          <td><span class="tag tag-resolved">✅ Reconfigurado</span></td>
+        </tr>
+        <tr>
+          <td>FanSlayer</td>
+          <td>7+ errores en cadena durante deploy</td>
+          <td>Primera vez con Vercel — curva de aprendizaje de deploy pipeline</td>
+          <td><span class="tag tag-medium">Media</span></td>
+          <td><span class="tag tag-resolved">✅ Resiliencia</span></td>
+        </tr>
+        <tr>
+          <td>ClearHope</td>
+          <td>Token de GitHub expuesto en chat público</td>
+          <td>misteroby17 pegó token en Discord — aibus alertó inmediatamente</td>
+          <td><span class="tag tag-critical">Crítica ⚠️</span></td>
+          <td><span class="tag tag-resolved">✅ Revocado</span></td>
+        </tr>
+        <tr>
+          <td>ClearHope</td>
+          <td>Sin permisos de push al repo</td>
+          <td>Repo privado, bots no tenían acceso de escritura</td>
+          <td><span class="tag tag-medium">Media</span></td>
+          <td><span class="tag tag-resolved">✅ Colaborador añadido</span></td>
+        </tr>
+        <tr>
+          <td>Eco Eeelien</td>
+          <td>Token de GitHub expuesto en chat</td>
+          <td>39eliens compartió token — aibus lo rechazó y pidió revocarlo</td>
+          <td><span class="tag tag-critical">Crítica ⚠️</span></td>
+          <td><span class="tag tag-resolved">✅ Revocado</span></td>
+        </tr>
+        <tr>
+          <td>devrel-banana</td>
+          <td>Rate limit API repetido (20+ veces)</td>
+          <td>Agente sin rate limiting propio — saturó API de Discord/LLM</td>
+          <td><span class="tag tag-medium">Media</span></td>
+          <td><span class="tag tag-low">❌ Persistente</span></td>
+        </tr>
+        <tr>
+          <td>Múltiples</td>
+          <td>Confusión Monad Testnet vs Mainnet</td>
+          <td>Chain IDs similares (10143 test vs 143 main). Docs inconsistentes</td>
+          <td><span class="tag tag-medium">Media</span></td>
+          <td><span class="tag tag-resolved">✅ Documentado</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Key Insights -->
+  <div class="insights">
+    <h3>💡 Insights Clave para Futuros Blitz</h3>
+    <div class="insight-item">
+      <strong>🔐 Seguridad:</strong> 2 equipos expusieron tokens de GitHub en chats públicos. Los agentes IA lo detectaron y alertaron. <em>Recomendación: Training de seguridad básica antes del evento + canal privado por equipo.</em>
+    </div>
+    <div class="insight-item">
+      <strong>🔧 Chain ID Confusion:</strong> El error más común fue configurar el Chain ID incorrecto. Monad Testnet=10143, NO 41454 ni 10151. <em>Recomendación: Template pre-configurado con chain ID correcto (ya existe: monad-blitz-starter).</em>
+    </div>
+    <div class="insight-item">
+      <strong>📦 Deploy Pipeline:</strong> La mayoría de equipos luchó más con deploy (Vercel, Foundry, GitHub) que con el código en sí. <em>Recomendación: Workshop de 15 min de deploy antes de empezar a codear.</em>
+    </div>
+    <div class="insight-item">
+      <strong>🤖 Agentes IA:</strong> devrel-banana fue el agente más activo pero sufrió rate limits constantes. aibus-dumbleclaw fue más estable. <em>Recomendación: Implementar rate limiting propio en los agentes + fallback entre agentes.</em>
+    </div>
+    <div class="insight-item">
+      <strong>👥 Team Size Sweet Spot:</strong> Equipos de 2-3 personas avanzaron más que los de 1 o 6. El solo dev (Antaria/Enrique) se quedó en concepto. <em>Recomendación: Mínimo 2 personas por equipo.</em>
+    </div>
+    <div class="insight-item">
+      <strong>🎯 Área más popular:</strong> DeFi/Fintech (5 proyectos). Falta representación en Gaming (solo FanSlayer) e IoT (solo Ecoelien). <em>Recomendación: Tracks temáticos para diversificar.</em>
+    </div>
+    <div class="insight-item">
+      <strong>📊 Tasa de completion:</strong> De 15 proyectos, solo 3 deployaron contratos en testnet (~20%). <em>Meta para próximo Blitz: 40%+.</em>
+    </div>
+  </div>
+
+  <script>
+    const COLORS = {
+      primary: '#ff9500',
+      secondary: '#f6464f',
+      accent: '#9ed22d',
+      purple: '#8b5cf6',
+      blue: '#3b82f6',
+      cyan: '#06b6d4',
+      pink: '#ec4899',
+      amber: '#f59e0b',
+      emerald: '#10b981',
+      slate: '#64748b',
+    };
+
+    const palette = [COLORS.primary, COLORS.secondary, COLORS.accent, COLORS.purple, COLORS.blue, COLORS.cyan, COLORS.pink, COLORS.amber, COLORS.emerald, COLORS.slate];
+
+    // 1. Tech Chart (horizontal bar)
+    new Chart(document.getElementById('techChart'), {
+      type: 'bar',
+      data: {
+        labels: ['Next.js', 'React/Vite', 'Tailwind CSS', 'Solidity/Foundry', 'Hardhat/Scaffold-ETH', 'wagmi/viem', 'Privy', 'Python/FastAPI', 'TypeScript', 'ESP32/IoT', 'Drizzle ORM', 'Framer Motion'],
+        datasets: [{
+          label: 'Equipos usando',
+          data: [5, 3, 7, 4, 1, 4, 2, 1, 6, 1, 1, 1],
+          backgroundColor: palette,
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+      }
+    });
+
+    // 2. Area Chart (doughnut)
+    new Chart(document.getElementById('areaChart'), {
+      type: 'doughnut',
+      data: {
+        labels: ['DeFi / Fintech', 'Social Impact', 'Gaming / NFT', 'IoT / Hardware', 'Health / MedTech', 'AI / Agents', 'Marketplace'],
+        datasets: [{
+          data: [5, 3, 1, 1, 1, 2, 2],
+          backgroundColor: [COLORS.primary, COLORS.accent, COLORS.secondary, COLORS.cyan, COLORS.pink, COLORS.purple, COLORS.blue],
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'right' }
+        }
+      }
+    });
+
+    // 3. Progress Chart (bar - % avance)
+    new Chart(document.getElementById('progressChart'), {
+      type: 'bar',
+      data: {
+        labels: ['FanSlayer', 'Eco Eeelien', 'MediTrack', 'MARP', 'ClearHope', 'Q-Operacha', '7AYLABS', 'Monazon', 'Antaria', 'BOTazo', 'MonadPay', 'CLOB.nad', 'Persea', 'Genomad', 'PREVENTDEMIC'],
+        datasets: [{
+          label: '% Avance',
+          data: [38, 25, 25, 35, 20, 20, 15, 30, 10, 8, 5, 5, 5, 2, 1],
+          backgroundColor: function(ctx) {
+            const v = ctx.raw;
+            if (v >= 30) return COLORS.accent;
+            if (v >= 15) return COLORS.primary;
+            return COLORS.secondary;
+          },
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, max: 50, ticks: { callback: v => v + '%' } }
+        }
+      }
+    });
+
+    // 4. Level Chart (radar)
+    new Chart(document.getElementById('levelChart'), {
+      type: 'radar',
+      data: {
+        labels: ['Solidity', 'Frontend (React/Next)', 'Deploy (Vercel/CF)', 'Git/GitHub', 'Web3 (wagmi/viem)', 'Testing'],
+        datasets: [
+          {
+            label: 'Principiantes (~60%)',
+            data: [1, 2, 1, 2, 1, 1],
+            backgroundColor: 'rgba(246, 70, 79, 0.2)',
+            borderColor: COLORS.secondary,
+            pointBackgroundColor: COLORS.secondary,
+          },
+          {
+            label: 'Intermedios (~30%)',
+            data: [3, 4, 3, 3, 3, 2],
+            backgroundColor: 'rgba(255, 149, 0, 0.2)',
+            borderColor: COLORS.primary,
+            pointBackgroundColor: COLORS.primary,
+          },
+          {
+            label: 'Avanzados (~10%)',
+            data: [5, 5, 4, 5, 4, 3],
+            backgroundColor: 'rgba(158, 210, 45, 0.2)',
+            borderColor: COLORS.accent,
+            pointBackgroundColor: COLORS.accent,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          r: {
+            beginAtZero: true,
+            max: 5,
+            ticks: { stepSize: 1, display: false },
+            pointLabels: { font: { size: 11 } }
+          }
+        }
+      }
+    });
+
+    // 5. Error categories (pie)
+    new Chart(document.getElementById('errorCatChart'), {
+      type: 'pie',
+      data: {
+        labels: ['Config/Chain ID', 'Deploy Pipeline', 'Seguridad (tokens expuestos)', 'Case Sensitivity', 'Rate Limits (agentes)', 'Smart Contract Bugs'],
+        datasets: [{
+          data: [3, 3, 2, 1, 1, 2],
+          backgroundColor: [COLORS.primary, COLORS.blue, COLORS.secondary, COLORS.amber, COLORS.slate, COLORS.purple],
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'right' } }
+      }
+    });
+
+    // 6. Agent activity (bar)
+    new Chart(document.getElementById('agentChart'), {
+      type: 'bar',
+      data: {
+        labels: ['devrel-banana 🍌', 'aibus-dumbleclaw 🧙‍♀️', 'Scarfdrilo 🐸', 'kukulcan 🦎', 'Fruterito 🐊'],
+        datasets: [{
+          label: 'Mensajes estimados',
+          data: [450, 350, 15, 0, 0],
+          backgroundColor: [COLORS.primary, COLORS.accent, COLORS.blue, COLORS.slate, COLORS.slate],
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true } }
+      }
+    });
+  </script>
+</body>
+</html>
