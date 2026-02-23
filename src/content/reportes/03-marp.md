@@ -14,14 +14,13 @@ techStack:
   - "Monad Testnet"
   - "Gamma (pitch)"
 contracts:
-  - name: "MARP"
-    deployed: true
-    address: ""
-    description: "Core reputation protocol (address pendiente verificar)"
   - name: "BlitzCollection"
     deployed: true
-    address: ""
-    description: "NFT badges for reputation (address pendiente verificar)"
+    address: "0xc056da0254ba095b0bfdbe688910ff5905abae70"
+    description: "NFT badges for reputation"
+  - name: "MARP"
+    deployed: false
+    description: "Core reputation protocol (en desarrollo)"
 repo: "https://github.com/IanHerez/MARP"
 deployUrl: "https://marp-lemon.vercel.app/"
 messages: 107
