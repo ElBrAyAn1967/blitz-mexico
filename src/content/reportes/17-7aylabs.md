@@ -32,7 +32,8 @@ contracts:
     deployed: false
   - name: "AccessControl"
     deployed: false
-repo: "https://github.com/7ayLabs/7ay-presence"
+repo: "https://github.com/imzzaidd/azist.me"
+deployUrl: "https://front-two-delta.vercel.app/"
 messages: 0
 errors: []
 ---

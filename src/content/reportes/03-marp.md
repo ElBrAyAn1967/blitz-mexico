@@ -22,7 +22,8 @@ contracts:
     deployed: true
     address: ""
     description: "NFT badges for reputation (address pendiente verificar)"
-repo: ""
+repo: "https://github.com/IanHerez/MARP"
+deployUrl: "https://marp-lemon.vercel.app/"
 messages: 107
 errors: []
 ---

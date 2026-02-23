@@ -19,7 +19,8 @@ contracts:
   - name: "AnchorRegistry"
     deployed: true
     address: "0xB284Dd77dcdc080d7c5548592768A6E6188e5381"
-repo: ""
+repo: "https://github.com/Enrikecm/Antaria"
+deployUrl: "https://antaria.vercel.app/"
 messages: 15
 errors: []
 ---

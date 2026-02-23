@@ -20,7 +20,8 @@ contracts:
   - name: "MediPay"
     deployed: false
     description: "Pagos médicos on-chain"
-repo: ""
+repo: "https://github.com/Scarfdrilo/meditrack"
+deployUrl: "https://meditrack-ruby.vercel.app"
 messages: 30
 errors: []
 ---

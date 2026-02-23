@@ -14,7 +14,7 @@ techStack:
   - "Reown"
   - "Supabase"
 contracts: []
-repo: ""
+repo: "https://github.com/daniellagart4-sys/Goyo"
 messages: 0
 errors: []
 ---
