@@ -1,37 +1,124 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('reportes');
+const projects = allProjects.filter(p => p.data.slug !== 'summary');
+
+// Compute friction points from errors
+const allErrors = projects.flatMap(p => p.data.errors.map(e => ({ ...e, project: p.data.title })));
+const criticalErrors = allErrors.filter(e => e.severity === 'critical' || e.severity === 'high');
+const resolvedCount = allErrors.filter(e => e.resolved).length;
+const unresolvedCount = allErrors.length - resolvedCount;
+
+// Group errors by cause patterns
+const errorPatterns: Record<string, { count: number; projects: string[]; severity: string }> = {};
+allErrors.forEach(e => {
+  const key = e.description.toLowerCase().includes('chain') ? 'Chain ID / RPC config' :
+    e.description.toLowerCase().includes('wallet') ? 'WalletConnect / Wallet config' :
+    e.description.toLowerCase().includes('deploy') ? 'Deploy issues' :
+    e.description.toLowerCase().includes('image') || e.description.toLowerCase().includes('asset') ? 'Assets / Images' :
+    e.description.toLowerCase().includes('git') || e.description.toLowerCase().includes('setup') ? 'Setup / Git issues' :
+    'Other';
+  if (!errorPatterns[key]) errorPatterns[key] = { count: 0, projects: [], severity: e.severity };
+  errorPatterns[key].count++;
+  if (!errorPatterns[key].projects.includes(e.project)) errorPatterns[key].projects.push(e.project);
+});
+const topFrictions = Object.entries(errorPatterns).sort((a, b) => b[1].count - a[1].count).slice(0, 5);
+
+// Tech stack frequency
+const techFreq: Record<string, number> = {};
+projects.forEach(p => p.data.techStack.forEach(t => { techFreq[t] = (techFreq[t] || 0) + 1; }));
+const topTech = Object.entries(techFreq).sort((a, b) => b[1] - a[1]);
+
+// Team size insights
+const avgMembers = projects.reduce((s, p) => s + p.data.members, 0) / projects.length;
+const soloTeams = projects.filter(p => p.data.members <= 1);
+const largeTeams = projects.filter(p => p.data.members >= 3);
+
+// Completion rate
+const totalContracts = projects.reduce((s, p) => s + p.data.contracts.length, 0);
+const deployedContracts = projects.reduce((s, p) => s + p.data.contracts.filter(c => c.deployed).length, 0);
+const deployRate = totalContracts > 0 ? Math.round((deployedContracts / totalContracts) * 100) : 0;
+
+// Projects by status
+const statusCounts: Record<string, number> = {};
+projects.forEach(p => { statusCounts[p.data.status] = (statusCounts[p.data.status] || 0) + 1; });
+
+// Top projects by phase
+const topByPhase = [...projects].sort((a, b) => b.data.phase - a.data.phase).slice(0, 5);
+
+// Messages insights
+const totalMessages = projects.reduce((s, p) => s + p.data.messages, 0);
+const avgMessages = Math.round(totalMessages / projects.length);
+const highActivity = projects.filter(p => p.data.messages > avgMessages);
+
+const statusColorMap: Record<string, string> = {
+  'completed': 'text-green-400 border-green-700/40 bg-green-900/20',
+  'in-progress': 'text-blue-400 border-blue-700/40 bg-blue-900/20',
+  'concept': 'text-yellow-400 border-yellow-700/40 bg-yellow-900/20',
+  'minimal': 'text-gray-400 border-gray-700/40 bg-gray-800/20',
+};
+const statusLabelMap: Record<string, string> = { 'completed': 'Completado', 'in-progress': 'En progreso', 'concept': 'Concepto', 'minimal': 'Minimal' };
 ---
 <Layout title="Insights y Recomendaciones">
   <div class="mb-8">
-    <h1 class="text-4xl font-bold mb-2">💡 Insights y Recomendaciones</h1>
-    <p class="text-gray-400">Post-mortem del Monad Blitz CDMX — Lo que funcionó, lo que no, y qué mejorar</p>
+    <h1 class="text-4xl font-bold mb-2 flex items-center gap-3">
+      <svg class="w-8 h-8 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+      Insights y Recomendaciones
+    </h1>
+    <p class="text-gray-400">Post-mortem del Monad Blitz CDMX — datos computados desde {projects.length} reportes</p>
   </div>
 
-  <!-- Friction points -->
+  <!-- Overview stats -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+    {[
+      { label: "Errores totales", value: allErrors.length, sub: `${resolvedCount} resueltos`, iconSvg: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/>' },
+      { label: "Tasa de deploy", value: `${deployRate}%`, sub: `${deployedContracts}/${totalContracts} contratos`, iconSvg: '<path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/>' },
+      { label: "Promedio equipo", value: avgMembers.toFixed(1), sub: `${soloTeams.length} equipos solo`, iconSvg: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>' },
+      { label: "Msgs promedio", value: avgMessages, sub: `${totalMessages} total`, iconSvg: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>' },
+    ].map(s => (
+      <div class="bg-purple-900/20 border border-purple-800/30 rounded-xl p-4 text-center">
+        <div class="flex justify-center mb-2">
+          <svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><Fragment set:html={s.iconSvg} /></svg>
+        </div>
+        <div class="text-xl font-bold text-white">{s.value}</div>
+        <div class="text-xs text-gray-400 mt-1">{s.label}</div>
+        <div class="text-xs text-gray-500 mt-0.5">{s.sub}</div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Friction points from errors -->
   <section class="mb-12">
-    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2"><span class="text-red-400">🚨</span> Top 5 Friction Points</h2>
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+      <svg class="w-6 h-6 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+      Friction Points (desde errores reales)
+    </h2>
     <div class="space-y-4">
-      {[
-        { n:1, title:"Setup en Windows", sev:"HIGH", desc:"Git Bash + Windows genera errores distintos a macOS. git clone en directorio no vacío da error diferente. El equipo de Axel gastó +1h solo en setup.", sol:"Guía específica de Windows para el próximo blitz. Step-by-step con screenshots.", impact:"Axel & equipo: 196 msgs solo de setup básico" },
-        { n:2, title:"Chain ID incorrecto — múltiples equipos", sev:"HIGH", desc:"Monazon llegó con mainnet hardcodeada. Confusión entre 143 (mainnet?) y 10143 (testnet). Error silencioso — el código 'funciona' pero en la red equivocada.", sol:"Big banner en el template README. Mensaje de inicio del agente con el chain ID correcto.", impact:"Monazon: 5 bugs críticos, todos relacionados" },
-        { n:3, title:"WalletConnect projectId", sev:"MED", desc:"Participantes no sabían que necesitaban registrarse en cloud.walletconnect.com. Usaron placeholders como 'eco-eeelien-monad-blitz' como ID real.", sol:"Incluir paso de WalletConnect en el onboarding inicial. Dar un projectId de demo para el blitz.", impact:"Eco Eeelien: build fallando por este bug" },
-        { n:4, title:"Comandos copiados y pegados todos juntos", sev:"MED", desc:"Participantes copiaban bloques de 3-4 comandos y los corrían sin esperar. Causaba errores en cadena muy difíciles de debuggear porque el error no era del último comando.", sol:"Comandos con pasos numerados + texto explícito 'espera que termine cada uno antes de continuar'.", impact:"Axel & equipo: loop de errores innecesarios" },
-        { n:5, title:"Llegada tardía", sev:"LOW", desc:"MediTrack llegó a las 21:40 UTC, solo 4 horas antes del code freeze. Alcanzaron un MVP pero fue muy acelerado y el contrato no se escribió.", sol:"Comunicar explícitamente que el setup pre-blitz es OBLIGATORIO. Check-in digital antes del evento.", impact:"MediTrack: solo 30 msgs, contrato pendiente" },
-      ].map(f => (
+      {topFrictions.map(([pattern, data], i) => (
         <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
           <div class="flex items-start gap-3 mb-3">
-            <span class={`text-xs font-bold px-2 py-1 rounded shrink-0 ${f.sev === 'HIGH' ? 'bg-red-900/50 text-red-400 border border-red-800/50' : 'bg-yellow-900/40 text-yellow-400 border border-yellow-700/40'}`}>{f.sev}</span>
-            <h3 class="font-bold text-white">#{f.n} {f.title}</h3>
+            <span class={`text-xs font-bold px-2 py-1 rounded shrink-0 ${data.count >= 3 ? 'bg-red-900/50 text-red-400 border border-red-800/50' : data.count >= 2 ? 'bg-yellow-900/40 text-yellow-400 border border-yellow-700/40' : 'bg-blue-900/40 text-blue-400 border border-blue-700/40'}`}>
+              {data.count >= 3 ? 'HIGH' : data.count >= 2 ? 'MED' : 'LOW'}
+            </span>
+            <h3 class="font-bold text-white">#{i + 1} {pattern}</h3>
+            <span class="ml-auto text-xs text-gray-500">{data.count} ocurrencia{data.count > 1 ? 's' : ''}</span>
           </div>
-          <p class="text-sm text-gray-400 mb-3">{f.desc}</p>
           <div class="grid md:grid-cols-2 gap-3">
-            <div class="bg-green-900/20 border border-green-800/30 rounded-lg p-3">
-              <div class="text-xs text-green-400 font-semibold mb-1">✅ Solución</div>
-              <p class="text-xs text-gray-300">{f.sol}</p>
+            <div class="bg-purple-900/20 border border-purple-800/30 rounded-lg p-3">
+              <div class="text-xs text-purple-400 font-semibold mb-1 flex items-center gap-1">
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                Equipos afectados
+              </div>
+              <p class="text-xs text-gray-300">{data.projects.join(', ')}</p>
             </div>
-            <div class="bg-blue-900/20 border border-blue-800/30 rounded-lg p-3">
-              <div class="text-xs text-blue-400 font-semibold mb-1">📊 Impacto observado</div>
-              <p class="text-xs text-gray-300">{f.impact}</p>
+            <div class="bg-green-900/20 border border-green-800/30 rounded-lg p-3">
+              <div class="text-xs text-green-400 font-semibold mb-1 flex items-center gap-1">
+                <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                Recomendacion
+              </div>
+              <p class="text-xs text-gray-300">Documentar y prevenir en el proximo blitz con guias especificas.</p>
             </div>
           </div>
         </div>
@@ -39,119 +126,165 @@ import Layout from '../layouts/Layout.astro';
     </div>
   </section>
 
-  <!-- Potencial post-blitz -->
+  <!-- Tech insights -->
   <section class="mb-12">
-    <h2 class="text-2xl font-bold mb-6">⭐ Equipos con Mayor Potencial Post-Blitz</h2>
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+      <svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+      Stack Tecnologico
+    </h2>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
+        <h3 class="text-sm font-semibold text-gray-300 mb-4">Tecnologias mas usadas</h3>
+        <div class="space-y-3">
+          {topTech.slice(0, 10).map(([tech, count]) => (
+            <div>
+              <div class="flex justify-between text-sm mb-1">
+                <span class="text-white">{tech}</span>
+                <span class="text-purple-400">{count} proyecto{count > 1 ? 's' : ''}</span>
+              </div>
+              <div class="h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-full" style={`width:${Math.round((count / projects.length) * 100)}%`}></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
+        <h3 class="text-sm font-semibold text-gray-300 mb-4">Distribucion de tecnologias</h3>
+        <div class="flex flex-wrap gap-2">
+          {topTech.map(([tech, count]) => (
+            <span class={`text-xs rounded-full px-3 py-1 border ${count >= 5 ? 'bg-purple-900/40 text-purple-300 border-purple-700/50' : count >= 3 ? 'bg-blue-900/30 text-blue-300 border-blue-700/40' : 'bg-gray-800/40 text-gray-400 border-gray-700/40'}`}>
+              {tech} ({count})
+            </span>
+          ))}
+        </div>
+        <div class="mt-6 text-xs text-gray-500 space-y-1">
+          <div class="flex items-center gap-2"><span class="w-3 h-1.5 bg-purple-500 rounded-full"></span> 5+ proyectos</div>
+          <div class="flex items-center gap-2"><span class="w-3 h-1.5 bg-blue-500 rounded-full"></span> 3-4 proyectos</div>
+          <div class="flex items-center gap-2"><span class="w-3 h-1.5 bg-gray-500 rounded-full"></span> 1-2 proyectos</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Team size insights -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+      <svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Insights de Equipos
+    </h2>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
+        <div class="text-3xl font-bold text-white mb-1">{soloTeams.length}</div>
+        <div class="text-sm text-gray-400 mb-3">Equipos de 1 persona</div>
+        <div class="text-xs text-gray-500 space-y-1">
+          {soloTeams.map(p => (
+            <div class="flex justify-between">
+              <span>{p.data.title}</span>
+              <span class="text-purple-400">{p.data.phase}%</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
+        <div class="text-3xl font-bold text-white mb-1">{largeTeams.length}</div>
+        <div class="text-sm text-gray-400 mb-3">Equipos de 3+ personas</div>
+        <div class="text-xs text-gray-500 space-y-1">
+          {largeTeams.map(p => (
+            <div class="flex justify-between">
+              <span>{p.data.title}</span>
+              <span class="text-purple-400">{p.data.members} miembros</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
+        <div class="text-sm text-gray-400 mb-3">Correlacion equipo vs avance</div>
+        <div class="space-y-2">
+          {[...projects].sort((a, b) => b.data.members - a.data.members).slice(0, 6).map(p => (
+            <div class="flex items-center gap-2 text-xs">
+              <span class="text-gray-400 w-20 truncate">{p.data.title}</span>
+              <div class="flex-1 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                <div class="h-full bg-purple-500 rounded-full" style={`width:${p.data.phase}%`}></div>
+              </div>
+              <span class="text-purple-400 w-6 text-right">{p.data.members}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top projects by potential -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+      <svg class="w-6 h-6 text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Proyectos con Mayor Potencial
+    </h2>
     <div class="grid md:grid-cols-2 gap-4">
-      {[
-        { emoji:"💜", name:"MARP", stars:5, why:"Concepto más maduro del blitz. Contrato live, pitch bilingüe, arquitectura sólida. 'MARP como la capa de confianza para todo el ecosistema agentic de Monad'.", action:"Conectar con Monad team. Post en X. Buscar grants." },
-        { emoji:"🥑", name:"Perséa Protocol", stars:5, why:"USD 320M/año sin capturar. Timing perfecto (ESG Europa 2027). Tech stack sólido (YOLOv8 + ESP32 + Monad). No tiene competencia directa.", action:"Introducir a fondos de impacto agroindustrial. Pre-seed USD 500K." },
-        { emoji:"🌱", name:"Eco Eeelien", stars:4, why:"Concepto más innovador: hardware físico + IA + blockchain. 2 contratos live. Diferenciador claro en el ecosistema.", action:"Conectar con Monad team. Workshop de WalletConnect para fix pendiente." },
-        { emoji:"🛒", name:"Monazon", stars:3, why:"Caso de uso real (pagos globales con stablecoins). Solo necesita resolver config bugs. ToryDom tenía repo propio antes del blitz.", action:"5 bugs ya corregidos. Próximo paso: deploy completo en Vercel." },
-        { emoji:"🏥", name:"MediTrack", stars:3, why:"Healthcare + blockchain es caso de uso real con impacto social. El MVP de UI ya existe.", action:"Escribir MediTrack.sol. Configurar Privy App ID. Deploy." },
-      ].map(p => (
+      {topByPhase.map((p, i) => (
         <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
           <div class="flex items-center justify-between mb-3">
-            <h3 class="font-bold text-white text-lg">{p.emoji} {p.name}</h3>
-            <span class="text-yellow-400 text-lg">{"⭐".repeat(p.stars)}</span>
+            <h3 class="font-bold text-white text-lg">{p.data.title}</h3>
+            <div class="flex gap-0.5">
+              {Array.from({ length: 5 }).map((_, si) => (
+                <svg class={`w-4 h-4 ${si < Math.ceil(p.data.phase / 20) ? 'text-yellow-400' : 'text-gray-700'}`} viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              ))}
+            </div>
           </div>
-          <p class="text-sm text-gray-400 mb-3">{p.why}</p>
-          <div class="bg-purple-900/20 border border-purple-800/30 rounded-lg p-2">
-            <span class="text-xs text-purple-300">🎯 Próxima acción: </span>
-            <span class="text-xs text-gray-300">{p.action}</span>
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- Curva de aprendizaje -->
-  <section class="mb-12">
-    <h2 class="text-2xl font-bold mb-6">🎓 Curva de Aprendizaje por Equipo</h2>
-    <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-6">
-      <div class="flex items-end gap-1 mb-4 h-24 relative">
-        <div class="absolute bottom-0 left-0 right-0 border-t border-gray-800 text-xs text-gray-600 pt-1">PRINCIPIANTE</div>
-        <div class="absolute top-0 left-0 right-0 border-b border-gray-800 text-xs text-gray-600 pb-1">AVANZADO</div>
-        {[
-          { name:"Axel", pct:10, color:"bg-red-500" },
-          { name:"AgenteConsumo", pct:25, color:"bg-orange-500" },
-          { name:"MediTrack", pct:40, color:"bg-blue-500" },
-          { name:"Monazon", pct:55, color:"bg-yellow-500" },
-          { name:"Eco Eeelien", pct:70, color:"bg-emerald-500" },
-          { name:"MARP", pct:90, color:"bg-purple-500" },
-          { name:"Clob.mad", pct:92, color:"bg-purple-700" },
-        ].map(b => (
-          <div class="flex-1 flex flex-col items-center gap-1">
-            <div class={`w-full ${b.color} rounded-t`} style={`height:${b.pct}%`}></div>
-          </div>
-        ))}
-      </div>
-      <div class="flex gap-1">
-        {["Axel", "Consumo", "MediTrack", "Monazon", "Eco", "MARP", "Clob"].map(n => (
-          <div class="flex-1 text-center text-xs text-gray-500 truncate">{n}</div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Recomendaciones -->
-  <section class="mb-12">
-    <h2 class="text-2xl font-bold mb-6">🔧 Recomendaciones para el Próximo Blitz</h2>
-    <div class="grid md:grid-cols-3 gap-4">
-      {[
-        { phase: "Pre-evento", icon:"📋", items:[
-          "Guía de pre-setup: Node v20+, Foundry, Git, WalletConnect projectId",
-          "Guía específica Windows con screenshots",
-          "Anunciar chain ID = 10143 en TODOS los canales",
-          "Check-in digital 48h antes para verificar setup",
-        ]},
-        { phase: "Durante el evento", icon:"⚡", items:[
-          "Abrir thread de proyecto desde el check-in (no en el blitz)",
-          "Recordatorio de code freeze: 2h antes y 30min antes",
-          "Agente de onboarding SEPARADO del agente de proyectos",
-          "Canal de errores comunes actualizado en tiempo real",
-        ]},
-        { phase: "Post-evento", icon:"🚀", items:[
-          "Conectar MARP y Eco Eeelien con Monad team ESTA SEMANA",
-          "Workshop de WalletConnect para equipos con placeholder",
-          "Seguimiento de repos — verificar que todos hayan pusheado",
-          "Post en X con resumen de proyectos + mención a equipos",
-        ]},
-      ].map(s => (
-        <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
-          <h3 class="font-bold text-white mb-3">{s.icon} {s.phase}</h3>
-          <ul class="space-y-2">
-            {s.items.map(i => (
-              <li class="flex items-start gap-2 text-sm text-gray-400">
-                <span class="text-purple-400 shrink-0 mt-0.5">→</span>
-                {i}
-              </li>
+          <p class="text-sm text-gray-400 mb-3">{p.data.area} — {p.data.phase}% avance, {p.data.members} miembro{p.data.members !== 1 ? 's' : ''}</p>
+          <div class="flex flex-wrap gap-1 mb-3">
+            {p.data.techStack.slice(0, 4).map(t => (
+              <span class="text-xs bg-purple-900/30 text-purple-300 border border-purple-800/30 rounded px-2 py-0.5">{t}</span>
             ))}
-          </ul>
+          </div>
+          <div class="bg-purple-900/20 border border-purple-800/30 rounded-lg p-2">
+            <span class="text-xs text-purple-300 flex items-center gap-1">
+              <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              {p.data.contracts.filter(c => c.deployed).length} contrato{p.data.contracts.filter(c => c.deployed).length !== 1 ? 's' : ''} deployado{p.data.contracts.filter(c => c.deployed).length !== 1 ? 's' : ''} de {p.data.contracts.length}
+            </span>
+          </div>
         </div>
       ))}
     </div>
   </section>
 
-  <!-- Métricas finales -->
+  <!-- Activity insights -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+      <svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+      Actividad por Mensajes
+    </h2>
+    <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
+      <div class="space-y-3">
+        {[...projects].sort((a, b) => b.data.messages - a.data.messages).map(p => (
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-gray-400 w-32 truncate">{p.data.title}</span>
+            <div class="flex-1 h-3 bg-gray-800 rounded-full overflow-hidden">
+              <div class={`h-full rounded-full ${p.data.messages > avgMessages ? 'bg-gradient-to-r from-purple-600 to-purple-400' : 'bg-gray-600'}`} style={`width:${Math.round((p.data.messages / Math.max(...projects.map(x => x.data.messages))) * 100)}%`}></div>
+            </div>
+            <span class="text-sm font-mono text-purple-300 w-16 text-right">{p.data.messages}</span>
+          </div>
+        ))}
+      </div>
+      <div class="mt-4 pt-4 border-t border-gray-800/50 text-xs text-gray-500">
+        Promedio: {avgMessages} msgs/proyecto — {highActivity.length} proyectos por encima del promedio
+      </div>
+    </div>
+  </section>
+
+  <!-- Status distribution -->
   <section>
-    <h2 class="text-2xl font-bold mb-6">📊 Métricas Finales del Blitz</h2>
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+      <svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+      Distribucion por Estado
+    </h2>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {[
-        { label:"Total mensajes", value:"~1,430+", icon:"💬" },
-        { label:"Threads activos", value:"7 + 1 archivado", icon:"🧵" },
-        { label:"Canal de onboarding", value:"400 msgs", icon:"📚" },
-        { label:"Contratos on-chain", value:"3+ confirmados", icon:"⛓️" },
-        { label:"Horas de hackathon", value:"~10h", icon:"⏱️" },
-        { label:"Agentes activos", value:"2/5", icon:"🤖" },
-        { label:"Proyectos con deploy", value:"2+ confirmados", icon:"🚀" },
-        { label:"Potencial post-blitz", value:"3 proyectos", icon:"⭐" },
-      ].map(m => (
-        <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-4 text-center">
-          <div class="text-2xl mb-2">{m.icon}</div>
-          <div class="text-xl font-bold text-white mb-1">{m.value}</div>
-          <div class="text-xs text-gray-400">{m.label}</div>
-        </div>
+      {Object.entries(statusCounts).map(([status, count]) => (
+          <div class={`border rounded-xl p-4 text-center ${statusColorMap[status] || ''}`}>
+            <div class="text-3xl font-bold mb-1">{count}</div>
+            <div class="text-sm">{statusLabelMap[status] || status}</div>
+          </div>
       ))}
     </div>
   </section>

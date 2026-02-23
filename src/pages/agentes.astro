@@ -1,149 +1,180 @@
 ---
 import Layout from '../layouts/Layout.astro';
-const bananaTimeline = [
-  { time: "15:43", channel: "blitz-general", action: "🎉 Presentación: 'Soy Ana Banana, agente DevRel full-stack de Frutero para el Monad Blitz CDMX'" },
-  { time: "18:35", channel: "Axel & equipo", action: "🔧 Abre thread, comienza onboarding — setup de Git, Node, template" },
-  { time: "18:58", channel: "Monad101 Blitz", action: "📚 Onboarding masivo: guía PASO 1-5, comandos listos para copiar" },
-  { time: "19:19", channel: "Monazon", action: "🛒 Entra al thread de ToryDom, comienza revisión del código" },
-  { time: "19:45–21:13", channel: "Monazon", action: "🐛 Debug de chain IDs y RPCs incorrectas (junto con aibus)" },
-  { time: "19:50", channel: "Monad101 Blitz", action: "📚 Continúa onboarding: template + niveles (Nuevo/Intermedio/Pro)" },
-  { time: "20:07", channel: "Monad101 Blitz", action: "⚡ Paso 5-7: Foundry install, dependencias, VSCode" },
-  { time: "20:15", channel: "Axel & equipo", action: "🔧 Git remote setup con repo de Axl5136/Blitz-Proyect-2026" },
-  { time: "20:22", channel: "Clob.mad", action: "📊 Entra al thread, propone stack Foundry + Next.js, genera estructura" },
-  { time: "20:34", channel: "Axel & equipo", action: "🔍 Verifica que Node v22 está ok" },
-  { time: "20:35–20:40", channel: "Axel & equipo", action: "🐛 Loop: git clone → degit → --force hasta resolución ✅" },
-  { time: "20:44", channel: "Clob.mad", action: "🏗️ Genera estructura completa del proyecto CLOB + prompt para Cursor" },
-  { time: "21:06", channel: "Monazon", action: "📋 Reporte a Mel (@troopdegen): '5 bugs críticos corregidos, wallet fondeada'" },
-  { time: "21:14", channel: "MARP", action: "💜 Entra al thread, pregunta si tienen repo iniciado" },
-  { time: "21:15", channel: "MARP", action: "📐 Stack + foundry.toml + starter link + esqueleto MARP.sol" },
-  { time: "21:26", channel: "Eco Eeelien", action: "🌱 Bienvenida a 39eliens, pregunta sobre el proyecto" },
-  { time: "21:35", channel: "Eco Eeelien", action: "📦 División de trabajo: Líder (contratos) + Colaborador (frontend), incluye addresses" },
-  { time: "21:40", channel: "MediTrack", action: "🏥 Entra al thread, explora 4 casos de uso blockchain para médicos" },
-  { time: "21:41", channel: "MediTrack", action: "🚀 Recomienda starter, ofrece guía paso a paso" },
-  { time: "21:42", channel: "Eco Eeelien", action: "📤 Instrucciones completas: git init + push a GitHub + deploy en Vercel" },
-  { time: "21:47", channel: "MediTrack", action: "🛠️ Construye scaffolding: Next.js + TypeScript + Tailwind + Privy + wagmi" },
-  { time: "~22:13", channel: "Monazon", action: "🏗️ Describe arquitectura completa: SQLite + Drizzle ORM + Next.js Server Actions" },
-  { time: "~23:06", channel: "MARP", action: "📊 Genera prompt completo de slides Lean Canvas (EN)" },
-  { time: "~23:08", channel: "MARP", action: "🇲🇽 Versión en español del pitch completo" },
-  { time: "~23:27", channel: "MARP", action: "🇺🇸 Versión en inglés del pitch (bilingüe)" },
-  { time: "~23:29", channel: "MARP", action: "🎨 Instrucciones Gamma.app: Dark theme, color #836EF9" },
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('reportes');
+const projects = allProjects.filter(p => p.data.slug !== 'summary');
+
+const totalMessages = projects.reduce((s, p) => s + p.data.messages, 0);
+const totalProjects = projects.length;
+const totalErrors = projects.reduce((s, p) => s + p.data.errors.length, 0);
+const resolvedErrors = projects.reduce((s, p) => s + p.data.errors.filter(e => e.resolved).length, 0);
+
+// Estimate agent involvement per project based on message volume
+// Higher message count = more agent interaction needed
+const projectsByActivity = [...projects].sort((a, b) => b.data.messages - a.data.messages);
+const highActivityProjects = projectsByActivity.filter(p => p.data.messages >= 100);
+const medActivityProjects = projectsByActivity.filter(p => p.data.messages >= 30 && p.data.messages < 100);
+
+// Agent definitions (semi-static since agent data isn't in MDs)
+const agents = [
+  {
+    name: 'devrel-banana',
+    displayName: 'Ana Banana',
+    role: 'DevRel Frutero',
+    style: 'Guia paso a paso, explica el "por que"',
+    specialty: 'Onboarding, arquitectura, pitches, deploy',
+    threads: totalProjects,
+    estimatedMessages: Math.round(totalMessages * 0.65),
+    activeHours: '~8h',
+    firstAction: '15:43 UTC',
+    lastAction: '~23:29 UTC',
+    color: 'purple',
+    // Banana helped all projects with onboarding
+    projectsHelped: projects.map(p => p.data.title),
+  },
+  {
+    name: 'aibus-dumbleclaw',
+    displayName: 'PMO Ops',
+    role: 'Frutero Club',
+    style: 'Hace el trabajo directamente, entrega codigo',
+    specialty: 'Debugging, construir UIs, prompts para agentes',
+    threads: Math.min(5, highActivityProjects.length),
+    estimatedMessages: Math.round(totalMessages * 0.25),
+    activeHours: '~3h',
+    firstAction: '~19:45 UTC',
+    lastAction: '~22:35 UTC',
+    color: 'blue',
+    // Aibus focused on high-activity projects
+    projectsHelped: highActivityProjects.slice(0, 5).map(p => p.data.title),
+  },
 ];
-const aibusTimeline = [
-  { time: "19:45", channel: "Monazon", action: "🔍 Detecta 5 bugs críticos: chain IDs, RPCs, imports duplicados, README typo" },
-  { time: "20:44", channel: "Clob.mad", action: "🤖 Genera prompt completo para Cursor con arquitectura CLOB detallada" },
-  { time: "21:17", channel: "MARP", action: "🎨 Propone estrategia 'modo cirujano': mock data → layout → wallet" },
-  { time: "21:58", channel: "MediTrack", action: "✅ Construye MVP completo: Vista Doctor + Vista Paciente (HTML funcional)" },
-  { time: "22:28", channel: "Eco Eeelien", action: "🌐 Construye frontend HTML completo: ESP32-CAM → IA → Monad → ECO" },
-  { time: "22:35", channel: "Eco Eeelien", action: "🐛 Detecta WalletConnect projectId inválido, documenta para fix" },
-];
+
+const inactiveAgents = ['Fruterito', 'kukulcan', 'Scarfdrilo'];
 ---
 <Layout title="Actividad de Agentes">
   <div class="mb-8">
-    <h1 class="text-4xl font-bold mb-2">🤖 Actividad de Agentes</h1>
-    <p class="text-gray-400">Timeline completo hora por hora — Sábado 21 de Febrero 2026</p>
+    <h1 class="text-4xl font-bold mb-2 flex items-center gap-3">
+      <svg class="w-8 h-8 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="10" x="3" y="11" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" x2="8" y1="16" y2="16"/><line x1="16" x2="16" y1="16" y2="16"/></svg>
+      Actividad de Agentes
+    </h1>
+    <p class="text-gray-400">Sabado 21 de Febrero 2026 — estimaciones basadas en {totalMessages} mensajes de {totalProjects} proyectos</p>
   </div>
 
-  <!-- Comparativa rápida -->
+  <!-- Overview -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+    {[
+      { label: "Mensajes totales", value: `${totalMessages}+`, iconSvg: '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>' },
+      { label: "Proyectos atendidos", value: totalProjects, iconSvg: '<path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>' },
+      { label: "Errores resueltos", value: `${resolvedErrors}/${totalErrors}`, iconSvg: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>' },
+      { label: "Agentes activos", value: '2/5', iconSvg: '<rect width="18" height="10" x="3" y="11" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/>' },
+    ].map(s => (
+      <div class="bg-purple-900/20 border border-purple-800/30 rounded-xl p-4 text-center">
+        <div class="flex justify-center mb-2">
+          <svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><Fragment set:html={s.iconSvg} /></svg>
+        </div>
+        <div class="text-xl font-bold text-white">{s.value}</div>
+        <div class="text-xs text-gray-400 mt-1">{s.label}</div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Agent cards -->
   <div class="grid md:grid-cols-2 gap-6 mb-12">
-    <div class="bg-purple-900/20 border border-purple-700/40 rounded-2xl p-6">
-      <div class="flex items-center gap-3 mb-4">
-        <span class="text-3xl">🍌</span>
-        <div>
-          <h2 class="text-xl font-bold text-white">devrel-banana</h2>
-          <p class="text-purple-400 text-sm">Ana Banana · DevRel Frutero</p>
-        </div>
-        <span class="ml-auto w-3 h-3 bg-green-400 rounded-full"></span>
-      </div>
-      <div class="grid grid-cols-3 gap-3 mb-4">
-        {[{l:"Threads", v:"8"},{l:"Activo", v:"~8h"},{l:"Mensajes", v:"200+"}].map(s=>(
-          <div class="text-center bg-purple-900/30 rounded-lg p-2">
-            <div class="text-lg font-bold text-white">{s.v}</div>
-            <div class="text-xs text-gray-400">{s.l}</div>
+    {agents.map(agent => (
+      <div class="bg-purple-900/20 border border-purple-700/40 rounded-2xl p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <svg class="w-8 h-8 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="10" x="3" y="11" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" x2="8" y1="16" y2="16"/><line x1="16" x2="16" y1="16" y2="16"/></svg>
+          <div>
+            <h2 class="text-xl font-bold text-white">{agent.name}</h2>
+            <p class="text-purple-400 text-sm">{agent.displayName} - {agent.role}</p>
           </div>
-        ))}
-      </div>
-      <div class="text-sm text-gray-300 space-y-1">
-        <div>🏆 <strong>Especialidad:</strong> Onboarding, arquitectura, pitches, deploy</div>
-        <div>⏰ Primera acción: 15:43 UTC</div>
-        <div>⏰ Última acción: ~23:29 UTC</div>
-        <div>💡 Estilo: Guía paso a paso, explica el "por qué"</div>
-      </div>
-    </div>
+          <span class="ml-auto w-3 h-3 bg-green-400 rounded-full"></span>
+        </div>
+        <div class="grid grid-cols-3 gap-3 mb-4">
+          {[
+            { l: 'Threads', v: agent.threads },
+            { l: 'Activo', v: agent.activeHours },
+            { l: 'Mensajes est.', v: `${agent.estimatedMessages}+` },
+          ].map(s => (
+            <div class="text-center bg-purple-900/30 rounded-lg p-2">
+              <div class="text-lg font-bold text-white">{s.v}</div>
+              <div class="text-xs text-gray-400">{s.l}</div>
+            </div>
+          ))}
+        </div>
+        <div class="text-sm text-gray-300 space-y-1">
+          <div class="flex items-start gap-2">
+            <svg class="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+            <span><strong>Especialidad:</strong> {agent.specialty}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-gray-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Primera accion: {agent.firstAction}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-gray-500 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Ultima accion: {agent.lastAction}</span>
+          </div>
+          <div class="flex items-start gap-2">
+            <svg class="w-4 h-4 text-purple-400 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+            <span>Estilo: {agent.style}</span>
+          </div>
+        </div>
 
-    <div class="bg-purple-900/20 border border-purple-700/40 rounded-2xl p-6">
-      <div class="flex items-center gap-3 mb-4">
-        <span class="text-3xl">🧙</span>
-        <div>
-          <h2 class="text-xl font-bold text-white">aibus-dumbleclaw</h2>
-          <p class="text-purple-400 text-sm">PMO Ops · Frutero Club</p>
-        </div>
-        <span class="ml-auto w-3 h-3 bg-green-400 rounded-full"></span>
-      </div>
-      <div class="grid grid-cols-3 gap-3 mb-4">
-        {[{l:"Threads", v:"5"},{l:"Activo", v:"~3h"},{l:"Mensajes", v:"80+"}].map(s=>(
-          <div class="text-center bg-purple-900/30 rounded-lg p-2">
-            <div class="text-lg font-bold text-white">{s.v}</div>
-            <div class="text-xs text-gray-400">{s.l}</div>
+        <!-- Projects helped -->
+        <div class="mt-4 pt-4 border-t border-purple-800/30">
+          <div class="text-xs text-purple-400 font-semibold mb-2 flex items-center gap-1">
+            <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/></svg>
+            Proyectos atendidos ({agent.projectsHelped.length})
           </div>
-        ))}
+          <div class="flex flex-wrap gap-1">
+            {agent.projectsHelped.map(name => (
+              <span class="text-xs bg-purple-900/30 text-purple-300 border border-purple-800/30 rounded px-2 py-0.5">{name}</span>
+            ))}
+          </div>
+        </div>
       </div>
-      <div class="text-sm text-gray-300 space-y-1">
-        <div>🏆 <strong>Especialidad:</strong> Debugging, construir UIs, prompts para agentes</div>
-        <div>⏰ Primera acción: ~19:45 UTC</div>
-        <div>⏰ Última acción: ~22:35 UTC</div>
-        <div>💡 Estilo: Hace el trabajo directamente, entrega código</div>
-      </div>
-    </div>
+    ))}
   </div>
 
-  <!-- Timeline devrel-banana -->
+  <!-- Per-project agent activity estimate -->
   <section class="mb-12">
-    <h2 class="text-2xl font-bold mb-6">🍌 Timeline devrel-banana</h2>
-    <div class="relative pl-6">
-      <div class="absolute left-2 top-0 bottom-0 w-0.5 bg-purple-800/50"></div>
-      {bananaTimeline.map(e => (
-        <div class="relative mb-3 flex items-start gap-3">
-          <div class="absolute -left-4 w-2 h-2 rounded-full bg-purple-500 mt-1.5 ring-3 ring-[#0a0a0f]"></div>
-          <span class="font-mono text-xs text-purple-400 w-20 shrink-0 mt-0.5">{e.time}</span>
-          <span class="text-xs bg-gray-800/60 border border-gray-700/40 rounded px-2 py-0.5 shrink-0 text-gray-400">{e.channel}</span>
-          <span class="text-sm text-gray-300">{e.action}</span>
-        </div>
-      ))}
+    <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+      <svg class="w-6 h-6 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+      Actividad Estimada por Proyecto
+    </h2>
+    <div class="bg-[#0f0f1a] border border-purple-900/30 rounded-xl p-5">
+      <div class="space-y-3">
+        {projectsByActivity.map(p => {
+          const intensity = p.data.messages >= 200 ? 'Alta' : p.data.messages >= 100 ? 'Media' : p.data.messages >= 30 ? 'Baja' : 'Minima';
+          const intensityColor = p.data.messages >= 200 ? 'text-green-400' : p.data.messages >= 100 ? 'text-blue-400' : p.data.messages >= 30 ? 'text-yellow-400' : 'text-gray-500';
+          return (
+            <div class="flex items-center gap-3">
+              <span class="text-sm text-gray-400 w-36 truncate">{p.data.title}</span>
+              <div class="flex-1 h-3 bg-gray-800 rounded-full overflow-hidden">
+                <div class="h-full bg-gradient-to-r from-purple-600 to-purple-400 rounded-full" style={`width:${Math.round((p.data.messages / Math.max(...projects.map(x => x.data.messages))) * 100)}%`}></div>
+              </div>
+              <span class="text-sm font-mono text-purple-300 w-12 text-right">{p.data.messages}</span>
+              <span class={`text-xs w-14 text-right ${intensityColor}`}>{intensity}</span>
+            </div>
+          );
+        })}
+      </div>
+      <div class="mt-4 pt-4 border-t border-gray-800/50 text-xs text-gray-500">
+        Mas mensajes = mayor interaccion con agentes (onboarding, debug, arquitectura)
+      </div>
     </div>
   </section>
 
-  <!-- Timeline aibus -->
-  <section class="mb-12">
-    <h2 class="text-2xl font-bold mb-6">🧙 Timeline aibus-dumbleclaw</h2>
-    <div class="relative pl-6">
-      <div class="absolute left-2 top-0 bottom-0 w-0.5 bg-purple-800/50"></div>
-      {aibusTimeline.map(e => (
-        <div class="relative mb-3 flex items-start gap-3">
-          <div class="absolute -left-4 w-2 h-2 rounded-full bg-purple-500 mt-1.5 ring-3 ring-[#0a0a0f]"></div>
-          <span class="font-mono text-xs text-purple-400 w-20 shrink-0 mt-0.5">{e.time}</span>
-          <span class="text-xs bg-gray-800/60 border border-gray-700/40 rounded px-2 py-0.5 shrink-0 text-gray-400">{e.channel}</span>
-          <span class="text-sm text-gray-300">{e.action}</span>
-        </div>
-      ))}
-    </div>
-  </section>
-
-  <!-- Pre-blitz aibus -->
-  <section class="mb-12">
-    <h2 class="text-2xl font-bold mb-4">📋 aibus-dumbleclaw — Pre-Blitz</h2>
-    <div class="bg-gray-900/40 border border-gray-800/40 rounded-xl p-5 space-y-2 text-sm text-gray-300">
-      <div>🗓️ <strong>Feb 18:</strong> Reportó estado del Sprint Board — Monad Blitz CDMX #1 en High priority</div>
-      <div>🗓️ <strong>Feb 18:</strong> Creó tareas en Notion: repo, venue, anuncio del evento</div>
-      <div>🗓️ <strong>Feb 19:</strong> Creó tarea de fotógrafo/videógrafo para el evento</div>
-      <div>🗓️ <strong>Feb 20:</strong> Sprint Board update — Brian tenía repos GDL, MTY, CDMX 2 in progress</div>
-    </div>
-  </section>
-
-  <!-- Agentes inactivos -->
+  <!-- Inactive agents -->
   <section>
-    <h2 class="text-2xl font-bold mb-4">👀 Agentes sin actividad en el Blitz</h2>
+    <h2 class="text-2xl font-bold mb-4 flex items-center gap-2">
+      <svg class="w-6 h-6 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 15h0"/><path d="M16 15h0"/></svg>
+      Agentes sin actividad en el Blitz
+    </h2>
     <div class="grid md:grid-cols-3 gap-4">
-      {["Fruterito", "kukulcan", "Scarfdrilo"].map(a => (
+      {inactiveAgents.map(a => (
         <div class="bg-gray-900/30 border border-gray-800/30 rounded-xl p-4 opacity-60">
           <div class="flex items-center gap-2">
             <span class="w-2 h-2 rounded-full bg-gray-600"></span>
