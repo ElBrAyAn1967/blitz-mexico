@@ -16,11 +16,13 @@ techStack:
 contracts:
   - name: "MARP"
     deployed: true
-    description: "Core reputation protocol"
+    address: ""
+    description: "Core reputation protocol (address pendiente verificar)"
   - name: "BlitzCollection"
     deployed: true
-    description: "NFT badges for reputation"
-repo: "https://github.com/EthDevMx/MARP"
+    address: ""
+    description: "NFT badges for reputation (address pendiente verificar)"
+repo: ""
 messages: 107
 errors: []
 ---

@@ -32,7 +32,7 @@ contracts:
     deployed: false
   - name: "AccessControl"
     deployed: false
-repo: "https://github.com/wom-devs-mx/azist.me"
+repo: "https://github.com/7ayLabs/7ay-presence"
 messages: 0
 errors: []
 ---

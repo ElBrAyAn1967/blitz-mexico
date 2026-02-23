@@ -26,7 +26,7 @@ contracts:
     deployed: false
   - name: "Escrow"
     deployed: false
-repo: "https://github.com/aguacate-protocol/persea-protocol"
+repo: "https://github.com/Luis-Cwk/persea-protocol"
 messages: 17
 errors: []
 ---

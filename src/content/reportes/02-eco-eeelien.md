@@ -32,7 +32,7 @@ contracts:
   - name: "ChallengeManager"
     deployed: true
     description: "Gamification challenges"
-repo: "https://github.com/SergioGutierrezVillwornet/eco-eeelien-monad"
+repo: "https://github.com/eeelien/eco-eeelien-monad"
 messages: 342
 errors:
   - description: "Chain ID incorrecto en frontend"

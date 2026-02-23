@@ -55,14 +55,14 @@ El Monad Blitz CDMX fue un hackathon presencial de 1 día con **18 proyectos ana
 
 ## 🏆 Proyectos Destacados por Categoría
 
-### Tier 1: Contratos Deployados (5)
+### Tier 1: Contratos Deployados
 
-| Proyecto | Contratos | Address |
-|----------|-----------|---------|
-| **Eco Eeelien** | EcoToken, RecyclingRegistry, VoucherNFT, ChallengeManager | `0xC365564E5AbA75dC747D...` |
-| **MARP** | MARP, BlitzCollection | Live en chain 10143 |
-| **Antaria** | AnchorRegistry | `0xB284Dd77dcdc080d7c55...` |
-| **Q-Operacha** | CoperachaInteligente | Live en chain 10143 |
+| Proyecto | Contratos | Address | Verificado |
+|----------|-----------|---------|------------|
+| **Eco Eeelien** | EcoToken + 3 más | `0xC365564E5AbA75dC747DF82027ED0C9AeA39B6a9` | ✅ On-chain |
+| **Antaria** | AnchorRegistry | `0xB284Dd77dcdc080d7c5548592768A6E6188e5381` | ✅ On-chain |
+| **MARP** | MARP, BlitzCollection | (address pendiente) | ⚠️ Reportado |
+| **Q-Operacha** | CoperachaInteligente | (address pendiente) | ⚠️ Reportado |
 
 ### Tier 2: Contratos Desarrollados (8)
 
@@ -176,20 +176,21 @@ Wallet/Auth:
 
 ---
 
-## 🔗 Repos de GitHub Encontrados
+## 🔗 Repos de GitHub (Verificados)
 
-| Proyecto | Repo |
-|----------|------|
-| Antaria | github.com/Juan-Fuente-T/Antaria |
-| Eco Eeelien | github.com/SergioGutierrezVillwornet/eco-eeelien-monad |
-| MARP | github.com/EthDevMx/MARP |
-| Persea Protocol | github.com/aguacate-protocol/persea-protocol |
-| Q-Operacha | github.com/LexBP11/qoperacha_hack |
-| Monazon | github.com/ToryDom/Monazon |
-| Strope Pay | github.com/0xChijioke/strope-pay |
-| azist.me | github.com/wom-devs-mx/azist.me |
-| Solidario México | github.com/AlanRLG/solidario-mexico |
-| MediTrack | github.com/Meditrack/meditrack |
+| Proyecto | Repo | Status |
+|----------|------|--------|
+| Eco Eeelien | github.com/eeelien/eco-eeelien-monad | ✅ Verificado |
+| Persea Protocol | github.com/Luis-Cwk/persea-protocol | ✅ Verificado |
+| Q-Operacha | github.com/LexBP11/qoperacha_hack | ✅ Verificado |
+| Monazon | github.com/ToryDom/Monazon | ✅ Verificado |
+| Strope Pay | github.com/usainbluntmx/strope-pay | ✅ Verificado |
+| Solidario México | github.com/AlanRLG/solidario-mexico | ✅ Verificado |
+| 7AYLABS | github.com/7ayLabs/7ay-presence | ✅ Verificado |
+| Betwhisper | github.com/anthonysurfermx/Betwhisper | ✅ Verificado |
+| Antaria | (repo no público) | ⚠️ |
+| MARP | (repo no público) | ⚠️ |
+| MediTrack | (repo no público) | ⚠️ |
 
 ---
 

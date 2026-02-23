@@ -19,7 +19,7 @@ contracts:
   - name: "SubscriptionManager"
     deployed: false
     description: "Pagos recurrentes on-chain"
-repo: "https://github.com/0xChijioke/strope-pay"
+repo: "https://github.com/usainbluntmx/strope-pay"
 messages: 0
 errors: []
 ---

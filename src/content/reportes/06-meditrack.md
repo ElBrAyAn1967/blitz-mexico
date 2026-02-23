@@ -20,7 +20,7 @@ contracts:
   - name: "MediPay"
     deployed: false
     description: "Pagos médicos on-chain"
-repo: "https://github.com/Meditrack/meditrack"
+repo: ""
 messages: 30
 errors: []
 ---
